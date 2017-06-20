@@ -1,0 +1,11 @@
+src/
+spec/
+tasks/
+.babelrc
+.editorconfig
+.gitignore
+demo.js
+gulpfile.js
+.env
+.env.*
+*tgz
