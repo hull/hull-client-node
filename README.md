@@ -1,8 +1,11 @@
 # Overview
 
+### In this package: 
 - [Hull Client](#hull)
     > Most low level Hull Platform API client: `const hull = new Hull({ configuration })`
 
+
+### In the Hull-node package (which embeds this one):
 - [Hull Middleware](https://github.com/hull/hull-node)
     > A bridge between Hull Client and a NodeJS HTTP application (e.g. express) which initializes context for every HTTP request:
     > `app.use(Hull.Middleware({ configuration }))`
