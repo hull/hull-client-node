@@ -49,6 +49,8 @@ if (process.env.HULL_ID && process.env.HULL_SECRET && process.env.HULL_ORGANIZAT
     console.log("Error", err);
   });
 
+  console.log(hull.asUser({ external_id: "1234", email: "foo@bar.com" }).token());
+
 } else {
   console.log("Environment variables not set.");
 }
