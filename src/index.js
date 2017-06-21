@@ -50,8 +50,10 @@ const Client = function Client(config = {}) {
     };
   });
 
-  this.userToken = function userToken(data = clientConfig.get("userId"), claims) {
-    return crypto.lookupToken(clientConfig.get(), "user", data, claims);
+  this.token = function token(claims) {
+    const subjectType = clientConfig.get("subjectType");
+    const claim = clientConfig.get(`${subjectType}Claim`);
+    return crypto.lookupToken(clientConfig.get(), subjectType, { [subjectType]: claim }, claims);
   };
 
   this.utils = {

@@ -84,10 +84,11 @@ client.configuration();
 ```
 
 
-### client.userToken()
+### client.token()
 
 ```js
-client.userToken({ email:'xxx@example.com', name:'FooBar' }, optionalClaims);
+client.asUser({ email:'xxx@example.com', external_id: "1234", name:'FooBar' }).token(optionalClaims);
+client.asAccount({ domain:'example.com', external_id: "1234", name:'FooBar' }).token(optionalClaims);
 ```
 
 Used for [Bring your own users](http://hull.io/docs/users/byou).
