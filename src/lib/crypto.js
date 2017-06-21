@@ -51,8 +51,8 @@ module.exports = {
    *
    * @param {Object} config object
    * @param {String} subjectType - "user" or "account"
-   * @param {String|Object} userClaim main idenditiy claim - object or string
-   * @param {String|Object} accountClaim main idenditiy claim - object or string
+   * @param {String|Object} userClaim main identity claim - object or string
+   * @param {String|Object} accountClaim main identity claim - object or string
    * @param {Object} additionalClaims
    * @returns {String} The jwt token to identity the user.
    */
