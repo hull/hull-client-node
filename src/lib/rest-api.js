@@ -1,5 +1,5 @@
 import rest from "restler";
-import pkg from "../package.json";
+import pkg from "../../package.json";
 
 const DEFAULT_HEADERS = {
   "Content-Type": "application/json",

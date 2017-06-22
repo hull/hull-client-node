@@ -1,13 +1,15 @@
 import _ from "lodash";
 import winston from "winston";
 import uuidV4 from "uuid/v4";
-import Configuration from "./configuration";
-import restAPI from "./rest-api";
+
+import Configuration from "./lib/configuration";
+import restAPI from "./lib/rest-api";
 import crypto from "./lib/crypto";
-import trait from "./trait";
-import * as settings from "./settings";
-import * as propertiesUtils from "./properties";
-import Firehose from "./firehose";
+import Firehose from "./lib/firehose";
+
+import trait from "./utils/trait";
+import * as settings from "./utils/settings";
+import * as propertiesUtils from "./utils/properties";
 
 const PUBLIC_METHODS = ["get", "post", "del", "put"];
 

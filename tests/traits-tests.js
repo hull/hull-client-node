@@ -1,6 +1,6 @@
 /* global describe, it */
 
-import { group, normalize } from "../src/trait";
+import { group, normalize } from "../src/utils/trait";
 import { user } from "./fixtures";
 
 const { expect, should } = require("chai");
