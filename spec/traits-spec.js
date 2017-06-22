@@ -8,7 +8,7 @@ var expect = chai.expect;
 chai.use(require('sinon-chai'));
 chai.should();
 
-var Traits = require('../src/utils/trait');
+var Traits = require('../src/utils/traits');
 
 describe('Traits.group', () => {
 

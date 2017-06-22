@@ -7,8 +7,8 @@ import restAPI from "./lib/rest-api";
 import crypto from "./lib/crypto";
 import Firehose from "./lib/firehose";
 
-import trait from "./utils/trait";
-import * as settings from "./utils/settings";
+import * as traitsUtils from "./utils/traits";
+import * as settingsUtils from "./utils/settings";
 import * as propertiesUtils from "./utils/properties";
 
 const PUBLIC_METHODS = ["get", "post", "del", "put"];
@@ -59,12 +59,12 @@ const Client = function Client(config = {}) {
   };
 
   this.utils = {
-    groupTraits: trait.group,
+    groupTraits: traitsUtils.group,
     properties: {
       get: propertiesUtils.get.bind(this),
     },
     settings: {
-      update: settings.update.bind(this),
+      update: settingsUtils.update.bind(this),
     }
   };
 
