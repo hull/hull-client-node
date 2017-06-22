@@ -59,7 +59,9 @@ const Client = function Client(config = {}) {
   };
 
   this.utils = {
+    // @deprecated - let's remove the `groupTraits` in favor of `traits.group` convention
     groupTraits: traitsUtils.group,
+    traits: traitsUtils,
     properties: {
       get: propertiesUtils.get.bind(this),
     },
