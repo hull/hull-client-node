@@ -237,9 +237,9 @@ The Hull API returns traits in a "flat" format, with '/' delimiters in the key.
 `client.utils.traits.group(user_report)` can be used to group those traits into subobjects:
 
 ```js
-import { group: groupTraits } from "hull-client/lib/trait";
+import { group } from "hull-client/lib/trait";
 
-groupTraits({
+group({
   'email': 'romain@user',
   'name': 'name',
   'traits_coconut_name': 'coconut',

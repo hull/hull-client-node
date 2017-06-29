@@ -1,12 +1,13 @@
+// @flow
+
 /**
- * Updates `private_settings`, touching only provided settings.
- * Also clears the `shipCache`.
- * `hullClient.put` will emit `ship:update` notify event.
- * @param {Object} ctx The Context Object
+ * Updates `private_settings` merging them if existing ones before.
+ *
+ * Note: `client.put` will result `ship:update` notify event coming from Hull platform - possible loop condition.
  * @param  {Object} newSettings settings to update
  * @return {Promise}
  */
-export function update(newSettings) { // eslint-disable-line import/prefer-default-export
+export function update(newSettings: Object): Promise<any> { // eslint-disable-line import/prefer-default-export
   return this.get("app")
     .then((ship) => {
       const private_settings = { ...ship.private_settings, ...newSettings };

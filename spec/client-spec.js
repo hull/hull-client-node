@@ -33,8 +33,7 @@ describe("API client", () => {
     const PUBLIC_METHODS = [
       "get", "post", "put", "del",
       "configuration",
-      "api",
-      "userToken"
+      "api"
     ];
 
     PUBLIC_METHODS.map(method => expect(hull[method]).to.be.a("function"));

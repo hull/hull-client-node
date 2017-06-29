@@ -1,13 +1,15 @@
 import _ from "lodash";
 import winston from "winston";
 import uuidV4 from "uuid/v4";
-import Configuration from "./configuration";
-import restAPI from "./rest-api";
+
+import Configuration from "./lib/configuration";
+import restAPI from "./lib/rest-api";
 import crypto from "./lib/crypto";
-import trait from "./trait";
-import * as settings from "./settings";
-import * as propertiesUtils from "./properties";
-import Firehose from "./firehose";
+import Firehose from "./lib/firehose";
+
+import * as traitsUtils from "./utils/traits";
+import * as settingsUtils from "./utils/settings";
+import * as propertiesUtils from "./utils/properties";
 
 const PUBLIC_METHODS = ["get", "post", "del", "put"];
 
@@ -57,12 +59,14 @@ const Client = function Client(config = {}) {
   };
 
   this.utils = {
-    groupTraits: trait.group,
+    // @deprecated - let's remove the `groupTraits` in favor of `traits.group` convention
+    groupTraits: traitsUtils.group,
+    traits: traitsUtils,
     properties: {
       get: propertiesUtils.get.bind(this),
     },
     settings: {
-      update: settings.update.bind(this),
+      update: settingsUtils.update.bind(this),
     }
   };
 
