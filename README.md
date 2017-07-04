@@ -23,8 +23,10 @@ This library makes it easy to interact with the Hull API, send tracking and prop
 
 Creating a new Hull client is pretty straightforward:
 
+`npm install -s hull-client`
+
 ```js
-import Hull from 'hull';
+import Hull from 'hull-client';
 
 const client = new Hull({
   id: 'HULL_ID',
