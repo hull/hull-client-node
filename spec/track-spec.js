@@ -3,7 +3,7 @@ import Hull from "../src";
 
 import Minihull from "minihull";
 
-describe("track", function test() {
+describe("client.track()", function test() {
   let client, minihull;
   this.timeout(10000);
   beforeEach(() => {
@@ -11,10 +11,12 @@ describe("track", function test() {
     minihull.listen(8000);
     client = new Hull({
       organization: "localhost:8000",
-      id: "111111111111111111111111",
+      id: "211111111111111111111111",
       secret: "rocks",
       protocol: "http",
-      flushAfter: 100
+      flushAfter: 100,
+      firehoseUrl: "http://localhost:8000/boom/firehose",
+      domain: "hullapp.dev",
     });
     process.env.BATCH_TIMEOUT = 300;
     process.env.BATCH_RETRY = 10;
@@ -45,10 +47,9 @@ describe("track", function test() {
   });
 
   it("shoud retry with the same event_id", (done) => {
-    const stub = minihull.stubPost("/api/v1/firehose")
+    const stub = minihull.stubPost("/boom/firehose")
       .onFirstCall()
-      .callsFake((req, res) => {
-      })
+      .callsFake((req, res) => {})
       .onSecondCall()
       .callsFake((req, res) => {
         res.end("ok");

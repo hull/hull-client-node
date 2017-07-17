@@ -2,8 +2,8 @@
 import Promise from "bluebird";
 
 import Batcher from "../src/lib/firehose";
-import Hull from "../src/index";
-const { expect, should } = require("chai");
+
+const { expect } = require("chai");
 
 describe("Batch", () => {
   describe("Calling batches", () => {
@@ -12,7 +12,8 @@ describe("Batch", () => {
       secret: "shhuuut",
       organization: "c6580820.hullbeta.dev",
       flushAt: 5,
-      flushAfter: 100
+      flushAfter: 100,
+      domain: "hullbeta.dev"
     };
 
     it("should batch", (done) => {
@@ -21,11 +22,11 @@ describe("Batch", () => {
       const handler = ({ batch }, batcher) => {
         handleCount += 1;
         expect(batcher.config.get("secret")).to.eq(config.secret);
-        if (handleCount == 1) {
+        if (handleCount === 1) {
           expect(batch.length).to.eq(5);
           expect(batch[0].headers["Hull-Access-Token"]).to.eq("123");
           expect(batch[4].headers["Hull-Access-Token"]).to.eq("456");
-        } else if (handleCount == 2) {
+        } else if (handleCount === 2) {
           expect(batch.length).to.eq(2);
           expect(batch[0].headers["Hull-Access-Token"]).to.eq("456");
           done();

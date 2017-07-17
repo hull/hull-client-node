@@ -79,8 +79,8 @@ client.configuration();
   protocol: 'https',
   id: '58765f7de3aa14001999',
   secret: '12347asc855041674dc961af50fc1',
-  organization: 'fa4321.hullbeta.io',
-  version: '0.7.4' }
+  organization: 'fa4321.hullapp.io',
+  version: '0.11.4' }
 ```
 
 
@@ -296,6 +296,13 @@ client.logger.info("message", { object });
 import winstonSlacker from "winston-slacker";
 Hull.logger.add(winstonSlacker,  { ... });
 
+```
+
+You can also have a user or account scoped logger. Claims used in `asUser` and `asAccount` methods will be added to the log context.
+
+```js
+const user = client.asUser({ email: "john@coltrane.com" });
+user.logger.info("message", { hello: "world" });
 ```
 
 ## Options

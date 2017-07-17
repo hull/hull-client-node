@@ -34,21 +34,22 @@ const Client = function Client(config = {}) {
   };
 
   const batch = Firehose.getInstance(clientConfig.get(), (params, batcher) => {
-    return restAPI(batcher.config, "firehose", "post", params, {
+    const firehoseUrl = clientConfig.get("firehoseUrl") || `${clientConfig.get("protocol")}://firehose.${clientConfig.get("domain")}`;
+    return restAPI(this, batcher.config, firehoseUrl, "post", params, {
       timeout: process.env.BATCH_TIMEOUT || 10000,
       retry: process.env.BATCH_RETRY || 5000
     });
   });
 
   this.api = function api(url, method, params, options = {}) {
-    return restAPI(clientConfig, url, method, params, options);
+    return restAPI(this, clientConfig, url, method, params, options);
   };
   _.each(PUBLIC_METHODS, (method) => {
     this[method] = (url, params, options = {}) => {
-      return restAPI(clientConfig, url, method, params, options);
+      return restAPI(this, clientConfig, url, method, params, options);
     };
     this.api[method] = (url, params, options = {}) => {
-      return restAPI(clientConfig, url, method, params, options);
+      return restAPI(this, clientConfig, url, method, params, options);
     };
   });
 
@@ -70,10 +71,22 @@ const Client = function Client(config = {}) {
     }
   };
 
-  const ctxe = _.mapKeys(
-    _.pick((this.configuration() || {}), ["organization", "id", "connectorName"]),
-    (value, key) => _.snakeCase(key)
-  );
+  const conf = this.configuration() || {};
+  const ctxKeys = _.pick(conf, ["organization", "id", "connectorName", "subjectType"]);
+  const ctxe = _.mapKeys(ctxKeys, (value, key) => _.snakeCase(key));
+
+  ["user", "account"].forEach((k) => {
+    const claim = conf[`${k}Claim`];
+    if (_.isString(claim)) {
+      ctxe[`${k}_id`] = claim;
+    } else if (_.isObject(claim)) {
+      _.each(claim, (value, key) => {
+        const ctxKey = _.snakeCase(`${k}_${key.toLowerCase()}`);
+        if (value) ctxe[ctxKey] = value.toString();
+      });
+    }
+  });
+
   const logFactory = level => (message, data) => logger[level](message, { context: ctxe, data });
   const logs = {};
   ["silly", "debug", "verbose", "info", "warn", "error"].map((level) => { logs[level] = logFactory(level); return level; });
@@ -123,6 +136,16 @@ const Client = function Client(config = {}) {
       });
     };
 
+    // Allow alias only for users
+    if (config.userClaim || config.accessToken) {
+      this.alias = (body) => {
+        return batch({
+          type: "alias",
+          body
+        });
+      };
+    }
+
     if (config.userClaim) {
       this.account = (accountClaim = {}) => {
         if (!accountClaim) {
@@ -132,6 +155,11 @@ const Client = function Client(config = {}) {
       };
     }
   } else {
+    this.as = (userClaim, additionalClaims = {}) => {
+      this.logger.warn("client.deprecation - use client.asUser instead of client.as");
+      return this.asUser(userClaim, additionalClaims);
+    };
+
     this.asUser = (userClaim, additionalClaims = {}) => {
       if (!userClaim) {
         throw new Error("User Claims was not defined when calling hull.asUser()");
