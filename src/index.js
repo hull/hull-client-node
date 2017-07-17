@@ -156,7 +156,7 @@ const Client = function Client(config = {}) {
     }
   } else {
     this.as = (userClaim, additionalClaims = {}) => {
-      this.logger.warn("client.deprecation - use client.asUser instead of client.as");
+      this.logger.warn("client.deprecation", { message: "use client.asUser instead of client.as" });
       return this.asUser(userClaim, additionalClaims);
     };
 
