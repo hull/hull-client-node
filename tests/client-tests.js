@@ -41,6 +41,18 @@ describe("Hull", () => {
         .that.eql({ email: "foo@bar.com" });
     });
 
+    it("should allow to pass scopes option", () => {
+      const hull = new Hull({ id: "562123b470df84b740000042", secret: "1234", organization: "test" });
+
+      const scoped = hull.asUser({ email: "foo@bar.com" }, { scopes: ["admin"] });
+      const scopedConfig = scoped.configuration();
+      const scopedJwtClaims = jwt.decode(scopedConfig.accessToken, scopedConfig.secret);
+      expect(scopedJwtClaims)
+        .to.have.property("scopes")
+        .that.eql(["admin"]);
+    });
+
+
     it("should expose an `as` method being an alias to `asUser`", () => {
       const hull = new Hull({ id: "562123b470df84b740000042", secret: "1234", organization: "test" });
 

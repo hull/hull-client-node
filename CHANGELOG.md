@@ -1,3 +1,6 @@
+# 1.1.1
+* Add support for custom `scopes` claim in auth tokens
+
 # 1.1.0
 * logging api timeouts and failures
 * filter out logged claims for users and accounts so one can pass `hull.asUser(user)`
