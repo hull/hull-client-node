@@ -82,6 +82,10 @@ module.exports = {
       return c;
     }, claims);
 
+    if (_.has(additionalClaims, "scopes")) {
+      claims.scopes = additionalClaims.scopes;
+    }
+
     if (_.has(additionalClaims, "create")) {
       claims["io.hull.create"] = additionalClaims.create;
     }
