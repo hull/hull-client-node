@@ -130,7 +130,8 @@ user.userToken();
 
 You can use an internal Hull `id`, an ID from your database that we call `external_id`, an `email` address or `anonymous_id`.
 
-Assigning the `user` variable doesn't make an API call, it scopes the calls to another instance of `hull` client. This means `user` is an instance of the `hull` client scoped to this user.
+Assigning the `user` variable doesn't make an API call, it 
+the calls to another instance of `hull` client. This means `user` is an instance of the `hull` client scoped to this user.
 
 The second parameter lets you define additional options (JWT claims) passed to the user resolution script:
 
@@ -169,6 +170,11 @@ client.asUser({ anonymous_id: 'anonymousId' });
 client.asUser({ email: "user@email.com" });
 ```
 
+> Return a hull `client` authenticated as the user but with admin privileges
+
+```js
+client.asUser({ email: 'user@email.com' }, { scopes: ['admin'] });
+```
 
 ## Methods for user-scoped instance
 
