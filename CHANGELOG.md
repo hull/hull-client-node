@@ -1,3 +1,6 @@
+# 1.1.2
+* fixes how API rest client rejects after errors
+
 # 1.1.1
 * Add support for custom `scopes` claim in auth tokens
 

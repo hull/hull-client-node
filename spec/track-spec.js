@@ -29,6 +29,10 @@ describe("client.track()", function test() {
   });
 
   it("should set default event_id", (done) => {
+    const stub = minihull.stubPost("/boom/firehose")
+      .callsFake((req, res) => {
+        res.end("ok");
+      });
     client.asUser("123").track("Foo")
       .then(() => {
         const firstReq = minihull.requests.get("incoming").get(0).value();
@@ -38,6 +42,10 @@ describe("client.track()", function test() {
   });
 
   it("should not overwrite event_id if provided", (done) => {
+    const stub = minihull.stubPost("/boom/firehose")
+      .callsFake((req, res) => {
+        res.end("ok");
+      });
     client.asUser("123").track("Foo", {}, { event_id: "someCustomValue" })
       .then(() => {
         const firstReq = minihull.requests.get("incoming").get(0).value();

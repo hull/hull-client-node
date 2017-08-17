@@ -64,13 +64,13 @@ function perform(client, config = {}, method = "get", path, params = {}, options
     .on("success", actions.resolve)
     .on("error", actions.reject);
 
-    query.on("fail", function handleError(body, response) {
+    query.on("fail", function handleError(error, response) {
       client.logger.debug("client.fail", { statusCode: response.statusCode, retryCount, path, method });
       if (response.statusCode === 503 && options.timeout && retryCount < 2) {
         retryCount += 1;
         return this.retry(options.retry || 500);
       }
-      return actions.reject();
+      return actions.reject(error);
     });
 
     if (options.timeout) {
@@ -80,7 +80,7 @@ function perform(client, config = {}, method = "get", path, params = {}, options
           retryCount += 1;
           return this.retry(options.retry || 500);
         }
-        return actions.reject();
+        return actions.reject(new Error("Timeout"));
       });
     }
     return query;
@@ -88,7 +88,7 @@ function perform(client, config = {}, method = "get", path, params = {}, options
 
   promise.abort = () => {
     query.abort();
-    actions.reject();
+    actions.reject(new Error("Aborted"));
   };
 
   return promise;
