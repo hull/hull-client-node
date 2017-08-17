@@ -28,6 +28,7 @@ describe("client retrying", function test() {
 
     client.get("/testing")
       .catch(err => {
+        expect(err).to.not.be.undefined;
         expect(stub.callCount).to.be.eql(3);
         done();
       });
@@ -58,6 +59,7 @@ describe("client retrying", function test() {
 
     client.get("/testing", {}, { timeout: 20, retry: 10 })
       .catch(err => {
+        expect(err.message).to.equal("Timeout");
         expect(stub.callCount).to.be.eql(3);
         done();
       });
