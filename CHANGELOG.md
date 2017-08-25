@@ -1,3 +1,6 @@
+# 1.1.3
+* fixes building and publishing process
+
 # 1.1.2
 * fixes how API rest client rejects after errors
 
