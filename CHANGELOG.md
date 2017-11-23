@@ -1,3 +1,6 @@
+# 1.1.4
+* add requestId in logger context
+
 # 1.1.3
 * fixes building and publishing process
 
