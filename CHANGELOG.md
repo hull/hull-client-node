@@ -1,3 +1,6 @@
+# 1.1.5
+* retry all 5xx errors
+
 # 1.1.4
 * add requestId in logger context
 
