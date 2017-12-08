@@ -66,7 +66,7 @@ function perform(client, config = {}, method = "get", path, params = {}, options
 
     query.on("fail", function handleError(error, response) {
       client.logger.debug("client.fail", { statusCode: response.statusCode, retryCount, path, method });
-      if (response.statusCode === 503 && options.timeout && retryCount < 2) {
+      if (response.statusCode >= 500 && options.timeout && retryCount < 2) {
         retryCount += 1;
         return this.retry(options.retry || 500);
       }
