@@ -148,19 +148,19 @@ client.asUser(userId);
 > Return a hull `client` scoped to the user identified by it's Social network ID. Lazily created if [Guest Users](http://www.hull.io/docs/users/guest_users) are enabled
 
 ```js
-client.asUser('instagram|facebook|google:userId');
+client.asUser("instagram|facebook|google:userId");
 ```
 
 > Return a hull `client` scoped to the user identified by it's External ID (from your dashboard). Lazily created if [Guest Users](http://www.hull.io/docs/users/guest_users) are enabled
 
 ```js
-client.asUser({ external_id: 'externalId' });
+client.asUser({ external_id: "externalId" });
 ```
 
 > Return a hull `client` scoped to the user identified by it's External ID (from your dashboard). Lazily created if [Guest Users](http://www.hull.io/docs/users/guest_users) are enabled
 
 ```js
-client.asUser({ anonymous_id: 'anonymousId' });
+client.asUser({ anonymous_id: "anonymousId" });
 ```
 
 > Return a hull `client` scoped to the user identified by only by an anonymousId. Lets you start tracking and storing properties from a user before you have a UserID ready for him. Lazily created if [Guest Users](http://www.hull.io/docs/users/guest_users) are enabled
@@ -173,7 +173,13 @@ client.asUser({ email: "user@email.com" });
 > Return a hull `client` authenticated as the user but with admin privileges
 
 ```js
-client.asUser({ email: 'user@email.com' }, { scopes: ['admin'] });
+client.asUser({ email: "user@email.com" }, { scopes: ["admin"] });
+```
+
+> Return a hull `client` identified by an email and additional aliases - which are passed as an array of unique identifiers
+
+```js
+client.asUser({ email: "user@email.com", alias: ["namespace:123"] });
 ```
 
 ## Methods for user-scoped instance
@@ -192,15 +198,16 @@ When you do this, you get a new client that has a different behaviour. It's now 
 Stores a new event.
 
 ```js
-user.track('new support ticket', { messages: 3,
-  priority:'high'
+user.track("new support ticket", {
+  messages: 3,
+  priority: "high"
 }, {
-  source: 'zendesk',
-  type: 'ticket',
-  event_id: 'uuid1234' //Pass a unique ID to ensure event de-duplication
-  ip: null, //don't store ip - it's a server call
-  referer: null, //don't store referer - it's a server call
-  created_at: '2013-02-08 09:30:26.123+07:00' //ISO 8601. moment.js does it very well
+  source: "zendesk",
+  type: "ticket",
+  event_id: "uuid1234", // Pass a unique ID to ensure event de-duplication
+  ip: null, // don't store ip - it's a server call
+  referer: null, // don't store referer - it's a server call
+  created_at: "2013-02-08 09:30:26.123+07:00" // ISO 8601. moment.js does it very well
 });
 ```
 
@@ -221,7 +228,7 @@ Stores Attributes on the user:
 ```js
 user.traits({
   opened_tickets: 12
-}, { source: 'zendesk' });
+}, { source: "zendesk" });
 // 'source' is optional. Will store the traits grouped under the source name.
 // Alternatively, you can send properties for multiple groups with the flat syntax:
 user.traits({ "zendesk/opened_tickets": 12, "clearbit/name": "foo" });
@@ -233,7 +240,7 @@ By default the `traits` calls are grouped in background and send to the Hull API
 user.traits({
   fetched_at: new Date().toISOString()
 }, {
-  source: 'mailchimp',
+  source: "mailchimp",
   sync: true
 });
 ```
