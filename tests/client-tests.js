@@ -153,13 +153,31 @@ describe("Hull", () => {
         .to.not.throw(Error);
     });
 
-     it("should filter all non standard claims", () => {
+    it("should filter all non standard claims", () => {
       const hull = new Hull({ id: "562123b470df84b740000042", secret: "1234", organization: "test" });
 
       const scoped = hull.asUser({ email: "foo@bar.com", foo: "bar" });
       const scopedJwtClaims = jwt.decode(scoped.configuration().accessToken, scoped.configuration().secret);
       expect(scopedJwtClaims["io.hull.asUser"])
         .to.eql({ email: "foo@bar.com" });
+    });
+
+    it("should allow to pass an array of user aliases", () => {
+      const hull = new Hull({ id: "562123b470df84b740000042", secret: "1234", organization: "test" });
+
+      const scoped = hull.asUser({ email: "foo@bar.com", alias: ["namespace:123"] });
+      const scopedJwtClaims = jwt.decode(scoped.configuration().accessToken, scoped.configuration().secret);
+      expect(scopedJwtClaims["io.hull.asUser"])
+        .to.eql({ email: "foo@bar.com", alias: ["namespace:123"] });
+    });
+
+    it("should allow to pass an array of account aliases", () => {
+      const hull = new Hull({ id: "562123b470df84b740000042", secret: "1234", organization: "test" });
+
+      const scoped = hull.asAccount({ domain: "bar.com", alias: ["namespace:123"] });
+      const scopedJwtClaims = jwt.decode(scoped.configuration().accessToken, scoped.configuration().secret);
+      expect(scopedJwtClaims["io.hull.asAccount"])
+        .to.eql({ domain: "bar.com", alias: ["namespace:123"] });
     });
   });
 });
