@@ -182,6 +182,12 @@ client.asUser({ email: "user@email.com" }, { scopes: ["admin"] });
 client.asUser({ email: "user@email.com", aliases: ["namespace:123"] });
 ```
 
+> Return a hull `client` identified by an email and additional service_ids - which are passed as an object of unique identifiers
+
+```js
+client.asUser({ email: "user@email.com", aliases: { serviceName: "serviceId123" } });
+```
+
 ## Methods for user-scoped instance
 
 ```js
