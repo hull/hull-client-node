@@ -54,13 +54,13 @@ const VALID_PROPS = {
  * All valid user claims, used for validation and filterind .asUser calls
  * @type {Array}
  */
-const USER_CLAIMS = ["id", "email", "external_id", "anonymous_id", "alias"];
+const USER_CLAIMS = ["id", "email", "external_id", "anonymous_id", "aliases", "service_ids"];
 
 /**
  * All valid accounts claims, used for validation and filtering .asAccount calls
  * @type {Array}
  */
-const ACCOUNT_CLAIMS = ["id", "external_id", "domain", "alias"];
+const ACCOUNT_CLAIMS = ["id", "external_id", "domain", "aliases", "service_ids"];
 
 /**
  * make sure that provided "identity claim" is valid

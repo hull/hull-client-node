@@ -1,5 +1,5 @@
 # 1.1.6
-* adds additional `alias` claim to `asAccount` and `asUser` methods
+* adds additional `aliases` and `service_ids` claims to `asAccount` and `asUser` methods
 
 # 1.1.5
 * retry all 5xx errors
