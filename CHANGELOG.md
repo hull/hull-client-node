@@ -1,3 +1,12 @@
+# 1.1.6
+* adds additional `aliases` and `service_ids` claims to `asAccount` and `asUser` methods
+
+# 1.1.5
+* retry all 5xx errors
+
+# 1.1.4
+* add requestId in logger context
+
 # 1.1.3
 * fixes building and publishing process
 

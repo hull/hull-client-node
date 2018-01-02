@@ -34,6 +34,20 @@ describe("client retrying", function test() {
       });
   });
 
+  it("should retry 2 times if get 502 response, then reject", (done) => {
+    const stub = minihull.stubGet("/api/v1/testing")
+      .callsFake((req, res) => {
+        res.status(502).end("error 502");
+      });
+
+    client.get("/testing")
+      .catch(err => {
+        expect(err).to.not.be.undefined;
+        expect(stub.callCount).to.be.eql(3);
+        done();
+      });
+  });
+
   it("should retry first 503 response, then resolve", (done) => {
     const stub = minihull.stubGet("/api/v1/testing")
       .onFirstCall()

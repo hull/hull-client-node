@@ -192,6 +192,18 @@ client.asUser({ email: "user@email.com" }, { active: true });
 client.asUser({ email: "user@email.com" }, { scopes: ["admin"] });
 ```
 
+> Return a hull `client` identified by an email and additional aliases - which are passed as an array of unique identifiers
+
+```js
+client.asUser({ email: "user@email.com", aliases: ["namespace:123"] });
+```
+
+> Return a hull `client` identified by an email and additional service_ids - which are passed as an object of unique identifiers
+
+```js
+client.asUser({ email: "user@email.com", aliases: { serviceName: "serviceId123" } });
+```
+
 ## Methods for user-scoped instance
 
 ```js
@@ -208,15 +220,16 @@ When you do this, you get a new client that has a different behaviour. It's now 
 Stores a new event.
 
 ```js
-user.track("new support ticket", { messages: 3,
+user.track("new support ticket", {
+  messages: 3,
   priority: "high"
 }, {
   source: "zendesk",
   type: "ticket",
-  event_id: "uuid1234" //Pass a unique ID to ensure event de-duplication
-  ip: null, //don't store ip - it's a server call
-  referer: null, //don't store referer - it's a server call
-  created_at: "2013-02-08 09:30:26.123+07:00" //ISO 8601. moment.js does it very well
+  event_id: "uuid1234", // Pass a unique ID to ensure event de-duplication
+  ip: null, // don't store ip - it's a server call
+  referer: null, // don't store referer - it's a server call
+  created_at: "2013-02-08 09:30:26.123+07:00" // ISO 8601. moment.js does it very well
 });
 ```
 
@@ -327,6 +340,29 @@ You can also have a user or account scoped logger. Claims used in `asUser` and `
 ```js
 const user = client.asUser({ email: "john@coltrane.com" });
 user.logger.info("message", { hello: "world" });
+```
+
+
+## Setting a requestId in the logs context
+
+You can decorate all your logs context with a `request_id` which allows you to group all logs related to a particular request or transaction. 
+
+This identifier can be passed a `requestId` param at the initialization of the Client.
+
+```js
+const client = new Hull({
+  organization:"193a8881.hullapp.io",
+  id:"59e99ec13cd60e5c9d000037",
+  secret: "change-me-please",
+  requestId:"123"
+});
+> client.logger.info("hello");
+```
+
+will log the following line
+
+```js
+{"context":{"organization":"193a8881.hullapp.io","id":"59e99ec13cd60e5c9d000037","request_id":"123"},"level":"info","message":"hello"}
 ```
 
 ## Options

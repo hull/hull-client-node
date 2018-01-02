@@ -72,7 +72,7 @@ const Client = function Client(config = {}) {
   };
 
   const conf = this.configuration() || {};
-  const ctxKeys = _.pick(conf, ["organization", "id", "connectorName", "subjectType"]);
+  const ctxKeys = _.pick(conf, ["organization", "id", "connectorName", "subjectType", "requestId"]);
   const ctxe = _.mapKeys(ctxKeys, (value, key) => _.snakeCase(key));
 
   ["user", "account"].forEach((k) => {
