@@ -135,8 +135,11 @@ the calls to another instance of `hull` client. This means `user` is an instance
 
 The second parameter lets you define additional options (JWT claims) passed to the user resolution script:
 
-* **create** - *boolean* - marks if the user should be lazily created if not found (default: *true*)
-* **scopes** - *Array<String>* - adds scopes claim to the JWT to impersonate a User with admin rights.
+|  field  |type     | description                                                                                                           | default|
+| ------- |---------| --------------------------------------------------------------------------------------------------------------------- | -------|
+|  create |`boolean`| Marks if the user should be lazily created if not found                                                               | `true` |
+|  scopes |`Array`  | Adds scopes claim to the JWT to impersonate a User with admin rights                                                  | `[]`   |
+|  active |`string` | Marks the user as *active* meaning a reduced latency at the expense of scalability. Don't use for high volume updates | `false`|
 
 ### Possible usage
 > Return a hull `client` scoped to the user identified by it's Hull ID. Not lazily created. Needs an existing User
