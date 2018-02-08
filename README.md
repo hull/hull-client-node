@@ -26,12 +26,12 @@ Creating a new Hull client is pretty straightforward:
 `npm install -s hull-client`
 
 ```js
-import Hull from 'hull-client';
+import Hull from "hull-client";
 
 const client = new Hull({
-  id: 'HULL_ID',
-  secret: 'HULL_SECRET',
-  organization: 'HULL_ORGANIZATION_DOMAIN'
+  id: "HULL_ID",
+  secret: "HULL_SECRET",
+  organization: "HULL_ORGANIZATION_DOMAIN"
 });
 ```
 
@@ -76,21 +76,21 @@ Returns the global configuration object.
 ```js
 client.configuration();
 // returns:
-{ prefix: '/api/v1',
-  domain: 'hullapp.io',
-  protocol: 'https',
-  id: '58765f7de3aa14001999',
-  secret: '12347asc855041674dc961af50fc1',
-  organization: 'fa4321.hullapp.io',
-  version: '0.11.4' }
+{ prefix: "/api/v1",
+  domain: "hullapp.io",
+  protocol: "https",
+  id: "58765f7de3aa14001999",
+  secret: "12347asc855041674dc961af50fc1",
+  organization: "fa4321.hullapp.io",
+  version: "0.11.4" }
 ```
 
 
 ### client.token()
 
 ```js
-client.asUser({ email:'xxx@example.com', external_id: "1234", name:'FooBar' }).token(optionalClaims);
-client.asAccount({ domain:'example.com', external_id: "1234", name:'FooBar' }).token(optionalClaims);
+client.asUser({ email: "xxx@example.com", external_id: "1234", name: "FooBar" }).token(optionalClaims);
+client.asAccount({ domain: "example.com", external_id: "1234", name: "FooBar" }).token(optionalClaims);
 ```
 
 Used for [Bring your own users](http://hull.io/docs/users/byou).
@@ -142,6 +142,7 @@ The second parameter lets you define additional options (JWT claims) passed to t
 |  active |`string` | Marks the user as *active* meaning a reduced latency at the expense of scalability. Don't use for high volume updates | `false`|
 
 ### Possible usage
+
 > Return a hull `client` scoped to the user identified by it's Hull ID. Not lazily created. Needs an existing User
 
 ```js
@@ -151,32 +152,58 @@ client.asUser(userId);
 > Return a hull `client` scoped to the user identified by it's Social network ID. Lazily created if [Guest Users](http://www.hull.io/docs/users/guest_users) are enabled
 
 ```js
-client.asUser('instagram|facebook|google:userId');
+client.asUser("instagram|facebook|google:userId");
 ```
 
 > Return a hull `client` scoped to the user identified by it's External ID (from your dashboard). Lazily created if [Guest Users](http://www.hull.io/docs/users/guest_users) are enabled
 
 ```js
-client.asUser({ external_id: 'externalId' });
+client.asUser({ external_id: "externalId" });
 ```
 
-> Return a hull `client` scoped to the user identified by it's External ID (from your dashboard). Lazily created if [Guest Users](http://www.hull.io/docs/users/guest_users) are enabled
-
-```js
-client.asUser({ anonymous_id: 'anonymousId' });
-```
-
-> Return a hull `client` scoped to the user identified by only by an anonymousId. Lets you start tracking and storing properties from a user before you have a UserID ready for him. Lazily created if [Guest Users](http://www.hull.io/docs/users/guest_users) are enabled
+> Return a hull `client` scoped to the user identified only by an anonymousId. Lets you start tracking and storing properties from a user before you have a UserID ready for him. Lazily created if [Guest Users](http://www.hull.io/docs/users/guest_users) are enabled
 > When you have a UserId, just pass both to link them.
+
+```js
+client.asUser({ anonymous_id: "anonymousId" });
+// or to link anonymousId with userId
+client.asUser({ anonymous_id: "anonymousId", id: "userId" });
+```
+
+> Return a hull `client` scoped to the user identified only by an email. If not found would be created.
 
 ```js
 client.asUser({ email: "user@email.com" });
 ```
 
+> Return a hull `client` scoped to the user identified only by an email, but won't be created when not found, only updates existing user.
+
+```js
+client.asUser({ email: "user@email.com" }, { create: false });
+```
+
+> Return a hull `client` scoped to the user identified only by an email and adds `active` flag to fast track recompute and notifications for that specific user while he remains active. .
+
+```js
+client.asUser({ email: "user@email.com" }, { active: true });
+```
+
 > Return a hull `client` authenticated as the user but with admin privileges
 
 ```js
-client.asUser({ email: 'user@email.com' }, { scopes: ['admin'] });
+client.asUser({ email: "user@email.com" }, { scopes: ["admin"] });
+```
+
+> Return a hull `client` identified by an email and additional aliases - which are passed as an array of unique identifiers
+
+```js
+client.asUser({ email: "user@email.com", aliases: ["namespace:123"] });
+```
+
+> Return a hull `client` identified by an email and additional service_ids - which are passed as an object of unique identifiers
+
+```js
+client.asUser({ email: "user@email.com", service_ids: { serviceName: "serviceId123" } });
 ```
 
 ## Methods for user-scoped instance
@@ -195,15 +222,16 @@ When you do this, you get a new client that has a different behaviour. It's now 
 Stores a new event.
 
 ```js
-user.track('new support ticket', { messages: 3,
-  priority:'high'
+user.track("new support ticket", {
+  messages: 3,
+  priority: "high"
 }, {
-  source: 'zendesk',
-  type: 'ticket',
-  event_id: 'uuid1234' //Pass a unique ID to ensure event de-duplication
-  ip: null, //don't store ip - it's a server call
-  referer: null, //don't store referer - it's a server call
-  created_at: '2013-02-08 09:30:26.123+07:00' //ISO 8601. moment.js does it very well
+  source: "zendesk",
+  type: "ticket",
+  event_id: "uuid1234", // Pass a unique ID to ensure event de-duplication
+  ip: null, // don't store ip - it's a server call
+  referer: null, // don't store referer - it's a server call
+  created_at: "2013-02-08 09:30:26.123+07:00" // ISO 8601. moment.js does it very well
 });
 ```
 
@@ -224,7 +252,7 @@ Stores Attributes on the user:
 ```js
 user.traits({
   opened_tickets: 12
-}, { source: 'zendesk' });
+}, { source: "zendesk" });
 // 'source' is optional. Will store the traits grouped under the source name.
 // Alternatively, you can send properties for multiple groups with the flat syntax:
 user.traits({ "zendesk/opened_tickets": 12, "clearbit/name": "foo" });
@@ -236,7 +264,7 @@ By default the `traits` calls are grouped in background and send to the Hull API
 user.traits({
   fetched_at: new Date().toISOString()
 }, {
-  source: 'mailchimp',
+  source: "mailchimp",
   sync: true
 });
 ```
@@ -250,33 +278,34 @@ The Hull API returns traits in a "flat" format, with '/' delimiters in the key.
 
 ```js
 client.utils.traits.group({
-  'email': 'romain@user',
-  'name': 'name',
-  'traits_coconut_name': 'coconut',
-  'traits_coconut_size': 'large',
-  'traits_cb/twitter_bio': 'parisian',
-  'traits_cb/twitter_name': 'parisian',
-  'traits_group/name': 'groupname',
-  'traits_zendesk/open_tickets': 18
+  mail: "romain@user",
+  name: "name",
+  "traits_coconut_name": "coconut",
+  "traits_coconut_size": "large",
+  "traits_cb/twitter_bio": "parisian",
+  "traits_cb/twitter_name": "parisian",
+  "traits_group/name": "groupname",
+  "traits_zendesk/open_tickets": 18
 });
+
 // returns
 {
-  'id' : '31628736813n1283',
-  'email': 'romain@user',
-  'name': 'name',
-  'traits': {
-    'coconut_name': 'coconut',
-    'coconut_size': 'large'
+  id : "31628736813n1283",
+  email: "romain@user",
+  name: "name",
+  traits: {
+    coconut_name: "coconut",
+    coconut_size: "large"
   },
   cb: {
-    'twitter_bio': 'parisian',
-    'twitter_name': 'parisian'
+    twitter_bio: "parisian",
+    twitter_name: "parisian"
   },
   group: {
-    'name': 'groupname',
+    name: "groupname"
   },
   zendesk: {
-    'open_tickets': 18
+    "open_tickets": 18
   }
 };
 ```
@@ -316,18 +345,18 @@ user.logger.info("message", { hello: "world" });
 ```
 
 
-## Setting a requestId in the logs context 
+## Setting a requestId in the logs context
 
 You can decorate all your logs context with a `request_id` which allows you to group all logs related to a particular request or transaction. 
 
-This identifier can be passed a `requestId` param at the initialization of the Client. 
+This identifier can be passed a `requestId` param at the initialization of the Client.
 
 ```js
-const client = new Hull({ 
+const client = new Hull({
   organization:"193a8881.hullapp.io",
   id:"59e99ec13cd60e5c9d000037",
   secret: "change-me-please",
-  requestId:"123" 
+  requestId:"123"
 });
 > client.logger.info("hello");
 ```
