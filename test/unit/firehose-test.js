@@ -1,7 +1,7 @@
 /* global describe, it */
 const Promise = require("bluebird");
 
-const Batcher = require("../src/lib/firehose");
+const Batcher = require("../../src/lib/firehose");
 
 const { expect } = require("chai");
 

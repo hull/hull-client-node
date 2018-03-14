@@ -14,10 +14,11 @@
   "author": "Romain Dardour <romain@hull.io>",
   "license": "MIT",
   "scripts": {
-    "test": "npm run test:lint && npm run test:flow && npm run test:units",
+    "test": "npm run test:lint && npm run test:flow && npm run test:unit && npm run test:integration",
     "test:lint": "eslint src && documentation lint src/**",
     "test:dependencies": "npm outdated --depth=0",
-    "test:units": "NODE_ENV=test mocha --require babel-register --exit -R spec ./tests/* ./tests/**/* ./spec/*",
+    "test:unit": "NODE_ENV=test mocha --require babel-register --exit -R spec ./tests/unit/** ./test/unit/*",
+    "test:integration": "NODE_ENV=test mocha --require babel-register --exit -R spec ./test/integration/* ./test/integration/**",
     "test:flow": "flow check",
     "clean": "rimraf lib",
     "build": "npm run clean && babel src -d lib && npm run documentation",
