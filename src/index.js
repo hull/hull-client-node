@@ -31,8 +31,8 @@ const logger = new (winston.Logger)({
  * @public
  * @param {Object} config configuration object
  * @param {string} config.id Connector ID - required
- * @param {string} config.secret Connector Secret
- * @param {string} config.organization Hull organization
+ * @param {string} config.secret Connector Secret - required
+ * @param {string} config.organization Hull organization - required
  * @param {string} [config.firehoseUrl=] The url track/traits calls should be sent
  * @param {string} [config.protocol=https] protocol which will be appended to organization url, override for testing only
  * @param {string} [config.prefix=/api/v1] prefix of Hull REST API - only possible value now
@@ -45,7 +45,7 @@ const logger = new (winston.Logger)({
  *   organization: "HULL_ORGANIZATION_DOMAIN"
  * });
  */
-const HullClient = function HullClient(config = {}) {
+const HullClient = function HullClient(config) {
   if (!(this instanceof HullClient)) { return new HullClient(config); }
 
   const clientConfig = new Configuration(config);
@@ -57,13 +57,13 @@ const HullClient = function HullClient(config = {}) {
    * @return {Object} current `HullClient` configuration parameters
    * @example
    * {
-   *   prefix: '/api/v1',
-   *   domain: 'hullapp.io',
-   *   protocol: 'https',
-   *   id: '58765f7de3aa14001999',
-   *   secret: '12347asc855041674dc961af50fc1',
-   *   organization: 'fa4321.hullapp.io',
-   *   version: '0.11.4'
+   *   prefix: "/api/v1",
+   *   domain: "hullapp.io",
+   *   protocol: "https",
+   *   id: "58765f7de3aa14001999",
+   *   secret: "12347asc855041674dc961af50fc1",
+   *   organization: "fa4321.hullapp.io",
+   *   version: "0.13.10"
    * }
    */
   this.configuration = function configuration() {
@@ -146,7 +146,7 @@ const HullClient = function HullClient(config = {}) {
    *
    * @public
    * @param  {Object} claims additionalClaims
-   * @return {string}        [description]
+   * @return {string}        token
    * @example
    * hullClient.asUser({ email: "xxx@example.com", external_id: "1234" }).token(optionalClaims);
    * hullClient.asAccount({ domain: "example.com", external_id: "1234" }).token(optionalClaims);
@@ -202,12 +202,12 @@ const HullClient = function HullClient(config = {}) {
 
   if (config.userClaim || config.accountClaim || config.accessToken) {
     /**
-     * Saves attributes on the user or account.
+     * Saves attributes on the user or account. Only available on User or Account scoped `HullClient` instance (see {@link asUser} and {@link asAccount}).
      *
      * @public
      * @param  {Object} traits            And object with new attributes, it's always flat object, without nested subobjects
      * @param  {Object} [context={}]
-     * @param  {string} [context.source=] Optional source prefix, if applied all traits will be prefixed adding slash
+     * @param  {string} [context.source=] Optional source prefix, if applied all traits will be prefixed with this string (and `/` character)
      * @return {Promise}
      */
     this.traits = (traits, context = {}) => {
@@ -232,11 +232,11 @@ const HullClient = function HullClient(config = {}) {
     };
 
     /**
-     * Stores events on user. Only available on user scoped hullClient instance (see {@link asUser}).
+     * Stores events on user. Only available on User scoped `HullClient` instance (see {@link asUser}).
      *
      * @public
      * @param  {string} event      event name
-     * @param  {Object} properties event properties, additional information about event, this is a one-level JSON object
+     * @param  {Object} properties additional information about event, this is a one-level JSON object
      * @param  {Object} [context={}] The `context` object lets you define event meta-data. Everything is optional
      * @param  {string} [context.source]     Defines a namespace, such as `zendesk`, `mailchimp`, `stripe`
      * @param  {string} [context.type]       Define a event type, such as `mail`, `ticket`, `payment`
@@ -280,9 +280,12 @@ const HullClient = function HullClient(config = {}) {
 
     if (config.userClaim) {
       /**
+       * Available only for User scoped `HullClient` instance (see {@link asUser}).
+       * Returns `HullClient` instance scoped to both User and Account, but all traits/track call would be performed on the User, who will be also linked to the Account.
+       *
        * @public
        * @param  {Object} accountClaim [description]
-       * @return {[type]}              [description]
+       * @return {HullClient} HullClient scoped to a User and linked to an Account
        */
       this.account = (accountClaim = {}) => {
         if (!accountClaim) {
@@ -303,7 +306,7 @@ const HullClient = function HullClient(config = {}) {
 
     /**
      * Takes User Claims (link to User Identity docs) and returnes `HullClient` instance scoped to this User.
-     * This allows to perform `traits` and `track` calls
+     * This makes {@link traits} and {@link track} methods available.
      *
      * @public
      * @param  {Object} userClaim
@@ -322,6 +325,7 @@ const HullClient = function HullClient(config = {}) {
 
     /**
      * Takes Account Claims (link to User Identity docs) and returnes `HullClient` instance scoped to this Account.
+     * This makes {@link traits} method available.
      *
      * @public
      * @param  {Object} accountClaim
