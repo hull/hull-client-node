@@ -23,14 +23,14 @@
 
 ## HullClient
 
-HullClient
+HullClient instance constructor - creates new instance to perform API calls, issue traits/track calls and log information
 
 **Parameters**
 
--   `config` **[Object][19]** configuration object (optional, default `{}`)
+-   `config` **[Object][19]** configuration object
     -   `config.id` **[string][20]** Connector ID - required
-    -   `config.secret` **[string][20]** Connector Secret
-    -   `config.organization` **[string][20]** Hull organization
+    -   `config.secret` **[string][20]** Connector Secret - required
+    -   `config.organization` **[string][20]** Hull organization - required
     -   `config.firehoseUrl` **[string][20]?** The url track/traits calls should be sent
     -   `config.protocol` **[string][20]** protocol which will be appended to organization url, override for testing only (optional, default `https`)
     -   `config.prefix` **[string][20]** prefix of Hull REST API - only possible value now (optional, default `/api/v1`)
@@ -54,21 +54,21 @@ Returns the global configuration object.
 
 ```javascript
 {
-  prefix: '/api/v1',
-  domain: 'hullapp.io',
-  protocol: 'https',
-  id: '58765f7de3aa14001999',
-  secret: '12347asc855041674dc961af50fc1',
-  organization: 'fa4321.hullapp.io',
-  version: '0.11.4'
+  prefix: "/api/v1",
+  domain: "hullapp.io",
+  protocol: "https",
+  id: "58765f7de3aa14001999",
+  secret: "12347asc855041674dc961af50fc1",
+  organization: "fa4321.hullapp.io",
+  version: "0.13.10"
 }
 ```
 
-Returns **[Object][19]** current hullClient configuration parameters
+Returns **[Object][19]** current `HullClient` configuration parameters
 
 ### post
 
-Performs a POST HTTP request on selected url
+Performs a POST HTTP request on selected url of Hull REST API (prefixed with `prefix` param of the constructor)
 
 **Parameters**
 
@@ -80,7 +80,7 @@ Performs a POST HTTP request on selected url
 
 ### del
 
-Performs a DELETE HTTP request on selected url
+Performs a DELETE HTTP request on selected url of Hull REST API (prefixed with `prefix` param of the constructor)
 
 **Parameters**
 
@@ -92,7 +92,7 @@ Performs a DELETE HTTP request on selected url
 
 ### put
 
-Performs a PUT HTTP request on selected url
+Performs a PUT HTTP request on selected url of Hull REST API (prefixed with `prefix` param of the constructor)
 
 **Parameters**
 
@@ -104,7 +104,7 @@ Performs a PUT HTTP request on selected url
 
 ### get
 
-Performs a GET HTTP request on selected url
+Performs a GET HTTP request on selected url of Hull REST API (prefixed with `prefix` param of the constructor)
 
 **Parameters**
 
@@ -131,28 +131,28 @@ hullClient.asUser({ email: "xxx@example.com", external_id: "1234" }).token(optio
 hullClient.asAccount({ domain: "example.com", external_id: "1234" }).token(optionalClaims);
 ```
 
-Returns **[string][20]** [description]
+Returns **[string][20]** token
 
 ### traits
 
-Saves attributes on the user or account.
+Saves attributes on the user or account. Only available on User or Account scoped `HullClient` instance (see [asUser][24] and [asAccount][25]).
 
 **Parameters**
 
 -   `traits` **[Object][19]** And object with new attributes, it's always flat object, without nested subobjects
 -   `context` **[Object][19]**  (optional, default `{}`)
-    -   `context.source` **[string][20]?** Optional source prefix, if applied all traits will be prefixed adding slash
+    -   `context.source` **[string][20]?** Optional source prefix, if applied all traits will be prefixed with this string (and `/` character)
 
-Returns **[Promise][24]** 
+Returns **[Promise][26]** 
 
 ### track
 
-Stores events on user. Only available on user scoped hullClient instance (see [asUser][25]).
+Stores events on user. Only available on User scoped `HullClient` instance (see [asUser][24]).
 
 **Parameters**
 
 -   `event` **[string][20]** event name
--   `properties` **[Object][19]** event properties, additional information about event, this is a one-level JSON object (optional, default `{}`)
+-   `properties` **[Object][19]** additional information about event, this is a one-level JSON object (optional, default `{}`)
 -   `context` **[Object][19]** The `context` object lets you define event meta-data. Everything is optional (optional, default `{}`)
     -   `context.source` **[string][20]?** Defines a namespace, such as `zendesk`, `mailchimp`, `stripe`
     -   `context.type` **[string][20]?** Define a event type, such as `mail`, `ticket`, `payment`
@@ -161,7 +161,7 @@ Stores events on user. Only available on user scoped hullClient instance (see [a
     -   `context.ip` **[string][20]?** Define the Event's IP. Set to `null` if you're storing a server call, otherwise, geoIP will locate this event.
     -   `context.referer` **[string][20]?** Define the Referer. `null` for server calls.
 
-Returns **[Promise][24]** 
+Returns **[Promise][26]** 
 
 ### alias
 
@@ -173,11 +173,14 @@ Returns **\[type]** [description]
 
 ### account
 
+Available only for User scoped `HullClient` instance (see [asUser][24]).
+Returns `HullClient` instance scoped to both User and Account, but all traits/track call would be performed on the User, who will be also linked to the Account.
+
 **Parameters**
 
 -   `accountClaim` **[Object][19]** [description] (optional, default `{}`)
 
-Returns **\[type]** [description]
+Returns **[HullClient][27]** HullClient scoped to a User and linked to an Account
 
 ### as
 
@@ -194,7 +197,7 @@ Returns **\[type]** [description]
 ### asUser
 
 Takes User Claims (link to User Identity docs) and returnes `HullClient` instance scoped to this User.
-This allows to perform `traits` and `track` calls
+This makes [traits][28] and [track][29] methods available.
 
 **Parameters**
 
@@ -202,13 +205,14 @@ This allows to perform `traits` and `track` calls
 -   `additionalClaims` **[Object][19]**  (optional, default `{}`)
 
 
--   Throws **[Error][26]** If no valid claims are passed
+-   Throws **[Error][30]** If no valid claims are passed
 
 Returns **[HullClient][27]** 
 
 ### asAccount
 
 Takes Account Claims (link to User Identity docs) and returnes `HullClient` instance scoped to this Account.
+This makes [traits][28] method available.
 
 **Parameters**
 
@@ -216,7 +220,7 @@ Takes Account Claims (link to User Identity docs) and returnes `HullClient` inst
 -   `additionalClaims` **[Object][19]**  (optional, default `{}`)
 
 
--   Throws **[Error][26]** If no valid claims are passed
+-   Throws **[Error][30]** If no valid claims are passed
 
 Returns **[HullClient][27]** instance scoped to account claims
 
@@ -231,7 +235,7 @@ Returns **[HullClient][27]** instance scoped to account claims
 
 Gets and returns all existing properties in the organization along with their metadata
 
-Returns **[Promise][24]&lt;[Object][19]>** 
+Returns **[Promise][26]&lt;[Object][19]>** 
 
 ### util.settings.update
 
@@ -243,7 +247,7 @@ Note: this method will trigger `hullClient.put` and will result in `ship:update`
 
 -   `newSettings` **[Object][19]** settings to update
 
-Returns **[Promise][24]** 
+Returns **[Promise][26]** 
 
 ### util.traits.group
 
@@ -338,10 +342,16 @@ Returns **[Object][19]** nested object
 
 [23]: http://www.hull.io/docs/users/byou
 
-[24]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise
+[24]: asUser
 
-[25]: asUser
+[25]: asAccount
 
-[26]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Error
+[26]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise
 
 [27]: #hullclient
+
+[28]: traits
+
+[29]: track
+
+[30]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Error
