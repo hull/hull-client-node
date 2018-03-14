@@ -36,7 +36,7 @@ const hullClient = new HullClient({
 });
 ```
 
-Find all configuration options in [API REFERENCE](./API.md#HullClient).
+Find all configuration options in [API REFERENCE](./API.md#hullclient).
 
 ## Calling the API
 
@@ -135,7 +135,7 @@ hullClient.asUser({ email: "user@email.com" });
 hullClient.asUser({ email: "user@email.com" }, { scopes: ["admin"] });
 ```
 
-Find detailed description of those claims scoping methods in [API REFERENCE](./API.md#asUser).
+Find detailed description of those claims scoping methods in [API REFERENCE](./API.md#asuser).
 
 ## Methods for user-scoped instance
 
@@ -199,9 +199,9 @@ Find detailed information about `traits` method in [API REFERENCE](./API.md#trai
 
 HullClient comes with a set of utilities to simplify working with Hull REST API:
 
-- `util.settings.update` - allows to update only part of connector settings, [see details](./API.md#util.settings.update)
-- `util.properties.get` - parse list of attributes stored on organization level, [see details](./API.md#util.properties.get)
-- `util.traits.group` - allows to transform flat list of attributes to nested object, [see details](./API.md#util.traits.group)
+- `util.settings.update` - allows to update only part of connector settings, [see details](./API.md#utilsettingsupdate)
+- `util.properties.get` - parse list of attributes stored on organization level, [see details](./API.md#utilpropertiesget)
+- `util.traits.group` - allows to transform flat list of attributes to nested object, [see details](./API.md#utiltraitsgroup)
 
 ## Logging
 
