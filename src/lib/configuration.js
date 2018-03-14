@@ -23,6 +23,15 @@ const VALID = {
   },
   number(num) {
     return _.isNumber(num) && num > 0;
+  },
+  writableStream(stream) {
+    return stream !== null
+      && typeof stream === "object"
+      && typeof stream.pipe === "function"
+      && stream.writable !== false
+      && typeof stream._write === "function"
+      && typeof stream._writableState === "object"
+      && stream._writableState.objectMode === true;
   }
 };
 
@@ -47,7 +56,8 @@ const VALID_PROPS = {
   flushAt: VALID.number,
   flushAfter: VALID.number,
   connectorName: VALID.string,
-  requestId: VALID.string
+  requestId: VALID.string,
+  writableStream: VALID.writableStream
 };
 
 /**

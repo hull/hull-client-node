@@ -36,6 +36,7 @@ const logger = new (winston.Logger)({
  * @param {string} [config.firehoseUrl=] The url track/traits calls should be sent
  * @param {string} [config.protocol=https] protocol which will be appended to organization url, override for testing only
  * @param {string} [config.prefix=/api/v1] prefix of Hull REST API - only possible value now
+ * @param {string} [config.writableStream] a writable stream which will capture all asynchronous firehose events and logs
  *
  * @example
  * const Hull = require("hull-client");
@@ -49,6 +50,7 @@ const HullClient = function HullClient(config) {
   if (!(this instanceof HullClient)) { return new HullClient(config); }
 
   const clientConfig = new Configuration(config);
+  const conf = clientConfig.get() || {};
 
   /**
    * Returns the global configuration object.
@@ -70,13 +72,40 @@ const HullClient = function HullClient(config) {
     return clientConfig.get();
   };
 
-  const batch = Firehose.getInstance(clientConfig.get(), (params, batcher) => {
-    const firehoseUrl = clientConfig.get("firehoseUrl") || `${clientConfig.get("protocol")}://firehose.${clientConfig.get("domain")}`;
-    return restAPI(this, batcher.config, firehoseUrl, "post", params, {
-      timeout: process.env.BATCH_TIMEOUT || 10000,
-      retry: process.env.BATCH_RETRY || 5000
+  let batch = () => Promise.resolve();
+  if (conf.writableStream) {
+    if (!logger.transports.writableStream) {
+      logger.remove("console");
+      logger.add(winston.transports.File, {
+        name: "writableStream",
+        stream: config.writableStream,
+        level: "info",
+        json: true,
+        stringify: input => input
+      });
+    }
+    batch = (data) => {
+      const token = clientConfig.get("sudo") ? clientConfig.get("secret") : (clientConfig.get("accessToken") || clientConfig.get("secret"));
+      const context = {
+        token,
+        id: clientConfig.get("id"),
+        secret: clientConfig.get("secret"),
+        userId: clientConfig.get("userId"),
+        organization: clientConfig.get("organization")
+      };
+      config.writableStream.write({ context, data });
+      return Promise.resolve();
+    };
+  } else {
+    batch = Firehose.getInstance(clientConfig.get(), (params, batcher) => {
+      const firehoseUrl = clientConfig.get("firehoseUrl") || `${clientConfig.get("protocol")}://firehose.${clientConfig.get("domain")}`;
+      return restAPI(this, batcher.config, firehoseUrl, "post", params, {
+        timeout: process.env.BATCH_TIMEOUT || 10000,
+        retry: process.env.BATCH_RETRY || 5000
+      });
     });
-  });
+  }
+
 
   this.api = function api(url, method, params, options = {}) {
     return restAPI(this, clientConfig, url, method, params, options);
@@ -174,7 +203,6 @@ const HullClient = function HullClient(config) {
     }
   };
 
-  const conf = this.configuration() || {};
   const ctxKeys = _.pick(conf, ["organization", "id", "connectorName", "subjectType", "requestId"]);
   const ctxe = _.mapKeys(ctxKeys, (value, key) => _.snakeCase(key));
 
