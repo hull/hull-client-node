@@ -3,7 +3,7 @@ const { expect } = require("chai");
 const sinon = require("sinon");
 const jwt = require("jwt-simple");
 
-const Hull = require("../src");
+const Hull = require("../../src");
 
 describe("Hull", () => {
   describe("as", () => {

@@ -1,13 +1,14 @@
 /* global it, describe */
 
 const _ = require("lodash");
-
 const chai = require("chai");
+const sinonChai = require("sinon-chai");
+
 const expect = chai.expect;
-chai.use(require("sinon-chai"));
+chai.use(sinonChai);
 chai.should();
 
-const Client = require("../src/index");
+const Client = require("../../src/index");
 
 const config = {
   id: "550964db687ee7866d000057",
@@ -62,7 +63,7 @@ describe("API client", () => {
 
     it("`version` should be forced to package.json value", () => {
       const conf = new Client(_.extend({}, config, { version: "test" })).configuration();
-      conf.version.should.eql(require("../package.json").version);
+      conf.version.should.eql(require("../../package.json").version);
     });
   });
 });

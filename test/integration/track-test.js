@@ -1,7 +1,7 @@
 const { expect } = require("chai");
-const Hull = require("../src");
-
 const Minihull = require("minihull");
+
+const Hull = require("../../src");
 
 describe("client.track()", function test() {
   let client, minihull;

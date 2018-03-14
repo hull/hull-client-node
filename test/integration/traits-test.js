@@ -3,11 +3,13 @@
 const _ = require('lodash');
 const sinon = require('sinon');
 const chai = require('chai');
-const expect = chai.expect;
-chai.use(require('sinon-chai'));
-chai.should();
+const sinonChai = require('sinon-chai');
 
-const Traits = require('../src/utils/traits');
+const Traits = require('../../src/utils/traits');
+
+const expect = chai.expect;
+chai.use(sinonChai);
+chai.should();
 
 describe('Traits.group', () => {
 
