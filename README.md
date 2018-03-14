@@ -239,12 +239,13 @@ This identifier can be passed a `requestId` param at the initialization of the C
 
 ```js
 const client = new Hull({ 
-  organization:"193a8881.hullapp.io",
-  id:"59e99ec13cd60e5c9d000037",
+  organization: "193a8881.hull.io",
+  id: "59e99ec13cd60e5c9d000037",
   secret: "change-me-please",
-  requestId:"123" 
+  requestId: "123"
 });
-> client.logger.info("hello");
+
+client.logger.info("hello");
 ```
 
 will log the following line
