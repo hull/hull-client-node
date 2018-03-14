@@ -202,7 +202,7 @@ const HullClient = function HullClient(config) {
 
   if (config.userClaim || config.accountClaim || config.accessToken) {
     /**
-     * Saves attributes on the user or account. Only available on User or Account scoped `HullClient` instance (see {@link HullClient#asUser} and {@link HullClient#asAccount}).
+     * Saves attributes on the user or account. Only available on User or Account scoped `HullClient` instance (see {@link #asUser} and {@link #asAccount}).
      *
      * @public
      * @param  {Object} traits            And object with new attributes, it's always flat object, without nested subobjects
@@ -232,7 +232,7 @@ const HullClient = function HullClient(config) {
     };
 
     /**
-     * Stores events on user. Only available on User scoped `HullClient` instance (see {@link HullClient#asUser}).
+     * Stores events on user. Only available on User scoped `HullClient` instance (see {@link #asUser}).
      *
      * @public
      * @param  {string} event      event name
@@ -282,7 +282,7 @@ const HullClient = function HullClient(config) {
 
     if (config.userClaim) {
       /**
-       * Available only for User scoped `HullClient` instance (see {@link HullClient#asUser}).
+       * Available only for User scoped `HullClient` instance (see {@link #asUser}).
        * Returns `HullClient` instance scoped to both User and Account, but all traits/track call would be performed on the User, who will be also linked to the Account.
        *
        * @public
@@ -308,7 +308,7 @@ const HullClient = function HullClient(config) {
 
     /**
      * Takes User Claims (link to User Identity docs) and returnes `HullClient` instance scoped to this User.
-     * This makes {@link HullClient#traits} and {@link HullClient#track} methods available.
+     * This makes {@link #traits} and {@link #track} methods available.
      *
      * @public
      * @param  {Object} userClaim
@@ -327,7 +327,7 @@ const HullClient = function HullClient(config) {
 
     /**
      * Takes Account Claims (link to User Identity docs) and returnes `HullClient` instance scoped to this Account.
-     * This makes {@link HullClient#traits} method available.
+     * This makes {@link #traits} method available.
      *
      * @public
      * @param  {Object} accountClaim

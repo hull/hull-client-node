@@ -135,7 +135,7 @@ Returns **[string][20]** token
 
 ### traits
 
-Saves attributes on the user or account. Only available on User or Account scoped `HullClient` instance (see [HullClient#asUser][24] and [HullClient#asAccount][25]).
+Saves attributes on the user or account. Only available on User or Account scoped `HullClient` instance (see [#asUser][24] and [#asAccount][25]).
 
 **Parameters**
 
@@ -147,7 +147,7 @@ Returns **[Promise][26]**
 
 ### track
 
-Stores events on user. Only available on User scoped `HullClient` instance (see [HullClient#asUser][24]).
+Stores events on user. Only available on User scoped `HullClient` instance (see [#asUser][24]).
 
 **Parameters**
 
@@ -175,7 +175,7 @@ Returns **[Promise][26]**
 
 ### account
 
-Available only for User scoped `HullClient` instance (see [HullClient#asUser][24]).
+Available only for User scoped `HullClient` instance (see [#asUser][24]).
 Returns `HullClient` instance scoped to both User and Account, but all traits/track call would be performed on the User, who will be also linked to the Account.
 
 **Parameters**
@@ -199,7 +199,7 @@ Returns **[HullClient][27]** HullClient scoped to a User and linked to an Accoun
 ### asUser
 
 Takes User Claims (link to User Identity docs) and returnes `HullClient` instance scoped to this User.
-This makes [HullClient#traits][28] and [HullClient#track][29] methods available.
+This makes [#traits][8] and [#track][9] methods available.
 
 **Parameters**
 
@@ -207,14 +207,14 @@ This makes [HullClient#traits][28] and [HullClient#track][29] methods available.
 -   `additionalClaims` **[Object][19]**  (optional, default `{}`)
 
 
--   Throws **[Error][30]** If no valid claims are passed
+-   Throws **[Error][28]** If no valid claims are passed
 
 Returns **[HullClient][27]** 
 
 ### asAccount
 
 Takes Account Claims (link to User Identity docs) and returnes `HullClient` instance scoped to this Account.
-This makes [HullClient#traits][28] method available.
+This makes [#traits][8] method available.
 
 **Parameters**
 
@@ -222,7 +222,7 @@ This makes [HullClient#traits][28] method available.
 -   `additionalClaims` **[Object][19]**  (optional, default `{}`)
 
 
--   Throws **[Error][30]** If no valid claims are passed
+-   Throws **[Error][28]** If no valid claims are passed
 
 Returns **[HullClient][27]** instance scoped to account claims
 
@@ -344,16 +344,12 @@ Returns **[Object][19]** nested object
 
 [23]: http://www.hull.io/docs/users/byou
 
-[24]: #hullclientasuser
+[24]: #asUser
 
-[25]: #hullclientasaccount
+[25]: #asAccount
 
 [26]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise
 
 [27]: #hullclient
 
-[28]: #hullclienttraits
-
-[29]: #hullclienttrack
-
-[30]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Error
+[28]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Error
