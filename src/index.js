@@ -202,7 +202,7 @@ const HullClient = function HullClient(config) {
 
   if (config.userClaim || config.accountClaim || config.accessToken) {
     /**
-     * Saves attributes on the user or account. Only available on User or Account scoped `HullClient` instance (see {@link #asUser} and {@link #asAccount}).
+     * Saves attributes on the user or account. Only available on User or Account scoped `HullClient` instance (see {@link #asuser} and {@link #asaccount}).
      *
      * @public
      * @param  {Object} traits            And object with new attributes, it's always flat object, without nested subobjects
@@ -232,7 +232,7 @@ const HullClient = function HullClient(config) {
     };
 
     /**
-     * Stores events on user. Only available on User scoped `HullClient` instance (see {@link #asUser}).
+     * Stores events on user. Only available on User scoped `HullClient` instance (see {@link #asuser}).
      *
      * @public
      * @param  {string} event      event name

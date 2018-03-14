@@ -135,7 +135,7 @@ Returns **[string][20]** token
 
 ### traits
 
-Saves attributes on the user or account. Only available on User or Account scoped `HullClient` instance (see [#asUser][24] and [#asAccount][25]).
+Saves attributes on the user or account. Only available on User or Account scoped `HullClient` instance (see [#asuser][13] and [#asaccount][14]).
 
 **Parameters**
 
@@ -143,11 +143,11 @@ Saves attributes on the user or account. Only available on User or Account scope
 -   `context` **[Object][19]**  (optional, default `{}`)
     -   `context.source` **[string][20]?** Optional source prefix, if applied all traits will be prefixed with this string (and `/` character)
 
-Returns **[Promise][26]** 
+Returns **[Promise][24]** 
 
 ### track
 
-Stores events on user. Only available on User scoped `HullClient` instance (see [#asUser][24]).
+Stores events on user. Only available on User scoped `HullClient` instance (see [#asuser][13]).
 
 **Parameters**
 
@@ -161,7 +161,7 @@ Stores events on user. Only available on User scoped `HullClient` instance (see 
     -   `context.ip` **[string][20]?** Define the Event's IP. Set to `null` if you're storing a server call, otherwise, geoIP will locate this event.
     -   `context.referer` **[string][20]?** Define the Referer. `null` for server calls.
 
-Returns **[Promise][26]** 
+Returns **[Promise][24]** 
 
 ### alias
 
@@ -171,18 +171,18 @@ Issues an `alias` event on user?
 
 -   `body` **[Object][19]** 
 
-Returns **[Promise][26]** 
+Returns **[Promise][24]** 
 
 ### account
 
-Available only for User scoped `HullClient` instance (see [#asUser][24]).
+Available only for User scoped `HullClient` instance (see [#asUser][25]).
 Returns `HullClient` instance scoped to both User and Account, but all traits/track call would be performed on the User, who will be also linked to the Account.
 
 **Parameters**
 
 -   `accountClaim` **[Object][19]** [description] (optional, default `{}`)
 
-Returns **[HullClient][27]** HullClient scoped to a User and linked to an Account
+Returns **[HullClient][26]** HullClient scoped to a User and linked to an Account
 
 ### as
 
@@ -207,9 +207,9 @@ This makes [#traits][8] and [#track][9] methods available.
 -   `additionalClaims` **[Object][19]**  (optional, default `{}`)
 
 
--   Throws **[Error][28]** If no valid claims are passed
+-   Throws **[Error][27]** If no valid claims are passed
 
-Returns **[HullClient][27]** 
+Returns **[HullClient][26]** 
 
 ### asAccount
 
@@ -222,9 +222,9 @@ This makes [#traits][8] method available.
 -   `additionalClaims` **[Object][19]**  (optional, default `{}`)
 
 
--   Throws **[Error][28]** If no valid claims are passed
+-   Throws **[Error][27]** If no valid claims are passed
 
-Returns **[HullClient][27]** instance scoped to account claims
+Returns **[HullClient][26]** instance scoped to account claims
 
 ### util.groupTraits
 
@@ -237,7 +237,7 @@ Returns **[HullClient][27]** instance scoped to account claims
 
 Gets and returns all existing properties in the organization along with their metadata
 
-Returns **[Promise][26]&lt;[Object][19]>** 
+Returns **[Promise][24]&lt;[Object][19]>** 
 
 ### util.settings.update
 
@@ -249,7 +249,7 @@ Note: this method will trigger `hullClient.put` and will result in `ship:update`
 
 -   `newSettings` **[Object][19]** settings to update
 
-Returns **[Promise][26]** 
+Returns **[Promise][24]** 
 
 ### util.traits.group
 
@@ -344,12 +344,10 @@ Returns **[Object][19]** nested object
 
 [23]: http://www.hull.io/docs/users/byou
 
-[24]: #asUser
+[24]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise
 
-[25]: #asAccount
+[25]: #asUser
 
-[26]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise
+[26]: #hullclient
 
-[27]: #hullclient
-
-[28]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Error
+[27]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Error
