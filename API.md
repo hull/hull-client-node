@@ -27,13 +27,13 @@ HullClient
 
 **Parameters**
 
--   `config` **[Object][19]** [description] (optional, default `{}`)
-    -   `config.id` **[string][20]** [description]
-    -   `config.secret` **[string][20]** [description]
-    -   `config.organization` **[string][20]** [description]
-    -   `config.firehoseUrl` **[string][20]?** 
-    -   `config.protocol` **[string][20]**  (optional, default `https`)
-    -   `config.prefix` **[string][20]**  (optional, default `/api/v1`)
+-   `config` **[Object][19]** configuration object (optional, default `{}`)
+    -   `config.id` **[string][20]** Connector ID - required
+    -   `config.secret` **[string][20]** Connector Secret
+    -   `config.organization` **[string][20]** Hull organization
+    -   `config.firehoseUrl` **[string][20]?** The url track/traits calls should be sent
+    -   `config.protocol` **[string][20]** protocol which will be appended to organization url, override for testing only (optional, default `https`)
+    -   `config.prefix` **[string][20]** prefix of Hull REST API - only possible value now (optional, default `/api/v1`)
 
 **Examples**
 
@@ -68,6 +68,8 @@ Returns **[Object][19]** current hullClient configuration parameters
 
 ### post
 
+Performs a POST HTTP request on selected url
+
 **Parameters**
 
 -   `url` **[string][20]** 
@@ -77,6 +79,8 @@ Returns **[Object][19]** current hullClient configuration parameters
     -   `options.retry` **[Number][21]?** controls the time between timeout or 503 error occurence and the next retry being done
 
 ### del
+
+Performs a DELETE HTTP request on selected url
 
 **Parameters**
 
@@ -88,6 +92,8 @@ Returns **[Object][19]** current hullClient configuration parameters
 
 ### put
 
+Performs a PUT HTTP request on selected url
+
 **Parameters**
 
 -   `url` **[string][20]** 
@@ -97,6 +103,8 @@ Returns **[Object][19]** current hullClient configuration parameters
     -   `options.retry` **[Number][21]?** controls the time between timeout or 503 error occurence and the next retry being done
 
 ### get
+
+Performs a GET HTTP request on selected url
 
 **Parameters**
 
@@ -127,22 +135,24 @@ Returns **[string][20]** [description]
 
 ### traits
 
-Sets attributes on the user or account
+Saves attributes on the user or account.
 
 **Parameters**
 
--   `traits` **[Object][19]** And object with new attributes
+-   `traits` **[Object][19]** And object with new attributes, it's always flat object, without nested subobjects
 -   `context` **[Object][19]**  (optional, default `{}`)
-    -   `context.source` **[string][20]?** Optional source prefix
+    -   `context.source` **[string][20]?** Optional source prefix, if applied all traits will be prefixed adding slash
 
 Returns **[Promise][24]** 
 
 ### track
 
+Stores events on user. Only available on user scoped hullClient instance (see [asUser][25]).
+
 **Parameters**
 
 -   `event` **[string][20]** event name
--   `properties` **[Object][19]** event properties, additional information about event (optional, default `{}`)
+-   `properties` **[Object][19]** event properties, additional information about event, this is a one-level JSON object (optional, default `{}`)
 -   `context` **[Object][19]** The `context` object lets you define event meta-data. Everything is optional (optional, default `{}`)
     -   `context.source` **[string][20]?** Defines a namespace, such as `zendesk`, `mailchimp`, `stripe`
     -   `context.type` **[string][20]?** Define a event type, such as `mail`, `ticket`, `payment`
@@ -178,12 +188,13 @@ Returns **\[type]** [description]
 
 **Meta**
 
--   **deprecated**: Use asUser instead
+-   **deprecated**: Use `asUser` instead
 
 
 ### asUser
 
-Eeturns client scoped to User Claims
+Takes User Claims (link to User Identity docs) and returnes `HullClient` instance scoped to this User.
+This allows to perform `traits` and `track` calls
 
 **Parameters**
 
@@ -191,13 +202,13 @@ Eeturns client scoped to User Claims
 -   `additionalClaims` **[Object][19]**  (optional, default `{}`)
 
 
--   Throws **[Error][25]** If no valid claims are passed
+-   Throws **[Error][26]** If no valid claims are passed
 
-Returns **[HullClient][26]** 
+Returns **[HullClient][27]** 
 
 ### asAccount
 
-Returns an instance scoped to account claims
+Takes Account Claims (link to User Identity docs) and returnes `HullClient` instance scoped to this Account.
 
 **Parameters**
 
@@ -205,9 +216,9 @@ Returns an instance scoped to account claims
 -   `additionalClaims` **[Object][19]**  (optional, default `{}`)
 
 
--   Throws **[Error][25]** If no valid claims are passed
+-   Throws **[Error][26]** If no valid claims are passed
 
-Returns **[HullClient][26]** instance scoped to account claims
+Returns **[HullClient][27]** instance scoped to account claims
 
 ### util.groupTraits
 
@@ -329,6 +340,8 @@ Returns **[Object][19]** nested object
 
 [24]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise
 
-[25]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Error
+[25]: asUser
 
-[26]: #hullclient
+[26]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Error
+
+[27]: #hullclient

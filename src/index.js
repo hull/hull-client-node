@@ -25,17 +25,17 @@ const logger = new (winston.Logger)({
 });
 
 /**
- * HullClient
+ * HullClient instance constructor - creates new instance to perform API calls, issue traits/track calls and log information
  *
  * @class
  * @public
- * @param {Object} config [description]
- * @param {string} config.id [description]
- * @param {string} config.secret [description]
- * @param {string} config.organization [description]
- * @param {string} [config.firehoseUrl=]
- * @param {string} [config.protocol=https]
- * @param {string} [config.prefix=/api/v1]
+ * @param {Object} config configuration object
+ * @param {string} config.id Connector ID - required
+ * @param {string} config.secret Connector Secret
+ * @param {string} config.organization Hull organization
+ * @param {string} [config.firehoseUrl=] The url track/traits calls should be sent
+ * @param {string} [config.protocol=https] protocol which will be appended to organization url, override for testing only
+ * @param {string} [config.prefix=/api/v1] prefix of Hull REST API - only possible value now
  *
  * @example
  * const Hull = require("hull-client");
@@ -54,7 +54,7 @@ const HullClient = function HullClient(config = {}) {
    * Returns the global configuration object.
    *
    * @public
-   * @return {Object} current hullClient configuration parameters
+   * @return {Object} current `HullClient` configuration parameters
    * @example
    * {
    *   prefix: '/api/v1',
@@ -83,6 +83,7 @@ const HullClient = function HullClient(config = {}) {
   };
 
   /**
+   * Performs a GET HTTP request on selected url of Hull REST API (prefixed with `prefix` param of the constructor)
    * @function get
    * @alias api.get
    * @public
@@ -94,6 +95,7 @@ const HullClient = function HullClient(config = {}) {
    * @param {Number} [options.retry] controls the time between timeout or 503 error occurence and the next retry being done
    */
   /**
+   * Performs a POST HTTP request on selected url of Hull REST API (prefixed with `prefix` param of the constructor)
    * @function post
    * @alias api.post
    * @public
@@ -105,6 +107,7 @@ const HullClient = function HullClient(config = {}) {
    * @param {Number} [options.retry] controls the time between timeout or 503 error occurence and the next retry being done
    */
   /**
+   * Performs a PUT HTTP request on selected url of Hull REST API (prefixed with `prefix` param of the constructor)
    * @function put
    * @alias api.put
    * @public
@@ -116,6 +119,7 @@ const HullClient = function HullClient(config = {}) {
    * @param {Number} [options.retry] controls the time between timeout or 503 error occurence and the next retry being done
    */
   /**
+   * Performs a DELETE HTTP request on selected url of Hull REST API (prefixed with `prefix` param of the constructor)
    * @function del
    * @alias api.del
    * @public
@@ -198,12 +202,12 @@ const HullClient = function HullClient(config = {}) {
 
   if (config.userClaim || config.accountClaim || config.accessToken) {
     /**
-     * Sets attributes on the user or account
+     * Saves attributes on the user or account.
      *
      * @public
-     * @param  {Object} traits            And object with new attributes
+     * @param  {Object} traits            And object with new attributes, it's always flat object, without nested subobjects
      * @param  {Object} [context={}]
-     * @param  {string} [context.source=] Optional source prefix
+     * @param  {string} [context.source=] Optional source prefix, if applied all traits will be prefixed adding slash
      * @return {Promise}
      */
     this.traits = (traits, context = {}) => {
@@ -228,9 +232,11 @@ const HullClient = function HullClient(config = {}) {
     };
 
     /**
+     * Stores events on user. Only available on user scoped hullClient instance (see {@link asUser}).
+     *
      * @public
      * @param  {string} event      event name
-     * @param  {Object} properties event properties, additional information about event
+     * @param  {Object} properties event properties, additional information about event, this is a one-level JSON object
      * @param  {Object} [context={}] The `context` object lets you define event meta-data. Everything is optional
      * @param  {string} [context.source]     Defines a namespace, such as `zendesk`, `mailchimp`, `stripe`
      * @param  {string} [context.type]       Define a event type, such as `mail`, `ticket`, `payment`
@@ -288,7 +294,7 @@ const HullClient = function HullClient(config = {}) {
   } else {
     /**
      * @public
-     * @deprecated Use asUser instead
+     * @deprecated Use `asUser` instead
      */
     this.as = (userClaim, additionalClaims = {}) => {
       this.logger.warn("client.deprecation", { message: "use client.asUser instead of client.as" });
@@ -296,7 +302,8 @@ const HullClient = function HullClient(config = {}) {
     };
 
     /**
-     * Eeturns client scoped to User Claims
+     * Takes User Claims (link to User Identity docs) and returnes `HullClient` instance scoped to this User.
+     * This allows to perform `traits` and `track` calls
      *
      * @public
      * @param  {Object} userClaim
@@ -314,7 +321,7 @@ const HullClient = function HullClient(config = {}) {
     };
 
     /**
-     * Returns an instance scoped to account claims
+     * Takes Account Claims (link to User Identity docs) and returnes `HullClient` instance scoped to this Account.
      *
      * @public
      * @param  {Object} accountClaim
