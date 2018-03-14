@@ -3,7 +3,7 @@ const { Writable } = require("stream");
 const { expect } = require("chai");
 const sinon = require("sinon");
 
-const HullClient = require("../src/index");
+const HullClient = require("../../src/index");
 
 const config = {
   id: "550964db687ee7866d000057",
