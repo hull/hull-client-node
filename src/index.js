@@ -266,9 +266,11 @@ const HullClient = function HullClient(config) {
     // Allow alias only for users
     if (config.userClaim || config.accessToken) {
       /**
+       * Issues an `alias` event on user?
+       * @todo
        * @public
-       * @param  {[type]} body [description]
-       * @return {[type]}      [description]
+       * @param  {Object} body
+       * @return {Promise}
        */
       this.alias = (body) => {
         return batch({

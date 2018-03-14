@@ -165,11 +165,13 @@ Returns **[Promise][26]**
 
 ### alias
 
+Issues an `alias` event on user?
+
 **Parameters**
 
--   `body` **\[type]** [description]
+-   `body` **[Object][19]** 
 
-Returns **\[type]** [description]
+Returns **[Promise][26]** 
 
 ### account
 
