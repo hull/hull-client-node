@@ -283,7 +283,7 @@ const HullClient = function HullClient(config) {
 
     if (config.userClaim) {
       /**
-       * Available only for User scoped `HullClient` instance (see {@link #asUser}).
+       * Available only for User scoped `HullClient` instance (see {@link #asuser}).
        * Returns `HullClient` instance scoped to both User and Account, but all traits/track call would be performed on the User, who will be also linked to the Account.
        *
        * @public

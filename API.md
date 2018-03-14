@@ -176,14 +176,14 @@ Returns **[Promise][24]**
 
 ### account
 
-Available only for User scoped `HullClient` instance (see [#asUser][25]).
+Available only for User scoped `HullClient` instance (see [#asuser][13]).
 Returns `HullClient` instance scoped to both User and Account, but all traits/track call would be performed on the User, who will be also linked to the Account.
 
 **Parameters**
 
 -   `accountClaim` **[Object][19]** [description] (optional, default `{}`)
 
-Returns **[HullClient][26]** HullClient scoped to a User and linked to an Account
+Returns **[HullClient][25]** HullClient scoped to a User and linked to an Account
 
 ### as
 
@@ -206,14 +206,14 @@ This makes [#traits][8] and [#track][9] methods available.
 
 -   `userClaim` **[Object][19]** 
 -   `additionalClaims` **[Object][19]**  (optional, default `{}`)
-    -   `additionalClaims.create` **[boolean][27]** marks if the user should be lazily created if not found (optional, default `true`)
-    -   `additionalClaims.scopes` **[Array][28]** adds scopes claim to the JWT to impersonate a User with admin rights (optional, default `[]`)
+    -   `additionalClaims.create` **[boolean][26]** marks if the user should be lazily created if not found (optional, default `true`)
+    -   `additionalClaims.scopes` **[Array][27]** adds scopes claim to the JWT to impersonate a User with admin rights (optional, default `[]`)
     -   `additionalClaims.active` **[string][20]** marks the user as _active_ meaning a reduced latency at the expense of scalability. Don't use for high volume updates (optional, default `false`)
 
 
--   Throws **[Error][29]** if no valid claims are passed
+-   Throws **[Error][28]** if no valid claims are passed
 
-Returns **[HullClient][26]** 
+Returns **[HullClient][25]** 
 
 ### asAccount
 
@@ -226,9 +226,9 @@ This makes [#traits][8] method available.
 -   `additionalClaims` **[Object][19]**  (optional, default `{}`)
 
 
--   Throws **[Error][29]** If no valid claims are passed
+-   Throws **[Error][28]** If no valid claims are passed
 
-Returns **[HullClient][26]** instance scoped to account claims
+Returns **[HullClient][25]** instance scoped to account claims
 
 ### util.groupTraits
 
@@ -350,12 +350,10 @@ Returns **[Object][19]** nested object
 
 [24]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise
 
-[25]: #asUser
+[25]: #hullclient
 
-[26]: #hullclient
+[26]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean
 
-[27]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean
+[27]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array
 
-[28]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array
-
-[29]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Error
+[28]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Error

@@ -60,7 +60,7 @@ to send with the request. They all return Promises so you can use the `.then()` 
 
 Find detailed description of those api methods in [API REFERENCE](./API.md#get).
 
-## Impersonating a User
+## Impersonating an User
 
 One of the more frequent use case is to store attributes and events with the identity of a given user. We provide several methods to do so.
 
