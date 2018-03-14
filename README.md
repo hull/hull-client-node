@@ -20,7 +20,7 @@
 
 # HullClient
 
-This library makes it easy to interact with the Hull API, send tracking and properties and handle Server-side Events we send to installed Ships.
+This library makes it easy to interact with the Hull API, store events and properties on users and accounts.
 
 Creating a new Hull client is pretty straightforward:
 
@@ -36,12 +36,12 @@ const hullClient = new HullClient({
 });
 ```
 
-Find all configuration options in [API REFERENCE](./API.md#hullclient).
+Find all required and optional configuration options in [API REFERENCE](./API.md#hullclient).
 
 ## Calling the API
 
-Once you have instantiated a client, you can use one of the `get`, `post`,
-`put`or `delete` methods to perform actions of our [HTTP API](https://www.hull.io/docs/references/api/).
+Once you have instantiated a `HullClient`, you can use one of the `get`, `post`,
+`put`or `del` methods to perform actions of our [HTTP API](https://www.hull.io/docs/references/api/).
 
 ```js
 // `client.api.get` works too.
@@ -56,25 +56,25 @@ hullClient.get(path, params)
 ```
 
 The first parameter is the route, the second is the set of parameters you want
-to send with the request. They all return Promises so you can use the `.then()` syntax if you're more inclined.
+to send with the request. They all return Promises so you can use the `.then()` syntax.
 
 Find detailed description of those api methods in [API REFERENCE](./API.md#get).
 
-## Impersonating a User - client.asUser()
+## Impersonating a User
 
-One of the more frequent use case is to perform API calls with the identity of a given user. We provide several methods to do so.
+One of the more frequent use case is to store attributes and events with the identity of a given user. We provide several methods to do so.
 
 ```js
 // if you have a user id from your database, use the `external_id` field
-const user = client.asUser({ external_id: "dkjf565wd654e" });
+const user = hullClient.asUser({ external_id: "dkjf565wd654e" });
 
 // if you have a Hull Internal User Id:
-const user = client.asUser({ id: "5718b59b7a85ebf20e000169" });
+const user = hullClient.asUser({ id: "5718b59b7a85ebf20e000169" });
 // or just as a string:
-const user = client.asUser("5718b59b7a85ebf20e000169");
+const user = hullClient.asUser("5718b59b7a85ebf20e000169");
 
 // you can optionally pass additional user resolution options as a second argument:
-const user = client.asUser({ id: "5718b59b7a85ebf20e000169" }, { create: false });
+const user = hullClient.asUser({ id: "5718b59b7a85ebf20e000169" }, { create: false });
 
 // Constant `user` is an instance of Hull, scoped to a specific user.
 user.get("/me").then(function(me) {
@@ -85,8 +85,7 @@ user.userToken();
 
 You can use an internal Hull `id`, an ID from your database that we call `external_id`, an `email` address or `anonymous_id`.
 
-Assigning the `user` variable doesn't make an API call, it 
-the calls to another instance of `hull` client. This means `user` is an instance of the `hull` client scoped to this user.
+Using `asUser` method doesn't make an API call, it just returnes scoped instance of `HullClient`.
 
 The second parameter lets you define additional options (JWT claims) passed to the user resolution script:
 
@@ -98,38 +97,38 @@ The second parameter lets you define additional options (JWT claims) passed to t
 
 ### Possible usage
 
-> Return a hull `client` scoped to the user identified by it's Hull ID. Not lazily created. Needs an existing User
+> Return a `HullClient` scoped to the user identified by it's Hull ID. Not lazily created. Needs an existing User
 
 ```js
 hullClient.asUser(userId);
 ```
 
-> Return a hull `client` scoped to the user identified by it's Social network ID. Lazily created if [Guest Users](http://www.hull.io/docs/users/guest_users) are enabled
+> Return a `HullClient` scoped to the user identified by it's Social network ID. Lazily created if [Guest Users](http://www.hull.io/docs/users/guest_users) are enabled
 
 ```js
 hullClient.asUser("instagram|facebook|google:userId");
 ```
 
-> Return a hull `client` scoped to the user identified by it's External ID (from your dashboard). Lazily created if [Guest Users](http://www.hull.io/docs/users/guest_users) are enabled
+> Return a `HullClient` scoped to the user identified by it's External ID (from your dashboard). Lazily created if [Guest Users](http://www.hull.io/docs/users/guest_users) are enabled
 
 ```js
 hullClient.asUser({ external_id: "externalId" });
 ```
 
-> Return a hull `client` scoped to the user identified by it's External ID (from your dashboard). Lazily created if [Guest Users](http://www.hull.io/docs/users/guest_users) are enabled
+> Return a `HullClient` scoped to the user identified by it's External ID (from your dashboard). Lazily created if [Guest Users](http://www.hull.io/docs/users/guest_users) are enabled
 
 ```js
 hullClient.asUser({ anonymous_id: "anonymousId" });
 ```
 
-> Return a hull `client` scoped to the user identified by only by an anonymousId. Lets you start tracking and storing properties from a user before you have a UserID ready for him. Lazily created if [Guest Users](http://www.hull.io/docs/users/guest_users) are enabled
+> Return a `HullClient` scoped to the user identified by only by an anonymousId. Lets you start tracking and storing properties from a user before you have a UserID ready for him. Lazily created if [Guest Users](http://www.hull.io/docs/users/guest_users) are enabled
 > When you have a UserId, just pass both to link them.
 
 ```js
 hullClient.asUser({ email: "user@email.com" });
 ```
 
-> Return a hull `client` authenticated as the user but with admin privileges
+> Return a hull `HullClient` authenticated as the user but with admin privileges
 
 ```js
 hullClient.asUser({ email: "user@email.com" }, { scopes: ["admin"] });
@@ -153,11 +152,11 @@ When you do this, you get a new client that has a different behaviour. It's now 
 Stores a new event.
 
 ```js
-user.track("new support ticket", {
+hullClient.asUser({ email: "foo@hull.io" }).track("new support ticket", {
   messages: 3,
   priority: "high"
 }, {
-  source: 'zendesk',
+  source: "zendesk",
   type: 'ticket',
   event_id: 'uuid1234' //Pass a unique ID to ensure event de-duplication
   ip: null, //don't store ip - it's a server call
@@ -188,7 +187,7 @@ By default the `traits` calls are grouped in background and send to the Hull API
 user.traits({
   fetched_at: new Date().toISOString()
 }, {
-  source: 'mailchimp',
+  source: "mailchimp",
   sync: true
 });
 ```
@@ -197,7 +196,7 @@ Find detailed information about `traits` method in [API REFERENCE](./API.md#trai
 
 ## Utils
 
-HullClient comes with a set of utilities to simplify working with Hull REST API:
+`HullClient` comes with a set of utilities to simplify working with Hull REST API:
 
 - `util.settings.update` - allows to update only part of connector settings, [see details](./API.md#utilsettingsupdate)
 - `util.properties.get` - parse list of attributes stored on organization level, [see details](./API.md#utilpropertiesget)

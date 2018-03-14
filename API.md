@@ -139,9 +139,10 @@ Saves attributes on the user or account. Only available on User or Account scope
 
 **Parameters**
 
--   `traits` **[Object][19]** And object with new attributes, it's always flat object, without nested subobjects
+-   `traits` **[Object][19]** object with new attributes, it's always flat object, without nested subobjects
 -   `context` **[Object][19]**  (optional, default `{}`)
-    -   `context.source` **[string][20]?** Optional source prefix, if applied all traits will be prefixed with this string (and `/` character)
+    -   `context.source` **[string][20]?** optional source prefix, if applied all traits will be prefixed with this string (and `/` character)
+    -   `context.sync` **[string][20]** make the operation synchronous (optional, default `false`)
 
 Returns **[Promise][24]** 
 
@@ -205,9 +206,12 @@ This makes [#traits][8] and [#track][9] methods available.
 
 -   `userClaim` **[Object][19]** 
 -   `additionalClaims` **[Object][19]**  (optional, default `{}`)
+    -   `additionalClaims.create` **[boolean][27]** marks if the user should be lazily created if not found (optional, default `true`)
+    -   `additionalClaims.scopes` **[Array][28]** adds scopes claim to the JWT to impersonate a User with admin rights (optional, default `[]`)
+    -   `additionalClaims.active` **[string][20]** marks the user as _active_ meaning a reduced latency at the expense of scalability. Don't use for high volume updates (optional, default `false`)
 
 
--   Throws **[Error][27]** If no valid claims are passed
+-   Throws **[Error][29]** if no valid claims are passed
 
 Returns **[HullClient][26]** 
 
@@ -222,7 +226,7 @@ This makes [#traits][8] method available.
 -   `additionalClaims` **[Object][19]**  (optional, default `{}`)
 
 
--   Throws **[Error][27]** If no valid claims are passed
+-   Throws **[Error][29]** If no valid claims are passed
 
 Returns **[HullClient][26]** instance scoped to account claims
 
@@ -350,4 +354,8 @@ Returns **[Object][19]** nested object
 
 [26]: #hullclient
 
-[27]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Error
+[27]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean
+
+[28]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array
+
+[29]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Error

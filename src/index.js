@@ -205,9 +205,10 @@ const HullClient = function HullClient(config) {
      * Saves attributes on the user or account. Only available on User or Account scoped `HullClient` instance (see {@link #asuser} and {@link #asaccount}).
      *
      * @public
-     * @param  {Object} traits            And object with new attributes, it's always flat object, without nested subobjects
+     * @param  {Object} traits            object with new attributes, it's always flat object, without nested subobjects
      * @param  {Object} [context={}]
-     * @param  {string} [context.source=] Optional source prefix, if applied all traits will be prefixed with this string (and `/` character)
+     * @param  {string} [context.source=] optional source prefix, if applied all traits will be prefixed with this string (and `/` character)
+     * @param  {string} [context.sync=false] make the operation synchronous
      * @return {Promise}
      */
     this.traits = (traits, context = {}) => {
@@ -311,9 +312,13 @@ const HullClient = function HullClient(config) {
      * This makes {@link #traits} and {@link #track} methods available.
      *
      * @public
-     * @param  {Object} userClaim
-     * @param  {Object} additionalClaims
-     * @throws {Error} If no valid claims are passed
+     * @param {Object} userClaim
+     * @param {Object}  [additionalClaims={}]
+     * @param {boolean} [additionalClaims.create=true] marks if the user should be lazily created if not found
+     * @param {Array}   [additionalClaims.scopes=[]] adds scopes claim to the JWT to impersonate a User with admin rights
+     * @param {string}  [additionalClaims.active=false] marks the user as _active_ meaning a reduced latency at the expense of scalability. Don't use for high volume updates
+     *
+     * @throws {Error} if no valid claims are passed
      * @return {HullClient}
      */
     this.asUser = (userClaim, additionalClaims = {}) => {
