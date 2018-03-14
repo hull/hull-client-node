@@ -1,13 +1,13 @@
 /* global it, describe */
 
-import _ from "lodash";
+const _ = require("lodash");
 
-import chai from "chai";
+const chai = require("chai");
 const expect = chai.expect;
 chai.use(require("sinon-chai"));
 chai.should();
 
-import Client from "../src/index";
+const Client = require("../src/index");
 
 const config = {
   id: "550964db687ee7866d000057",

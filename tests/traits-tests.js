@@ -1,7 +1,7 @@
 /* global describe, it */
 
-import { group, normalize } from "../src/utils/traits";
-import { user } from "./fixtures";
+const { group, normalize } = require("../src/utils/traits");
+const { user } = require("./fixtures");
 
 const { expect, should } = require("chai");
 should();

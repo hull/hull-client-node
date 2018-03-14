@@ -1,4 +1,4 @@
-import _ from "lodash";
+const _ = require("lodash");
 
 function getProperties(raw, path, id_path) {
   const properties = {};
@@ -7,7 +7,9 @@ function getProperties(raw, path, id_path) {
   _.each(raw, (props) => {
     const title = props.text || props.name;
     const key = props.id || props.key;
-    const node = { ...props, id_path, path, title, key };
+    const node = {
+      ...props, id_path, path, title, key
+    };
 
     if (key) {
       properties[key] = node;
@@ -27,13 +29,19 @@ function getProperties(raw, path, id_path) {
   return { properties, tree };
 }
 
-
 /**
- * gets all existing Properties in the organization along with their metadata
- * @return {Promise}
+ * Gets and returns all existing properties in the organization along with their metadata
+ * @memberof HullClient
+ * @method   util.properties.get
+ * @public
+ * @return   {Promise<Object>}
  */
-export function get() { // eslint-disable-line import/prefer-default-export
+function get() {
   return this
     .get("search/user_reports/bootstrap")
     .then(({ tree }) => getProperties(tree).properties);
 }
+
+module.exports = {
+  get
+};

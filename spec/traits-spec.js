@@ -1,14 +1,13 @@
-"use strict";
 /* global it, describe */
 
-var _ = require('lodash');
-var sinon = require('sinon');
-var chai = require('chai');
-var expect = chai.expect;
+const _ = require('lodash');
+const sinon = require('sinon');
+const chai = require('chai');
+const expect = chai.expect;
 chai.use(require('sinon-chai'));
 chai.should();
 
-var Traits = require('../src/utils/traits');
+const Traits = require('../src/utils/traits');
 
 describe('Traits.group', () => {
 

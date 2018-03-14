@@ -1,7 +1,48 @@
 // @flow
-import _ from "lodash";
-
-export function group(user: Object): Object {
+const _ = require("lodash");
+/**
+ * The Hull API returns traits in a "flat" format, with '/' delimiters in the key.
+ * This method can be used to group those traits into subobjects:
+ *
+ * @memberof HullClient
+ * @method   util.traits.group
+ * @public
+ * @param  {Object} user flat object
+ * @return {Object} nested object
+ * @example
+ * hullClient.utils.traits.group({
+ *   email: "romain@user",
+ *   name: "name",
+ *   "traits_coconut_name": "coconut",
+ *   "traits_coconut_size": "large",
+ *   "traits_cb/twitter_bio": "parisian",
+ *   "traits_cb/twitter_name": "parisian",
+ *   "traits_group/name": "groupname",
+ *   "traits_zendesk/open_tickets": 18
+ * });
+ *
+ * // returns
+ * {
+ *   "email": "romain@user",
+ *   "name": "name",
+ *   "traits": {
+ *     "coconut_name": "coconut",
+ *     "coconut_size": "large"
+ *   },
+ *   "cb": {
+ *     "twitter_bio": "parisian",
+ *     "twitter_name": "parisian"
+ *   },
+ *   "group": {
+ *     "name": "groupname"
+ *   },
+ *   "zendesk": {
+ *     "open_tickets": 18
+ *   }
+ * };
+ * ```
+ */
+function group(user: Object): Object {
   return _.reduce(user, (grouped, value, key) => {
     let dest = key;
     if (key.match(/^traits_/)) {
@@ -15,7 +56,7 @@ export function group(user: Object): Object {
   }, {});
 }
 
-export function normalize(traits: Object): Object {
+function normalize(traits: Object): Object {
   return _.reduce(traits, (memo, value, key) => {
     if (!_.isObject(value)) {
       value = { operation: "set", value };
@@ -25,3 +66,8 @@ export function normalize(traits: Object): Object {
     return memo;
   }, {});
 }
+
+module.exports = {
+  group,
+  normalize
+};

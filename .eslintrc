@@ -2,7 +2,8 @@
   "parser": "babel-eslint",
   "globals": {},
   "env": {
-    "es6": true
+    "es6": true,
+    "node": true
   },
   "rules": {
     "comma-dangle": [0],
@@ -15,7 +16,17 @@
     "arrow-body-style" : [0],
     "no-param-reassign" : [0],
     "no-console": [0],
-    "eqeqeq": [1]
+    "eqeqeq": [1],
+    "prefer-destructuring": [0],
+    "class-methods-use-this": [0],
+    "flowtype-errors/show-errors": 2
   },
-  "extends": "airbnb-base"
+  "extends": [
+    "airbnb-base",
+    "plugin:flowtype/recommended"
+  ],
+  "plugins": [
+    "flowtype",
+    "flowtype-errors"
+  ],
 }

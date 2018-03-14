@@ -1,7 +1,7 @@
-import { expect } from "chai";
-import Hull from "../src";
+const { expect } = require("chai");
+const Hull = require("../src");
 
-import Minihull from "minihull";
+const Minihull = require("minihull");
 
 describe("client retrying", function test() {
   let minihull, client;

@@ -1,5 +1,5 @@
-import _ from "lodash";
-import Configuration from "./configuration";
+const _ = require("lodash");
+const Configuration = require("./configuration");
 
 const BATCHERS = {};
 
@@ -7,9 +7,10 @@ global.setImmediate = global.setImmediate || process.nextTick.bind(process);
 
 
 class FirehoseBatcher {
-
   static getInstance(config, handler) {
-    const { id, secret, organization, accessToken } = config;
+    const {
+      id, secret, organization, accessToken
+    } = config;
     const key = [organization, id, secret].join("/");
     BATCHERS[key] = BATCHERS[key] || new FirehoseBatcher(config, handler);
     const batcher = BATCHERS[key];
