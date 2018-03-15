@@ -37,6 +37,7 @@ HullClient instance constructor - creates new instance to perform API calls, iss
     -   `config.firehoseUrl` **[string][23]?** The url track/traits calls should be sent
     -   `config.protocol` **[string][23]** protocol which will be appended to organization url, override for testing only (optional, default `https`)
     -   `config.prefix` **[string][23]** prefix of Hull REST API - only possible value now (optional, default `/api/v1`)
+    -   `config.writableStream` **[string][23]?** a writable stream which will capture all asynchronous firehose events and logs
 
 **Examples**
 
