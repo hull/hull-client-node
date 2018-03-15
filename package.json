@@ -23,7 +23,8 @@
     "clean": "rimraf lib",
     "build": "npm run clean && babel src -d lib && npm run documentation",
     "prepublish": "npm run build",
-    "documentation": "documentation build src -f md -o API.md --access public"
+    "documentation": "documentation build src -f md -o API.md --access public",
+    "precommit": "npm run documentation"
   },
   "dependencies": {
     "jwt-simple": "^0.5.0",
@@ -49,6 +50,7 @@
     "eslint-plugin-flowtype-errors": "^3.5.1",
     "eslint-plugin-import": "^2.9.0",
     "flow-bin": "^0.67.1",
+    "husky": "^0.14.3",
     "isparta": "^4.0.0",
     "minihull": "0.0.7",
     "mkdirp": "^0.5.1",
