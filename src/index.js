@@ -38,12 +38,36 @@ const logger = new (winston.Logger)({
  * @param {string} [config.prefix=/api/v1] prefix of Hull REST API - only possible value now
  *
  * @example
- * const Hull = require("hull-client");
- * const client = new Hull({
+ * const HullClient = require("hull-client");
+ * const hullClient = new HullClient({
  *   id: "HULL_ID",
  *   secret: "HULL_SECRET",
  *   organization: "HULL_ORGANIZATION_DOMAIN"
  * });
+ */
+/**
+ * Following methods are available when `HullClient` instance is scoped to user or account.
+ * How to get scoped client? Use `asUser` or `asAccount` methods.
+ *
+ * @namespace ScopedHullClient
+ * @public
+ * @example
+ * const hullClient = new HullClient({ id, secret, organization });
+ * const scopedHullClient = hullClient.asUser({ email: "foo@bar.com "});
+ * scopedHullClient.traits({ new_attribute: "new_value" });
+ */
+/**
+ * Following methods allows to perform api calls again Hull REST API.
+ * Their are available on `HullClient` and scoped HullClient.
+ *
+ * @namespace Api
+ * @public
+ */
+/**
+ * Following methods are helper utilities. They are available under `utils` property
+ *
+ * @namespace Utils
+ * @public
  */
 const HullClient = function HullClient(config) {
   if (!(this instanceof HullClient)) { return new HullClient(config); }
@@ -56,6 +80,9 @@ const HullClient = function HullClient(config) {
    * @public
    * @return {Object} current `HullClient` configuration parameters
    * @example
+   * const hullClient = new HullClient({});
+   * shullClient.configuration()
+   * // returns
    * {
    *   prefix: "/api/v1",
    *   domain: "hullapp.io",
@@ -85,9 +112,8 @@ const HullClient = function HullClient(config) {
   /**
    * Performs a GET HTTP request on selected url of Hull REST API (prefixed with `prefix` param of the constructor)
    * @function get
-   * @alias api.get
    * @public
-   * @memberof HullClient#
+   * @memberof Api#
    * @param {string} url
    * @param {Object} [params]
    * @param {Object} [options={}]
@@ -97,9 +123,8 @@ const HullClient = function HullClient(config) {
   /**
    * Performs a POST HTTP request on selected url of Hull REST API (prefixed with `prefix` param of the constructor)
    * @function post
-   * @alias api.post
    * @public
-   * @memberof HullClient#
+   * @memberof Api#
    * @param {string} url
    * @param {Object} [params]
    * @param {Object} [options={}]
@@ -111,7 +136,7 @@ const HullClient = function HullClient(config) {
    * @function put
    * @alias api.put
    * @public
-   * @memberof HullClient#
+   * @memberof Api#
    * @param {string} url
    * @param {Object} [params]
    * @param {Object} [options={}]
@@ -123,7 +148,7 @@ const HullClient = function HullClient(config) {
    * @function del
    * @alias api.del
    * @public
-   * @memberof HullClient#
+   * @memberof Api#
    * @param {string} url
    * @param {Object} [params]
    * @param {Object} [options={}]
@@ -145,6 +170,7 @@ const HullClient = function HullClient(config) {
    * [You can then pass this client-side to Hull.js](http://www.hull.io/docs/users/byou) to authenticate users client-side and cross-domain
    *
    * @public
+   * @memberof ScopedHullClient
    * @param  {Object} claims additionalClaims
    * @return {string}        token
    * @example
@@ -159,8 +185,8 @@ const HullClient = function HullClient(config) {
 
   this.utils = {
     /**
-     * @memberof HullClient
-     * @method   util.groupTraits
+     * @memberof Utils
+     * @method   groupTraits
      * @public
      * @deprecated - use `utils.traits.group` instead
      */
@@ -205,6 +231,7 @@ const HullClient = function HullClient(config) {
      * Saves attributes on the user or account. Only available on User or Account scoped `HullClient` instance (see {@link #asuser} and {@link #asaccount}).
      *
      * @public
+     * @memberof ScopedHullClient
      * @param  {Object} traits            object with new attributes, it's always flat object, without nested subobjects
      * @param  {Object} [context={}]
      * @param  {string} [context.source=] optional source prefix, if applied all traits will be prefixed with this string (and `/` character)
@@ -236,6 +263,7 @@ const HullClient = function HullClient(config) {
      * Stores events on user. Only available on User scoped `HullClient` instance (see {@link #asuser}).
      *
      * @public
+     * @memberof ScopedHullClient
      * @param  {string} event      event name
      * @param  {Object} properties additional information about event, this is a one-level JSON object
      * @param  {Object} [context={}] The `context` object lets you define event meta-data. Everything is optional
@@ -269,6 +297,7 @@ const HullClient = function HullClient(config) {
       /**
        * Issues an `alias` event on user?
        * @todo
+       * @memberof ScopedHullClient
        * @public
        * @param  {Object} body
        * @return {Promise}
@@ -287,6 +316,7 @@ const HullClient = function HullClient(config) {
        * Returns `HullClient` instance scoped to both User and Account, but all traits/track call would be performed on the User, who will be also linked to the Account.
        *
        * @public
+       * @memberof ScopedHullClient
        * @param  {Object} accountClaim [description]
        * @return {HullClient} HullClient scoped to a User and linked to an Account
        */

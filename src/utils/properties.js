@@ -31,8 +31,8 @@ function getProperties(raw, path, id_path) {
 
 /**
  * Gets and returns all existing properties in the organization along with their metadata
- * @memberof HullClient
- * @method   util.properties.get
+ * @memberof Utils
+ * @method   properties.get
  * @public
  * @return   {Promise<Object>}
  */
