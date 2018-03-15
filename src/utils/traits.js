@@ -4,8 +4,8 @@ const _ = require("lodash");
  * The Hull API returns traits in a "flat" format, with '/' delimiters in the key.
  * This method can be used to group those traits into subobjects:
  *
- * @memberof HullClient
- * @method   util.traits.group
+ * @memberof Utils
+ * @method   traits.group
  * @public
  * @param  {Object} user flat object
  * @return {Object} nested object

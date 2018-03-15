@@ -4,8 +4,8 @@
  * Updates `private_settings` merging them with existing ones before.
  *
  * Note: this method will trigger `hullClient.put` and will result in `ship:update` notify event coming from Hull platform - possible loop condition.
- * @memberof HullClient
- * @method   util.settings.update
+ * @memberof Utils
+ * @method   settings.update
  * @public
  * @param  {Object} newSettings settings to update
  * @return {Promise}
