@@ -2,27 +2,27 @@
 
 ### Table of Contents
 
--   [HullClient](#hullclient)
-    -   [configuration](#configuration)
-    -   [as](#as)
-    -   [asUser](#asuser)
-    -   [asAccount](#asaccount)
--   [ScopedHullClient](#scopedhullclient)
-    -   [token](#token)
-    -   [traits](#traits)
-    -   [track](#track)
-    -   [alias](#alias)
-    -   [account](#account)
--   [Api](#api)
-    -   [get](#get)
-    -   [post](#post)
-    -   [put](#put)
-    -   [del](#del)
--   [Utils](#utils)
-    -   [groupTraits](#grouptraits)
-    -   [properties.get](#propertiesget)
-    -   [settings.update](#settingsupdate)
-    -   [traits.group](#traitsgroup)
+-   [HullClient][1]
+    -   [configuration][2]
+    -   [as][3]
+    -   [asUser][4]
+    -   [asAccount][5]
+-   [ScopedHullClient][6]
+    -   [token][7]
+    -   [traits][8]
+    -   [track][9]
+    -   [alias][10]
+    -   [account][11]
+-   [Api][12]
+    -   [get][13]
+    -   [post][14]
+    -   [put][15]
+    -   [del][16]
+-   [Utils][17]
+    -   [groupTraits][18]
+    -   [properties.get][19]
+    -   [settings.update][20]
+    -   [traits.group][21]
 
 ## HullClient
 
@@ -30,13 +30,13 @@ HullClient instance constructor - creates new instance to perform API calls, iss
 
 **Parameters**
 
--   `config` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** configuration object
-    -   `config.id` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Connector ID - required
-    -   `config.secret` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Connector Secret - required
-    -   `config.organization` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Hull organization - required
-    -   `config.firehoseUrl` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)?** The url track/traits calls should be sent
-    -   `config.protocol` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** protocol which will be appended to organization url, override for testing only (optional, default `https`)
-    -   `config.prefix` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** prefix of Hull REST API - only possible value now (optional, default `/api/v1`)
+-   `config` **[Object][22]** configuration object
+    -   `config.id` **[string][23]** Connector ID - required
+    -   `config.secret` **[string][23]** Connector Secret - required
+    -   `config.organization` **[string][23]** Hull organization - required
+    -   `config.firehoseUrl` **[string][23]?** The url track/traits calls should be sent
+    -   `config.protocol` **[string][23]** protocol which will be appended to organization url, override for testing only (optional, default `https`)
+    -   `config.prefix` **[string][23]** prefix of Hull REST API - only possible value now (optional, default `/api/v1`)
 
 **Examples**
 
@@ -70,7 +70,7 @@ shullClient.configuration()
 }
 ```
 
-Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** current `HullClient` configuration parameters
+Returns **[Object][22]** current `HullClient` configuration parameters
 
 ### as
 
@@ -87,35 +87,35 @@ Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Refer
 ### asUser
 
 Takes User Claims (link to User Identity docs) and returnes `HullClient` instance scoped to this User.
-This makes [#traits](#traits) and [#track](#track) methods available.
+This makes [#traits][8] and [#track][9] methods available.
 
 **Parameters**
 
--   `userClaim` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
--   `additionalClaims` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)**  (optional, default `{}`)
-    -   `additionalClaims.create` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** marks if the user should be lazily created if not found (optional, default `true`)
-    -   `additionalClaims.scopes` **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** adds scopes claim to the JWT to impersonate a User with admin rights (optional, default `[]`)
-    -   `additionalClaims.active` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** marks the user as _active_ meaning a reduced latency at the expense of scalability. Don't use for high volume updates (optional, default `false`)
+-   `userClaim` **[Object][22]** 
+-   `additionalClaims` **[Object][22]**  (optional, default `{}`)
+    -   `additionalClaims.create` **[boolean][24]** marks if the user should be lazily created if not found (optional, default `true`)
+    -   `additionalClaims.scopes` **[Array][25]** adds scopes claim to the JWT to impersonate a User with admin rights (optional, default `[]`)
+    -   `additionalClaims.active` **[string][23]** marks the user as _active_ meaning a reduced latency at the expense of scalability. Don't use for high volume updates (optional, default `false`)
 
 
--   Throws **[Error](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error)** if no valid claims are passed
+-   Throws **[Error][26]** if no valid claims are passed
 
-Returns **[HullClient](#hullclient)** 
+Returns **[HullClient][27]** 
 
 ### asAccount
 
 Takes Account Claims (link to User Identity docs) and returnes `HullClient` instance scoped to this Account.
-This makes [#traits](#traits) method available.
+This makes [#traits][8] method available.
 
 **Parameters**
 
--   `accountClaim` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
--   `additionalClaims` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)**  (optional, default `{}`)
+-   `accountClaim` **[Object][22]** 
+-   `additionalClaims` **[Object][22]**  (optional, default `{}`)
 
 
--   Throws **[Error](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error)** If no valid claims are passed
+-   Throws **[Error][26]** If no valid claims are passed
 
-Returns **[HullClient](#hullclient)** instance scoped to account claims
+Returns **[HullClient][27]** instance scoped to account claims
 
 ## ScopedHullClient
 
@@ -132,13 +132,13 @@ scopedHullClient.traits({ new_attribute: "new_value" });
 
 ### token
 
-Used for [Bring your own users](http://hull.io/docs/users/byou).
+Used for [Bring your own users][28].
 Creates a signed string for the user passed in hash. `userHash` needs an `email` field.
-[You can then pass this client-side to Hull.js](http://www.hull.io/docs/users/byou) to authenticate users client-side and cross-domain
+[You can then pass this client-side to Hull.js][29] to authenticate users client-side and cross-domain
 
 **Parameters**
 
--   `claims` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** additionalClaims
+-   `claims` **[Object][22]** additionalClaims
 
 **Examples**
 
@@ -147,38 +147,38 @@ hullClient.asUser({ email: "xxx@example.com", external_id: "1234" }).token(optio
 hullClient.asAccount({ domain: "example.com", external_id: "1234" }).token(optionalClaims);
 ```
 
-Returns **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** token
+Returns **[string][23]** token
 
 ### traits
 
-Saves attributes on the user or account. Only available on User or Account scoped `HullClient` instance (see [#asuser](#asuser) and [#asaccount](#asaccount)).
+Saves attributes on the user or account. Only available on User or Account scoped `HullClient` instance (see [#asuser][4] and [#asaccount][5]).
 
 **Parameters**
 
--   `traits` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** object with new attributes, it's always flat object, without nested subobjects
--   `context` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)**  (optional, default `{}`)
-    -   `context.source` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)?** optional source prefix, if applied all traits will be prefixed with this string (and `/` character)
-    -   `context.sync` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** make the operation synchronous (optional, default `false`)
+-   `traits` **[Object][22]** object with new attributes, it's always flat object, without nested subobjects
+-   `context` **[Object][22]**  (optional, default `{}`)
+    -   `context.source` **[string][23]?** optional source prefix, if applied all traits will be prefixed with this string (and `/` character)
+    -   `context.sync` **[string][23]** make the operation synchronous (optional, default `false`)
 
-Returns **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)** 
+Returns **[Promise][30]** 
 
 ### track
 
-Stores events on user. Only available on User scoped `HullClient` instance (see [#asuser](#asuser)).
+Stores events on user. Only available on User scoped `HullClient` instance (see [#asuser][4]).
 
 **Parameters**
 
--   `event` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** event name
--   `properties` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** additional information about event, this is a one-level JSON object (optional, default `{}`)
--   `context` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The `context` object lets you define event meta-data. Everything is optional (optional, default `{}`)
-    -   `context.source` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)?** Defines a namespace, such as `zendesk`, `mailchimp`, `stripe`
-    -   `context.type` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)?** Define a event type, such as `mail`, `ticket`, `payment`
-    -   `context.created_at` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)?** Define an event date. defaults to `now()`
-    -   `context.event_id` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)?** Define a way to de-duplicate events. If you pass events with the same unique `event_id`, they will overwrite the previous one.
-    -   `context.ip` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)?** Define the Event's IP. Set to `null` if you're storing a server call, otherwise, geoIP will locate this event.
-    -   `context.referer` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)?** Define the Referer. `null` for server calls.
+-   `event` **[string][23]** event name
+-   `properties` **[Object][22]** additional information about event, this is a one-level JSON object (optional, default `{}`)
+-   `context` **[Object][22]** The `context` object lets you define event meta-data. Everything is optional (optional, default `{}`)
+    -   `context.source` **[string][23]?** Defines a namespace, such as `zendesk`, `mailchimp`, `stripe`
+    -   `context.type` **[string][23]?** Define a event type, such as `mail`, `ticket`, `payment`
+    -   `context.created_at` **[string][23]?** Define an event date. defaults to `now()`
+    -   `context.event_id` **[string][23]?** Define a way to de-duplicate events. If you pass events with the same unique `event_id`, they will overwrite the previous one.
+    -   `context.ip` **[string][23]?** Define the Event's IP. Set to `null` if you're storing a server call, otherwise, geoIP will locate this event.
+    -   `context.referer` **[string][23]?** Define the Referer. `null` for server calls.
 
-Returns **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)** 
+Returns **[Promise][30]** 
 
 ### alias
 
@@ -186,20 +186,20 @@ Issues an `alias` event on user?
 
 **Parameters**
 
--   `body` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
+-   `body` **[Object][22]** 
 
-Returns **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)** 
+Returns **[Promise][30]** 
 
 ### account
 
-Available only for User scoped `HullClient` instance (see [#asuser](#asuser)).
+Available only for User scoped `HullClient` instance (see [#asuser][4]).
 Returns `HullClient` instance scoped to both User and Account, but all traits/track call would be performed on the User, who will be also linked to the Account.
 
 **Parameters**
 
--   `accountClaim` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** [description] (optional, default `{}`)
+-   `accountClaim` **[Object][22]** [description] (optional, default `{}`)
 
-Returns **[HullClient](#hullclient)** HullClient scoped to a User and linked to an Account
+Returns **[HullClient][27]** HullClient scoped to a User and linked to an Account
 
 ## Api
 
@@ -212,11 +212,11 @@ Performs a GET HTTP request on selected url of Hull REST API (prefixed with `pre
 
 **Parameters**
 
--   `url` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** 
--   `params` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)?** 
--   `options` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)**  (optional, default `{}`)
-    -   `options.timeout` **[Number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number)?** option controls if the client should retry the request if the client timeout error happens or if there is an error 503 returned serverside - the value of the option is applied for client side error
-    -   `options.retry` **[Number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number)?** controls the time between timeout or 503 error occurence and the next retry being done
+-   `url` **[string][23]** 
+-   `params` **[Object][22]?** 
+-   `options` **[Object][22]**  (optional, default `{}`)
+    -   `options.timeout` **[Number][31]?** option controls if the client should retry the request if the client timeout error happens or if there is an error 503 returned serverside - the value of the option is applied for client side error
+    -   `options.retry` **[Number][31]?** controls the time between timeout or 503 error occurence and the next retry being done
 
 ### post
 
@@ -224,11 +224,11 @@ Performs a POST HTTP request on selected url of Hull REST API (prefixed with `pr
 
 **Parameters**
 
--   `url` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** 
--   `params` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)?** 
--   `options` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)**  (optional, default `{}`)
-    -   `options.timeout` **[Number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number)?** option controls if the client should retry the request if the client timeout error happens or if there is an error 503 returned serverside - the value of the option is applied for client side error
-    -   `options.retry` **[Number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number)?** controls the time between timeout or 503 error occurence and the next retry being done
+-   `url` **[string][23]** 
+-   `params` **[Object][22]?** 
+-   `options` **[Object][22]**  (optional, default `{}`)
+    -   `options.timeout` **[Number][31]?** option controls if the client should retry the request if the client timeout error happens or if there is an error 503 returned serverside - the value of the option is applied for client side error
+    -   `options.retry` **[Number][31]?** controls the time between timeout or 503 error occurence and the next retry being done
 
 ### put
 
@@ -236,11 +236,11 @@ Performs a PUT HTTP request on selected url of Hull REST API (prefixed with `pre
 
 **Parameters**
 
--   `url` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** 
--   `params` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)?** 
--   `options` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)**  (optional, default `{}`)
-    -   `options.timeout` **[Number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number)?** option controls if the client should retry the request if the client timeout error happens or if there is an error 503 returned serverside - the value of the option is applied for client side error
-    -   `options.retry` **[Number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number)?** controls the time between timeout or 503 error occurence and the next retry being done
+-   `url` **[string][23]** 
+-   `params` **[Object][22]?** 
+-   `options` **[Object][22]**  (optional, default `{}`)
+    -   `options.timeout` **[Number][31]?** option controls if the client should retry the request if the client timeout error happens or if there is an error 503 returned serverside - the value of the option is applied for client side error
+    -   `options.retry` **[Number][31]?** controls the time between timeout or 503 error occurence and the next retry being done
 
 ### del
 
@@ -248,11 +248,11 @@ Performs a DELETE HTTP request on selected url of Hull REST API (prefixed with `
 
 **Parameters**
 
--   `url` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** 
--   `params` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)?** 
--   `options` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)**  (optional, default `{}`)
-    -   `options.timeout` **[Number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number)?** option controls if the client should retry the request if the client timeout error happens or if there is an error 503 returned serverside - the value of the option is applied for client side error
-    -   `options.retry` **[Number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number)?** controls the time between timeout or 503 error occurence and the next retry being done
+-   `url` **[string][23]** 
+-   `params` **[Object][22]?** 
+-   `options` **[Object][22]**  (optional, default `{}`)
+    -   `options.timeout` **[Number][31]?** option controls if the client should retry the request if the client timeout error happens or if there is an error 503 returned serverside - the value of the option is applied for client side error
+    -   `options.retry` **[Number][31]?** controls the time between timeout or 503 error occurence and the next retry being done
 
 ## Utils
 
@@ -269,7 +269,7 @@ Following methods are helper utilities. They are available under `utils` propert
 
 Gets and returns all existing properties in the organization along with their metadata
 
-Returns **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)>** 
+Returns **[Promise][30]&lt;[Object][22]>** 
 
 ### settings.update
 
@@ -279,9 +279,9 @@ Note: this method will trigger `hullClient.put` and will result in `ship:update`
 
 **Parameters**
 
--   `newSettings` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** settings to update
+-   `newSettings` **[Object][22]** settings to update
 
-Returns **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)** 
+Returns **[Promise][30]** 
 
 ### traits.group
 
@@ -290,42 +290,104 @@ This method can be used to group those traits into subobjects:
 
 **Parameters**
 
--   `user` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** flat object
+-   `user` **[Object][22]** flat object
 
 **Examples**
 
 ````javascript
-    hullClient.utils.traits.group({
-      email: "romain@user",
-      name: "name",
-      "traits_coconut_name": "coconut",
-      "traits_coconut_size": "large",
-      "traits_cb/twitter_bio": "parisian",
-      "traits_cb/twitter_name": "parisian",
-      "traits_group/name": "groupname",
-      "traits_zendesk/open_tickets": 18
-    });
+hullClient.utils.traits.group({
+  email: "romain@user",
+  name: "name",
+  "traits_coconut_name": "coconut",
+  "traits_coconut_size": "large",
+  "traits_cb/twitter_bio": "parisian",
+  "traits_cb/twitter_name": "parisian",
+  "traits_group/name": "groupname",
+  "traits_zendesk/open_tickets": 18
+});
 
-    // returns
-    {
-      "email": "romain@user",
-      "name": "name",
-      "traits": {
-        "coconut_name": "coconut",
-        "coconut_size": "large"
-      },
-      "cb": {
-        "twitter_bio": "parisian",
-        "twitter_name": "parisian"
-      },
-      "group": {
-        "name": "groupname"
-      },
-      "zendesk": {
-        "open_tickets": 18
-      }
-    };
-    ```
+// returns
+{
+  "email": "romain@user",
+  "name": "name",
+  "traits": {
+    "coconut_name": "coconut",
+    "coconut_size": "large"
+  },
+  "cb": {
+    "twitter_bio": "parisian",
+    "twitter_name": "parisian"
+  },
+  "group": {
+    "name": "groupname"
+  },
+  "zendesk": {
+    "open_tickets": 18
+  }
+};
+```
 ````
 
-Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** nested object
+Returns **[Object][22]** nested object
+
+[1]: #hullclient
+
+[2]: #configuration
+
+[3]: #as
+
+[4]: #asuser
+
+[5]: #asaccount
+
+[6]: #scopedhullclient
+
+[7]: #token
+
+[8]: #traits
+
+[9]: #track
+
+[10]: #alias
+
+[11]: #account
+
+[12]: #api
+
+[13]: #get
+
+[14]: #post
+
+[15]: #put
+
+[16]: #del
+
+[17]: #utils
+
+[18]: #grouptraits
+
+[19]: #propertiesget
+
+[20]: #settingsupdate
+
+[21]: #traitsgroup
+
+[22]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object
+
+[23]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String
+
+[24]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean
+
+[25]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array
+
+[26]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Error
+
+[27]: #hullclient
+
+[28]: http://hull.io/docs/users/byou
+
+[29]: http://www.hull.io/docs/users/byou
+
+[30]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise
+
+[31]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number
