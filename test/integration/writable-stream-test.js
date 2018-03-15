@@ -1,5 +1,5 @@
 /* global it, describe */
-const { Writable } = require("stream");
+const { Writable, Readable } = require("stream");
 const { expect } = require("chai");
 const sinon = require("sinon");
 
@@ -12,7 +12,15 @@ const config = {
 };
 
 describe("HullClient writableStream feature", () => {
-  it("should reject non wriable stream");
+  it("should throw in case of non wriable stream", () => {
+    const readableStream = new Readable({
+      objectMode: true
+    });
+    expect(() => {
+      return new HullClient({ ...config, writableStream: readableStream });
+    })
+      .to.throw(Error);
+  });
 
   it("should allow to capture traits", () => {
     const clock = sinon.useFakeTimers();

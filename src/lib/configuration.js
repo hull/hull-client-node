@@ -157,7 +157,12 @@ class Configuration {
     if (key) {
       return this._state[key];
     }
-    return JSON.parse(JSON.stringify(this._state));
+    return _.cloneDeep(this._state);
+  }
+
+  validate(key) {
+    const value = this.get(key);
+    return VALID_PROPS[key](value);
   }
 }
 

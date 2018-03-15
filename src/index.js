@@ -100,12 +100,15 @@ const HullClient = function HullClient(config) {
   };
 
   let batch = () => Promise.resolve();
-  if (conf.writableStream) {
+  if (clientConfig.get("writableStream")) {
+    if (!clientConfig.validate("writableStream")) {
+      throw Error("writableStream needs to be writable and have objectMode enabled");
+    }
     if (!logger.transports.writableStream) {
       logger.remove("console");
       logger.add(winston.transports.File, {
         name: "writableStream",
-        stream: config.writableStream,
+        stream: clientConfig.get("writableStream"),
         level: "info",
         json: true,
         stringify: input => input
@@ -120,7 +123,7 @@ const HullClient = function HullClient(config) {
         userId: clientConfig.get("userId"),
         organization: clientConfig.get("organization")
       };
-      config.writableStream.write({ context, data });
+      clientConfig.get("writableStream").write({ context, data });
       return Promise.resolve();
     };
   } else {
