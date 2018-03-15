@@ -58,7 +58,7 @@ hullClient.get(path, params)
 The first parameter is the route, the second is the set of parameters you want
 to send with the request. They all return Promises so you can use the `.then()` syntax.
 
-Find detailed description of those api methods in [API REFERENCE](./API.md#get).
+Find detailed description of those api methods in [API REFERENCE](./API.md#api).
 
 ## Impersonating an User
 
@@ -95,7 +95,7 @@ The second parameter lets you define additional options (JWT claims) passed to t
 | scopes | `Array`   | Adds scopes claim to the JWT to impersonate a User with admin rights                                                  | `[]`    |
 | active | `string`  | Marks the user as _active_ meaning a reduced latency at the expense of scalability. Don't use for high volume updates | `false` |
 
-### Possible usage
+### Examples
 
 > Return a `HullClient` scoped to the user identified by it's Hull ID. Not lazily created. Needs an existing User
 
