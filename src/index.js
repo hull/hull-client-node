@@ -33,7 +33,7 @@ const logger = new (winston.Logger)({
  * @param {string} config.id Connector ID - required
  * @param {string} config.secret Connector Secret - required
  * @param {string} config.organization Hull organization - required
- * @param {string} [config.firehoseUrl=] The url track/traits calls should be sent
+ * @param {string} [config.firehoseUrl=] The url track/traits calls should be sent - when not provided by default it's sent to separate firehose endpoint
  * @param {string} [config.protocol=https] protocol which will be appended to organization url, override for testing only
  * @param {string} [config.prefix=/api/v1] prefix of Hull REST API - only possible value now
  *

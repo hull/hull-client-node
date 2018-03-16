@@ -34,7 +34,7 @@ HullClient instance constructor - creates new instance to perform API calls, iss
     -   `config.id` **[string][23]** Connector ID - required
     -   `config.secret` **[string][23]** Connector Secret - required
     -   `config.organization` **[string][23]** Hull organization - required
-    -   `config.firehoseUrl` **[string][23]?** The url track/traits calls should be sent
+    -   `config.firehoseUrl` **[string][23]?** The url track/traits calls should be sent - when not provided by default it's sent to separate firehose endpoint
     -   `config.protocol` **[string][23]** protocol which will be appended to organization url, override for testing only (optional, default `https`)
     -   `config.prefix` **[string][23]** prefix of Hull REST API - only possible value now (optional, default `/api/v1`)
 
@@ -57,9 +57,7 @@ Returns the global configuration object.
 
 ```javascript
 const hullClient = new HullClient({});
-shullClient.configuration()
-// returns
-{
+hullClient.configuration() == {
   prefix: "/api/v1",
   domain: "hullapp.io",
   protocol: "https",
@@ -67,7 +65,7 @@ shullClient.configuration()
   secret: "12347asc855041674dc961af50fc1",
   organization: "fa4321.hullapp.io",
   version: "0.13.10"
-}
+};
 ```
 
 Returns **[Object][22]** current `HullClient` configuration parameters
