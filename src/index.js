@@ -81,9 +81,7 @@ const HullClient = function HullClient(config) {
    * @return {Object} current `HullClient` configuration parameters
    * @example
    * const hullClient = new HullClient({});
-   * shullClient.configuration()
-   * // returns
-   * {
+   * hullClient.configuration() == {
    *   prefix: "/api/v1",
    *   domain: "hullapp.io",
    *   protocol: "https",
@@ -91,7 +89,7 @@ const HullClient = function HullClient(config) {
    *   secret: "12347asc855041674dc961af50fc1",
    *   organization: "fa4321.hullapp.io",
    *   version: "0.13.10"
-   * }
+   * };
    */
   this.configuration = function configuration() {
     return clientConfig.get();
