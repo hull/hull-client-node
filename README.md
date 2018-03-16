@@ -36,7 +36,7 @@ const hullClient = new HullClient({
 });
 ```
 
-Find all required and optional configuration options in [API REFERENCE](./API.md#hullclient).
+Find all required and optional constructor options in [API REFERENCE](./API.md#hullclient).
 
 ## Calling the API
 
@@ -85,22 +85,16 @@ user.userToken();
 
 You can use an internal Hull `id`, an ID from your database that we call `external_id`, an `email` address or `anonymous_id`.
 
-Using `asUser` method doesn't make an API call, it just returnes scoped instance of `HullClient`.
+Using `asUser` method doesn't make an API call, it just returnes scoped instance of `HullClient` which comes with additional methods (see [API REFERENCE](./API.md#scopedhullclient)).
 
-The second parameter lets you define additional options (JWT claims) passed to the user resolution script:
-
-| field  | type      | description                                                                                                           | default |
-| ------ | --------- | --------------------------------------------------------------------------------------------------------------------- | ------- |
-| create | `boolean` | Marks if the user should be lazily created if not found                                                               | `true`  |
-| scopes | `Array`   | Adds scopes claim to the JWT to impersonate a User with admin rights                                                  | `[]`    |
-| active | `string`  | Marks the user as _active_ meaning a reduced latency at the expense of scalability. Don't use for high volume updates | `false` |
+The second parameter lets you define additional options (JWT claims) passed to the user resolution script which customize how platform identity resolution mechanism will work (see [API REFERENCE](./API.md#asuser)).
 
 ### Examples
 
 > Return a `HullClient` scoped to the user identified by it's Hull ID. Not lazily created. Needs an existing User
 
 ```js
-hullClient.asUser(userId);
+hullClient.asUser(userId, { create: false });
 ```
 
 > Return a `HullClient` scoped to the user identified by it's Social network ID. Lazily created if [Guest Users](http://www.hull.io/docs/users/guest_users) are enabled
@@ -109,7 +103,7 @@ hullClient.asUser(userId);
 hullClient.asUser("instagram|facebook|google:userId");
 ```
 
-> Return a `HullClient` scoped to the user identified by it's External ID (from your dashboard). Lazily created if [Guest Users](http://www.hull.io/docs/users/guest_users) are enabled
+> Return a `HullClient` scoped to the user identified by it's External ID (from your dashboard). Lazily created if not present before
 
 ```js
 hullClient.asUser({ external_id: "externalId" });
@@ -158,10 +152,10 @@ hullClient.asUser({ email: "foo@hull.io" }).track("new support ticket", {
 }, {
   source: "zendesk",
   type: 'ticket',
-  event_id: 'uuid1234' //Pass a unique ID to ensure event de-duplication
-  ip: null, //don't store ip - it's a server call
-  referer: null, //don't store referer - it's a server call
-  created_at: '2013-02-08 09:30:26.123+07:00' //ISO 8601. moment.js does it very well
+  event_id: 'uuid1234' // Pass a unique ID to ensure event de-duplication
+  ip: null, // don't store ip - it's a server call
+  referer: null, // don't store referer - it's a server call
+  created_at: '2013-02-08 09:30:26.123+07:00' // ISO 8601. moment.js does it very well
 });
 ```
 
@@ -204,17 +198,19 @@ Find detailed information about `traits` method in [API REFERENCE](./API.md#trai
 
 ## Logging
 
-The Logger comes in two flavors, `HullClient.logger.xxx` and `hullClient.logger.xxx` - The first one is a generic logger, the second use the current instance of `HullClient` logs will contain shp id and organization for more precision.
+The Logger comes in two flavors, `HullClient.logger.xxx` and `hullClient.logger.xxx` - The first one is a generic logger, the second use the current instance of `HullClient` logs will contain shp id and organization for more context.
 
-Internal logger uses [Winston](https://github.com/winstonjs/winston)
+Internal logger uses [Winston](https://github.com/winstonjs/winston). By default it comes with console stdout/stderr transport which will show logs from `info` level.
 
 ```js
-HullClient.logger.info("message", { object }); //Class logging method,
-hullClient.logger.info("message", { object }); //Instance logging method, adds Ship ID and Organization to Context. Use if available.
+HullClient.logger.info("message", { object }); // Class logging method,
+hullClient.logger.info("message", { object }); // Instance logging method, adds Ship ID and Organization to Context. Use if available.
 
-// Debug works the same way but only logs if process.env.DEBUG===true
-HullClient.logger.info("message", { object }); //Class logging method,
-hullClient.logger.info("message", { object });
+// Debug works the same way but by default they won't be logged, adjust the log level in following way:
+Hull.logger.transports.console.level = "debug";
+
+HullClient.logger.debug("message", { object }); // Class logging method,
+hullClient.logger.debug("message", { object });
 
 // You can add more logging destinations like this:
 const winstonSlacker = require("winston-slacker");
@@ -227,7 +223,10 @@ You can also have a user or account scoped logger. Claims used in `asUser` and `
 
 ```js
 const user = hullClient.asUser({ email: "john@coltrane.com" });
-user.logger.info("message", { hello: "world" });
+user.logger.info("hello");
+
+// it will produce following log line:
+{"context":{"organization":"...","id":"...","user_email":"john@coltrane.com"},"level":"info","message":"hello"}
 ```
 
 ### Setting a requestId in the logs context
