@@ -1,6 +1,6 @@
 {
   "name": "hull-client",
-  "version": "1.1.5",
+  "version": "1.2.0",
   "description": "A barebones Node.js API client for hull.io",
   "main": "lib",
   "repository": {
@@ -38,8 +38,8 @@
     "babel": "^6.23.0",
     "babel-cli": "^6.24.1",
     "babel-eslint": "^8.2.2",
-    "babel-plugin-syntax-object-rest-spread": "^6.13.0",
     "babel-plugin-transform-flow-comments": "^6.22.0",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-register": "^6.26.0",
     "bluebird": "^3.5.1",
     "chai": "^4.1.2",

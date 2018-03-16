@@ -1,3 +1,7 @@
+# 1.2.0
+* documentation split into API reference in API.md and getting started and how tos gides in README.md
+* cleanup babeljs configuration and use native NodeJS v6 with single babeljs plugin (transform-object-rest-spread) to allow object spread syntax
+
 # 1.1.5
 * retry all 5xx errors
 
