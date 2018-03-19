@@ -35,9 +35,9 @@ const logger = new (winston.Logger)({
  * @param {string} config.organization Hull organization - required
  * @param {string} [config.requestId] additional parameter which will be added to logs context, it can be HTTP request unique id when you init HullClient and you want to group log lines by the request (it can be a job id etc.)
  * @param {string} [config.connectorName] additional parameter which will be added to logs context, it's used to track connector name in logs
- * @param {string} [config.firehoseUrl=] The url track/traits calls should be sent - when not provided by default it's sent to separate firehose endpoint
+ * @param {string} [config.firehoseUrl=] The url track/traits calls should be sent - deprecated option, will be removed in next version
  * @param {string} [config.protocol=https] protocol which will be appended to organization url, override for testing only
- * @param {string} [config.prefix=/api/v1] prefix of Hull REST API - only possible value now
+ * @param {string} [config.prefix=/api/v1] prefix of Hull REST API
  *
  * @example
  * const HullClient = require("hull-client");
@@ -235,7 +235,7 @@ const HullClient = function HullClient(config) {
      * @param  {Object} traits            object with new attributes, it's always flat object, without nested subobjects
      * @param  {Object} [context={}]
      * @param  {string} [context.source=] optional source prefix, if applied all traits will be prefixed with this string (and `/` character)
-     * @param  {string} [context.sync=false] make the operation synchronous
+     * @param  {string} [context.sync=false] make the operation synchronous - deprecated option, will be removed in next version
      * @return {Promise}
      */
     this.traits = (traits, context = {}) => {
