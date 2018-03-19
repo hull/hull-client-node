@@ -34,6 +34,8 @@ HullClient instance constructor - creates new instance to perform API calls, iss
     -   `config.id` **[string][23]** Connector ID - required
     -   `config.secret` **[string][23]** Connector Secret - required
     -   `config.organization` **[string][23]** Hull organization - required
+    -   `config.requestId` **[string][23]?** additional parameter which will be added to logs context, it can be HTTP request unique id when you init HullClient and you want to group log lines by the request (it can be a job id etc.)
+    -   `config.connectorName` **[string][23]?** additional parameter which will be added to logs context, it's used to track connector name in logs
     -   `config.firehoseUrl` **[string][23]?** The url track/traits calls should be sent - when not provided by default it's sent to separate firehose endpoint
     -   `config.protocol` **[string][23]** protocol which will be appended to organization url, override for testing only (optional, default `https`)
     -   `config.prefix` **[string][23]** prefix of Hull REST API - only possible value now (optional, default `/api/v1`)

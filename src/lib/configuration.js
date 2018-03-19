@@ -43,7 +43,7 @@ const VALID_PROPS = {
   subjectType: VALID.string,
   additionalClaims: VALID.object,
   accessToken: VALID.string,
-  hostSecret: VALID.string,
+  hostSecret: VALID.string, // TODO: check if this is being used anywhere
   flushAt: VALID.number,
   flushAfter: VALID.number,
   connectorName: VALID.string,

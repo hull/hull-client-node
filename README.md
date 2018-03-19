@@ -41,7 +41,7 @@ Find all required and optional constructor options in [API REFERENCE](./API.md#h
 ## Calling the API
 
 Once you have instantiated a `HullClient`, you can use one of the `get`, `post`,
-`put`or `del` methods to perform actions of our [HTTP API](https://www.hull.io/docs/references/api/).
+`put`or `del` methods to perform actions of our [HTTP REST API](https://www.hull.io/docs/references/api/).
 
 ```js
 // `client.api.get` works too.
@@ -60,9 +60,9 @@ to send with the request. They all return Promises so you can use the `.then()` 
 
 Find detailed description of those api methods in [API REFERENCE](./API.md#api).
 
-## Impersonating an User
+## Scoping HullClient to User or Account identity
 
-One of the more frequent use case is to store attributes and events with the identity of a given user. We provide several methods to do so.
+One of the more frequent use case is to store attributes and events with the identity of a given user or account. To get scoped HullClient use `asUser` or `asAccount` mathods just like below:
 
 ```js
 // if you have a user id from your database, use the `external_id` field
@@ -73,17 +73,21 @@ const user = hullClient.asUser({ id: "5718b59b7a85ebf20e000169" });
 // or just as a string:
 const user = hullClient.asUser("5718b59b7a85ebf20e000169");
 
-// you can optionally pass additional user resolution options as a second argument:
-const user = hullClient.asUser({ id: "5718b59b7a85ebf20e000169" }, { create: false });
-
-// Constant `user` is an instance of Hull, scoped to a specific user.
-user.get("/me").then(function(me) {
+// Constant `user` is an instance of HullClient, scoped to a specific user
+// perform an API call with the user access token
+user.get("/me").then((me) => {
   console.log(me);
 });
-user.userToken();
+
+// store attributes on this user identity
+user.traits({ foo: "bar "})
+
+
+// get the access token value
+user.token();
 ```
 
-You can use an internal Hull `id`, an ID from your database that we call `external_id`, an `email` address or `anonymous_id`.
+You can use an internal Hull `id`, an ID from your database that we call `external_id`, an `email` address or `anonymous_id`. See more examples of picking and using different User claims below.
 
 Using `asUser` method doesn't make an API call, it just returnes scoped instance of `HullClient` which comes with additional methods (see [API REFERENCE](./API.md#scopedhullclient)).
 
@@ -130,7 +134,7 @@ hullClient.asUser({ email: "user@email.com" }, { scopes: ["admin"] });
 
 Find detailed description of those claims scoping methods in [API REFERENCE](./API.md#asuser).
 
-## Methods for user-scoped instance
+## Methods for User or Account scoped instance
 
 ```js
 const externalId = "dkjf565wd654e";
@@ -192,11 +196,13 @@ Find detailed information about `traits` method in [API REFERENCE](./API.md#trai
 
 `HullClient` comes with a set of utilities to simplify working with Hull REST API:
 
-- `util.settings.update` - allows to update only part of connector settings, [see details](./API.md#utilsettingsupdate)
-- `util.properties.get` - parse list of attributes stored on organization level, [see details](./API.md#utilpropertiesget)
-- `util.traits.group` - allows to transform flat list of attributes to nested object, [see details](./API.md#utiltraitsgroup)
+- `util.settings.update` - allows to update only part of connector settings, [see details](./API.md#settingsupdate)
+- `util.properties.get` - parse list of attributes stored on organization level, [see details](./API.md#propertiesget)
+- `util.traits.group` - allows to transform flat list of attributes to nested object, [see details](./API.md#traitsgroup)
 
 ## Logging
+
+Since not all actions related to data will result in an api call or traits/track method, to have full picture of data flow we need to log information from the very beginning of data processing pipe. To make it easier `HullClient` comes with built-in logger exposed on `logger` property which standarize output and show all internal information about `HullClient` instance (initial constructor configuration, additional User or Account claims etc.)
 
 The Logger comes in two flavors, `HullClient.logger.xxx` and `hullClient.logger.xxx` - The first one is a generic logger, the second use the current instance of `HullClient` logs will contain shp id and organization for more context.
 
