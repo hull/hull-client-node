@@ -1,3 +1,9 @@
+# 1.2.0
+* documentation split into API reference in API.md and getting started and "how-tos" guides in README.md
+* cleanup babeljs configuration and use native NodeJS v6 with single babeljs plugin (transform-object-rest-spread) to allow object spread syntax (remove import/export syntax)
+* run circleci jobs on all supported nodejs versions
+* upgrade of dependencies
+
 # 1.1.5
 * retry all 5xx errors
 

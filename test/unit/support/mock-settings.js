@@ -1,4 +1,4 @@
-export default function mockSettings(settings) {
+function mockSettings(settings) {
   return {
     hull: {
       ship: {
@@ -7,3 +7,5 @@ export default function mockSettings(settings) {
     }
   };
 }
+
+module.exports = mockSettings;

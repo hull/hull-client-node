@@ -1,5 +1,5 @@
-import rest from "restler";
-import pkg from "../../package.json";
+const rest = require("restler");
+const pkg = require("../../package.json");
 
 const DEFAULT_HEADERS = {
   "Content-Type": "application/json",
@@ -61,11 +61,13 @@ function perform(client, config = {}, method = "get", path, params = {}, options
     actions.reject = reject;
 
     query
-    .on("success", actions.resolve)
-    .on("error", actions.reject);
+      .on("success", actions.resolve)
+      .on("error", actions.reject);
 
     query.on("fail", function handleError(error, response) {
-      client.logger.debug("client.fail", { statusCode: response.statusCode, retryCount, path, method });
+      client.logger.debug("client.fail", {
+        statusCode: response.statusCode, retryCount, path, method
+      });
       if (response.statusCode >= 500 && options.timeout && retryCount < 2) {
         retryCount += 1;
         return this.retry(options.retry || 500);
@@ -75,7 +77,9 @@ function perform(client, config = {}, method = "get", path, params = {}, options
 
     if (options.timeout) {
       query.on("timeout", function handleTimeout() {
-        client.logger.debug("client.timeout", { timeout: opts.timeout, retryCount, path, method });
+        client.logger.debug("client.timeout", {
+          timeout: opts.timeout, retryCount, path, method
+        });
         if (retryCount < 2) {
           retryCount += 1;
           return this.retry(options.retry || 500);

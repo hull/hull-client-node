@@ -1,14 +1,16 @@
-"use strict";
 /* global it, describe */
 
-var _ = require('lodash');
-var sinon = require('sinon');
-var chai = require('chai');
-var expect = chai.expect;
-chai.use(require('sinon-chai'));
+const _ = require('lodash');
+const sinon = require('sinon');
+const chai = require('chai');
+const sinonChai = require('sinon-chai');
+
+const expect = chai.expect;
+
+chai.use(sinonChai);
 chai.should();
 
-var Configuration = require('../src/lib/configuration'),
+var Configuration = require('../../src/lib/configuration'),
     config = {
       id: '550964db687ee7866d000057',
       secret: 'abcd12345',

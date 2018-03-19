@@ -1,9 +1,8 @@
 /* global describe, it */
-
-import { group, normalize } from "../src/utils/traits";
-import { user } from "./fixtures";
-
 const { expect, should } = require("chai");
+
+const { group, normalize } = require("../../src/utils/traits");
+const { user } = require("./fixtures");
 should();
 
 const grouped_expected = {

@@ -1,6 +1,6 @@
-import _ from "lodash";
-import pkg from "../../package.json";
-import crypto from "./crypto";
+const _ = require("lodash");
+const pkg = require("../../package.json");
+const crypto = require("./crypto");
 
 const GLOBALS = {
   prefix: "/api/v1",
@@ -43,7 +43,7 @@ const VALID_PROPS = {
   subjectType: VALID.string,
   additionalClaims: VALID.object,
   accessToken: VALID.string,
-  hostSecret: VALID.string,
+  hostSecret: VALID.string, // TODO: check if this is being used anywhere
   flushAt: VALID.number,
   flushAfter: VALID.number,
   connectorName: VALID.string,
@@ -64,8 +64,8 @@ const ACCOUNT_CLAIMS = ["id", "external_id", "domain"];
 
 /**
  * make sure that provided "identity claim" is valid
- * @param  {String} type          "user" or "account"
- * @param  {String|Object} object identity claim
+ * @param  {string} type          "user" or "account"
+ * @param  {string|Object} object identity claim
  * @param  {Array} requiredFields fields which are required if the passed
  * claim is an object
  * @throws Error

@@ -1,6 +1,6 @@
-import _ from "lodash";
-import crypto from "crypto";
-import jwt from "jwt-simple";
+const _ = require("lodash");
+const crypto = require("crypto");
+const jwt = require("jwt-simple");
 
 
 function getSecret(config = {}, secret) {
@@ -12,9 +12,9 @@ function sign(config, data) {
   }
   const sha1 = getSecret(config);
   return crypto
-  .createHmac("sha1", sha1)
-  .update(data)
-  .digest("hex");
+    .createHmac("sha1", sha1)
+    .update(data)
+    .digest("hex");
 }
 function checkConfig(config) {
   if (!config || !_.isObject(config) || !config.id || !config.secret) {
@@ -34,6 +34,7 @@ function buildToken(config, claims = {}) {
   return jwt.encode(claim, getSecret(config));
 }
 
+/** @namespace */
 module.exports = {
   sign(config, data) {
     checkConfig(config);
@@ -50,11 +51,10 @@ module.exports = {
    * and saves them as a custom ident claim.
    *
    * @param {Object} config object
-   * @param {String} subjectType - "user" or "account"
-   * @param {String|Object} userClaim main identity claim - object or string
-   * @param {String|Object} accountClaim main identity claim - object or string
+   * @param {string} subjectType - "user" or "account"
+   * @param {string|Object} objectClaims user or account main identity claim - object or string
    * @param {Object} additionalClaims
-   * @returns {String} The jwt token to identity the user.
+   * @returns {string} The jwt token to identity the user.
    */
   lookupToken(config, subjectType, objectClaims = {}, additionalClaims = {}) {
     subjectType = _.toLower(subjectType);
@@ -101,9 +101,9 @@ module.exports = {
   /**
    * Checks the signed userId - used in middleware to authenticate the current user locally via signed cookies.
    *
-   * @param {String} userId.  the userId to check
-   * @param {String} userSig. the signed userId
-   * @returns {String|Boolean} the userId if the signature matched, false otherwise.
+   * @param {string} userId  the userId to check
+   * @param {string} userSig the signed userId
+   * @returns {string|boolean} the userId if the signature matched, false otherwise.
    */
   currentUserId(config, userId, userSig) {
     checkConfig(config);

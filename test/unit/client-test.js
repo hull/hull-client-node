@@ -1,9 +1,9 @@
 /* global describe, it */
-import { expect } from "chai";
-import sinon from "sinon";
-import jwt from "jwt-simple";
+const { expect } = require("chai");
+const sinon = require("sinon");
+const jwt = require("jwt-simple");
 
-import Hull from "../src";
+const Hull = require("../../src");
 
 describe("Hull", () => {
   describe("as", () => {
