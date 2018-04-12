@@ -1,6 +1,6 @@
 {
   "name": "hull-client",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "A barebones Node.js API client for hull.io",
   "main": "lib",
   "repository": {
@@ -23,7 +23,7 @@
     "clean": "rimraf lib",
     "build": "npm run clean && babel src -d lib && npm run documentation",
     "prepublish": "npm run build",
-    "documentation": "documentation build src -f md -o API.md --access public",
+    "documentation": "documentation build src -f md -o API.md --access public --markdownToc=false",
     "precommit": "npm run documentation && git add API.md"
   },
   "dependencies": {
