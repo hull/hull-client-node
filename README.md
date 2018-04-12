@@ -14,7 +14,7 @@
     > A complete toolkit to operate with Hull Client in request handlers. Includes Hull Middleware and a set of official patterns to build highly scalable and efficient Connectors:
     > `const connector = new Hull.Connector({ configuration })`
 
-![hull node core components](docs/assets/hull-node-components.png)
+![hull node core components](/docs/assets/hull-node-components.png)
 
 ---
 
