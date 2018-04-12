@@ -1,18 +1,33 @@
 # Overview
 
-### In this package:
+## In this package:
 
-- [Hull Client](#hull)
-    > Most low level Hull Platform API client: `const hull = new Hull({ configuration })`
+### [Hull Client](#hull)
 
-### In the Hull-node package (which embeds this one):
+A low level Hull Platform API client. Refer to it's documentation for more details
 
-- [Hull Middleware](https://github.com/hull/hull-node)
-    > A bridge between Hull Client and a NodeJS HTTP application (e.g. express) which initializes context for every HTTP request:
-    > `app.use(Hull.Middleware({ configuration }))`
-- [Hull Connector](https://github.com/hull/hull-node)
-    > A complete toolkit to operate with Hull Client in request handlers. Includes Hull Middleware and a set of official patterns to build highly scalable and efficient Connectors:
-    > `const connector = new Hull.Connector({ configuration })`
+```javascript
+const hullClient = new Hull.Client({ configuration });
+```
+
+## In the hull-node package (which embeds this one):
+
+### [Hull Middleware](https://github.com/hull/hull-node)
+
+A bridge between Hull Client and a NodeJS HTTP application (e.g. express) which initializes context for every HTTP request:
+
+```javascript
+app.use(Hull.Middleware({ configuration }));
+```
+
+### [Hull Connector](https://github.com/hull/hull-node)
+
+
+```javascript
+const connector = new Hull.Connector({ configuration });
+```
+
+A complete toolkit which is created next to ExpressJS server instance. Includes Hull Middleware and a set of official patterns to build highly scalable and efficient Connectors.
 
 ![hull node core components](/docs/assets/hull-node-components.png)
 
