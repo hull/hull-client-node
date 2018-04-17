@@ -48,7 +48,7 @@ const logger = new (winston.Logger)({
  * });
  */
 /**
- * Following methods are available when `HullClient` instance is scoped to user or account.
+ * The following methods are available when `HullClient` instance is scoped to user or account.
  * How to get scoped client? Use `asUser` or `asAccount` methods.
  *
  * @namespace ScopedHullClient
@@ -66,7 +66,7 @@ const logger = new (winston.Logger)({
  * @public
  */
 /**
- * Following methods are helper utilities. They are available under `utils` property
+ * The following methods are helper utilities. They are available under `utils` property
  *
  * @namespace Utils
  * @public
@@ -227,6 +227,9 @@ const HullClient = function HullClient(config) {
   };
 
   if (config.userClaim || config.accountClaim || config.accessToken) {
+
+    const requestId = conf.requestId;
+
     /**
      * Saves attributes on the user or account. Only available on User or Account scoped `HullClient` instance (see {@link #asuser} and {@link #asaccount}).
      *
@@ -256,7 +259,7 @@ const HullClient = function HullClient(config) {
         return this.post("me/traits", body);
       }
 
-      return batch({ type: "traits", body });
+      return batch({ type: "traits", body, requestId });
     };
 
     /**
@@ -281,6 +284,7 @@ const HullClient = function HullClient(config) {
       });
       return batch({
         type: "track",
+        requestId,
         body: {
           ip: null,
           url: null,
@@ -305,6 +309,7 @@ const HullClient = function HullClient(config) {
       this.alias = (body) => {
         return batch({
           type: "alias",
+          requestId,
           body
         });
       };
