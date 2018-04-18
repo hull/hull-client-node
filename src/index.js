@@ -227,7 +227,6 @@ const HullClient = function HullClient(config) {
   };
 
   if (config.userClaim || config.accountClaim || config.accessToken) {
-
     const requestId = conf.requestId;
 
     /**
