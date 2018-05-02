@@ -1,3 +1,13 @@
+// @flow
+
+import type {
+  HullClientConfiguration, HullEntityAttributes, HullEntityAttributesOptions,
+  HullEventName, HullEventProperties, HullEventContext,
+  HullAccountClaims, HullUserClaims, HullAuxiliaryClaims, HullEntityClaims
+} from "./types";
+
+/*:: export type * from "./types"; */
+
 const _ = require("lodash");
 const winston = require("winston");
 const uuidV4 = require("uuid/v4");
@@ -71,7 +81,7 @@ const logger = new (winston.Logger)({
  * @namespace Utils
  * @public
  */
-const HullClient = function HullClient(config) {
+const HullClient = function HullClient(config: HullClientConfiguration) {
   if (!(this instanceof HullClient)) { return new HullClient(config); }
 
   const clientConfig = new Configuration(config);
@@ -93,7 +103,7 @@ const HullClient = function HullClient(config) {
    *   version: "0.13.10"
    * };
    */
-  this.configuration = function configuration() {
+  this.configuration = function configuration(): HullClientConfiguration {
     return clientConfig.get();
   };
 
@@ -177,7 +187,7 @@ const HullClient = function HullClient(config) {
    * hullClient.asUser({ email: "xxx@example.com", external_id: "1234" }).token(optionalClaims);
    * hullClient.asAccount({ domain: "example.com", external_id: "1234" }).token(optionalClaims);
    */
-  this.token = function token(claims) {
+  this.token = function token(claims: HullEntityClaims) {
     const subjectType = clientConfig.get("subjectType");
     const claim = clientConfig.get(`${subjectType}Claim`);
     return crypto.lookupToken(clientConfig.get(), subjectType, { [subjectType]: claim }, claims);
@@ -238,7 +248,7 @@ const HullClient = function HullClient(config) {
      * @param  {string} [context.sync=false] make the operation synchronous - deprecated option, will be removed in next version
      * @return {Promise}
      */
-    this.traits = (traits, context = {}) => {
+    this.traits = (traits: HullEntityAttributes, context: HullEntityAttributesOptions = {}): Promise<*> => {
       // Quick and dirty way to add a source prefix to all traits we want in.
       const source = context.source;
       let body = {};
@@ -275,7 +285,7 @@ const HullClient = function HullClient(config) {
      * @param  {string} [context.referer]    Define the Referer. `null` for server calls.
      * @return {Promise}
      */
-    this.track = (event, properties = {}, context = {}) => {
+    this.track = (event: HullEventName, properties: HullEventProperties = {}, context: HullEventContext = {}): Promise<*> => {
       _.defaults(context, {
         event_id: uuidV4()
       });
@@ -320,7 +330,7 @@ const HullClient = function HullClient(config) {
        * @param  {Object} accountClaim [description]
        * @return {HullClient} HullClient scoped to a User and linked to an Account
        */
-      this.account = (accountClaim = {}) => {
+      this.account = (accountClaim: HullAccountClaims = {}): HullClient => {
         if (!accountClaim) {
           return new HullClient({ ...config, subjectType: "account" });
         }
@@ -332,7 +342,7 @@ const HullClient = function HullClient(config) {
      * @public
      * @deprecated Use `asUser` instead
      */
-    this.as = (userClaim, additionalClaims = {}) => {
+    this.as = (userClaim: HullUserClaims, additionalClaims: HullAuxiliaryClaims = {}): HullClient => {
       this.logger.warn("client.deprecation", { message: "use client.asUser instead of client.as" });
       return this.asUser(userClaim, additionalClaims);
     };
@@ -351,7 +361,7 @@ const HullClient = function HullClient(config) {
      * @throws {Error} if no valid claims are passed
      * @return {HullClient}
      */
-    this.asUser = (userClaim, additionalClaims = {}) => {
+    this.asUser = (userClaim: HullUserClaims, additionalClaims: HullAuxiliaryClaims = {}): HullClient => {
       if (!userClaim) {
         throw new Error("User Claims was not defined when calling hull.asUser()");
       }
@@ -370,7 +380,7 @@ const HullClient = function HullClient(config) {
      * @throws {Error} If no valid claims are passed
      * @return {HullClient} instance scoped to account claims
      */
-    this.asAccount = (accountClaim, additionalClaims = {}) => {
+    this.asAccount = (accountClaim: HullAccountClaims, additionalClaims: HullAuxiliaryClaims = {}): HullClient => {
       if (!accountClaim) {
         throw new Error("Account Claims was not defined when calling hull.asAccount()");
       }
