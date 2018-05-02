@@ -1,18 +1,18 @@
 // @flow
 
 /*
- * COMMON TYPEs
+ * ATTRIBUTES TYPES
  */
-export type HullAttributeName = string;
-export type HullAttributeValue = string | boolean | Array<string> | number;
-export type HullAttributeOperation = {
-  operation: string,
+export type HullAttributeName = string; // all attribtues names are strings
+export type HullAttributeValue = string | boolean | Array<string> | number; // these are possible values
+export type HullAttributeOperation = { // when writing attributes we can specify both the value with operation
+  operation: "set" | "setIfNull" | "inc" | "dec", // @see https://www.hull.io/docs/references/api/#user-attributes
   value: HullAttributeValue
 };
 export type HullEntityType = "account" | "user";
 
 /*
- * DATA STRUCTURES TO WRITE TO PLATFORM
+ * DATA STRUCTURES TO USE WHEN WRITING TO PLATFORM
  */
 
 // separate claims to find entity
@@ -57,7 +57,7 @@ export type HullEventContext = {
 };
 
 /*
- * DATA STRUCTURES TO READ FROM PLATFORM
+ * DATA STRUCTURES TO USE WHEN READING FROM PLATFORM
  */
 
 // combined ident and attributes
