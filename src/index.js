@@ -81,7 +81,7 @@ const logger = new (winston.Logger)({
  * @namespace Utils
  * @public
  */
-const HullClient = function HullClient(config: HullClientConfiguration) {
+function HullClient(config: HullClientConfiguration) {
   if (!(this instanceof HullClient)) { return new HullClient(config); }
 
   const clientConfig = new Configuration(config);
@@ -334,7 +334,7 @@ const HullClient = function HullClient(config: HullClientConfiguration) {
        * @param  {Object} accountClaim [description]
        * @return {HullClient} HullClient scoped to a User and linked to an Account
        */
-      this.account = (accountClaim: HullAccountClaims = {}): HullClient => {
+      this.account = (accountClaim: HullAccountClaims = {}) => {
         if (!accountClaim) {
           return new HullClient({ ...config, subjectType: "account" });
         }
@@ -346,7 +346,7 @@ const HullClient = function HullClient(config: HullClientConfiguration) {
      * @public
      * @deprecated Use `asUser` instead
      */
-    this.as = (userClaim: HullUserClaims, additionalClaims: HullAuxiliaryClaims = {}): HullClient => {
+    this.as = (userClaim: HullUserClaims, additionalClaims: HullAuxiliaryClaims = {}) => {
       this.logger.warn("client.deprecation", { message: "use client.asUser instead of client.as" });
       return this.asUser(userClaim, additionalClaims);
     };
@@ -365,7 +365,7 @@ const HullClient = function HullClient(config: HullClientConfiguration) {
      * @throws {Error} if no valid claims are passed
      * @return {HullClient}
      */
-    this.asUser = (userClaim: HullUserClaims, additionalClaims: HullAuxiliaryClaims = {}): HullClient => {
+    this.asUser = (userClaim: HullUserClaims, additionalClaims: HullAuxiliaryClaims = {}) => {
       if (!userClaim) {
         throw new Error("User Claims was not defined when calling hull.asUser()");
       }
@@ -384,7 +384,7 @@ const HullClient = function HullClient(config: HullClientConfiguration) {
      * @throws {Error} If no valid claims are passed
      * @return {HullClient} instance scoped to account claims
      */
-    this.asAccount = (accountClaim: HullAccountClaims, additionalClaims: HullAuxiliaryClaims = {}): HullClient => {
+    this.asAccount = (accountClaim: HullAccountClaims, additionalClaims: HullAuxiliaryClaims = {}) => {
       if (!accountClaim) {
         throw new Error("Account Claims was not defined when calling hull.asAccount()");
       }
@@ -393,7 +393,7 @@ const HullClient = function HullClient(config: HullClientConfiguration) {
       });
     };
   }
-};
+}
 
 HullClient.logger = logger;
 
