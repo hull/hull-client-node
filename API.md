@@ -121,7 +121,7 @@ Returns **[HullClient][24]** instance scoped to account claims
 
 ## ScopedHullClient
 
-Following methods are available when `HullClient` instance is scoped to user or account.
+The following methods are available when `HullClient` instance is scoped to user or account.
 How to get scoped client? Use `asUser` or `asAccount` methods.
 
 **Examples**
@@ -258,7 +258,7 @@ Performs a DELETE HTTP request on selected url of Hull REST API (prefixed with `
 
 ## Utils
 
-Following methods are helper utilities. They are available under `utils` property
+The following methods are helper utilities. They are available under `utils` property
 
 ### groupTraits
 
