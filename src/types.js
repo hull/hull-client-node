@@ -115,3 +115,13 @@ export type HullClientConfiguration = {
   flushAt?: number,
   flushAfter?: number
 };
+
+// export type HullClientLogger = {
+//   log: (string, Object) => void,
+//   silly: (string, Object) => void,
+//   debug: (string, Object) => void,
+//   verbose: (string, Object) => void,
+//   info: (string, Object) => void,
+//   warn: (string, Object) => void,
+//   error: (string, Object) => void
+// };

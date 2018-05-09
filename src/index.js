@@ -227,13 +227,15 @@ function HullClient(config: HullClientConfiguration) {
   });
 
   const logFactory = level => (message, data) => logger[level](message, { context: ctxe, data });
-  const logs = {};
-  ["silly", "debug", "verbose", "info", "warn", "error"].map((level) => { logs[level] = logFactory(level); return level; });
-
 
   this.logger = {
     log: logFactory("info"),
-    ...logs
+    silly: logFactory("silly"),
+    debug: logFactory("debug"),
+    verbose: logFactory("verbose"),
+    info: logFactory("info"),
+    warn: logFactory("warn"),
+    error: logFactory("error"),
   };
 
   if (config.userClaim || config.accountClaim || config.accessToken) {
