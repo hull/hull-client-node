@@ -3,7 +3,8 @@
 import type {
   HullClientConfiguration, HullEntityAttributes, HullEntityAttributesOptions,
   HullEventName, HullEventProperties, HullEventContext,
-  HullAccountClaims, HullUserClaims, HullAuxiliaryClaims, HullEntityClaims
+  HullAccountClaims, HullUserClaims, HullAuxiliaryClaims, HullEntityClaims,
+  HullClientLogger, HullClientUtils
 } from "./types";
 
 const _ = require("lodash");
@@ -83,11 +84,11 @@ const logger = new (winston.Logger)({
 class HullClient {
   config: HullClientConfiguration;
   clientConfig: Configuration;
-  logger: Object;
-  utils: Object;
+  logger: HullClientLogger;
+  utils: HullClientUtils;
   requestId: string | void;
   batch: Firehose;
-  static logger: Object;
+  static logger: HullClientLogger;
 
   constructor(config: HullClientConfiguration) {
     this.config = config;
