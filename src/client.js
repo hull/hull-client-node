@@ -74,13 +74,6 @@ const logger = new (winston.Logger)({
  * @namespace Api
  * @public
  */
-/**
- * The following methods are helper utilities. They are available under `utils` property
- *
- * @namespace Utils
- * @public
- */
-
 class HullClient {
   config: HullClientConfiguration;
   clientConfig: Configuration;
@@ -154,6 +147,12 @@ class HullClient {
       };
     });
 
+    /**
+     * The following methods are helper utilities. They are available under `utils` property
+     *
+     * @namespace Utils
+     * @public
+     */
     this.utils = {
       /**
        * @memberof Utils
