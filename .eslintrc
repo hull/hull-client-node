@@ -20,7 +20,8 @@
     "prefer-destructuring": [0],
     "class-methods-use-this": [0],
     "flowtype-errors/show-errors": 2,
-    "spaced-comment": ["error", "always", { "markers": [":", "::"] }]
+    "spaced-comment": ["error", "always", { "markers": [":", "::"] }],
+    "no-use-before-define": ["error", { "classes": false }]
   },
   "extends": [
     "airbnb-base",

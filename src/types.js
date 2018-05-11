@@ -116,12 +116,58 @@ export type HullClientConfiguration = {
   flushAfter?: number
 };
 
-// export type HullClientLogger = {
-//   log: (string, Object) => void,
-//   silly: (string, Object) => void,
-//   debug: (string, Object) => void,
-//   verbose: (string, Object) => void,
-//   info: (string, Object) => void,
-//   warn: (string, Object) => void,
-//   error: (string, Object) => void
-// };
+export type HullClientLogger = {
+  log: (string, Object) => void,
+  silly: (string, Object) => void,
+  debug: (string, Object) => void,
+  verbose: (string, Object) => void,
+  info: (string, Object) => void,
+  warn: (string, Object) => void,
+  error: (string, Object) => void
+};
+
+export interface HullClientBaseInterface {
+  configuration(): HullClientConfiguration;
+  get(url: string, method: string, params: Object, options?: Object): Promise<*>;
+  post(url: string, method: string, params: Object, options?: Object): Promise<*>;
+  del(url: string, method: string, params: Object, options?: Object): Promise<*>;
+  put(url: string, method: string, params: Object, options?: Object): Promise<*>;
+  api: {
+    get(url: string, method: string, params: Object, options?: Object): Promise<*>;
+    post(url: string, method: string, params: Object, options?: Object): Promise<*>;
+    del(url: string, method: string, params: Object, options?: Object): Promise<*>;
+    put(url: string, method: string, params: Object, options?: Object): Promise<*>;
+  };
+  logger: HullClientLogger;
+  token(): void;
+  utils: {
+    groupTraits(): void,
+    traits: {
+      group(): void
+    },
+    properties: {
+      get(): void
+    },
+    settings: {
+      update(): void
+    }
+  };
+}
+
+export interface ScopedHullClientInterface extends HullClientBaseInterface {
+  alias(body: Object): Promise<*>;
+  track(event: HullEventName, properties?: HullEventProperties, context?: HullEventContext): Promise<*>;
+  traits(traits: HullEntityAttributes, context?: HullEntityAttributesOptions): Promise<*>;
+
+  asUser(userClaim: HullUserClaims, additionalClaims?: HullAuxiliaryClaims): ScopedHullClientInterface;
+  as(userClaim: HullUserClaims, additionalClaims?: HullAuxiliaryClaims): ScopedHullClientInterface;
+  asAccount(accountClaim: HullAccountClaims, additionalClaims?: HullAuxiliaryClaims): ScopedHullClientInterface;
+  account(accountClaim?: HullAccountClaims): ScopedHullClientInterface;
+}
+
+export interface HullClientInterface extends HullClientBaseInterface {
+  asUser(userClaim: HullUserClaims, additionalClaims?: HullAuxiliaryClaims): ScopedHullClientInterface;
+  as(userClaim: HullUserClaims, additionalClaims?: HullAuxiliaryClaims): ScopedHullClientInterface;
+  asAccount(accountClaim: HullAccountClaims, additionalClaims?: HullAuxiliaryClaims): ScopedHullClientInterface;
+  account(accountClaim?: HullAccountClaims): ScopedHullClientInterface;
+}

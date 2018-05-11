@@ -142,18 +142,18 @@ describe("Hull", () => {
     it("should throw an error if any of required field is not passed", () => {
       const hull = new Hull({ id: "562123b470df84b740000042", secret: "1234", organization: "test" });
 
-      expect(hull.asUser.bind(null, { some_id: "1234" }))
+      expect(hull.asUser.bind(hull, { some_id: "1234" }))
         .to.throw(Error);
-      expect(hull.asAccount.bind(null, { some_other_id: "1234" }))
+      expect(hull.asAccount.bind(hull, { some_other_id: "1234" }))
         .to.throw(Error);
 
-      expect(hull.asUser.bind(null, { external_id: "1234" }))
+      expect(hull.asUser.bind(hull, { external_id: "1234" }))
         .to.not.throw(Error);
-      expect(hull.asAccount.bind(null, { external_id: "1234" }))
+      expect(hull.asAccount.bind(hull, { external_id: "1234" }))
         .to.not.throw(Error);
     });
 
-     it("should filter all non standard claims", () => {
+    it("should filter all non standard claims", () => {
       const hull = new Hull({ id: "562123b470df84b740000042", secret: "1234", organization: "test" });
 
       const scoped = hull.asUser({ email: "foo@bar.com", foo: "bar" });
