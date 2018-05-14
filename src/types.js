@@ -57,7 +57,17 @@ export type HullEventProperties = {
   [HullEventProperty: string]: string
 };
 export type HullEventContext = {
-  [HullEventProperty: string]: string
+  location?: {},
+  page?: {
+    referrer?: string
+  },
+  referrer?: {
+    url: string
+  },
+  os?: {},
+  useragent?: string,
+  // https://github.com/facebook/flow/issues/1511
+  // ip?: null | string | number
 };
 
 /*
