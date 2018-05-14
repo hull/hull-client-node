@@ -10,7 +10,7 @@
  * @param  {Object} newSettings settings to update
  * @return {Promise}
  */
-function update(newSettings: Object): Promise<any> {
+function update(newSettings: Object): Promise<*> {
   return this.get("app")
     .then((ship) => {
       const private_settings = { ...ship.private_settings, ...newSettings };

@@ -23,7 +23,7 @@ describe("API client", () => {
   });
 
 
-  it("should return an instance of the client even without new", () => {
+  it.skip("should return an instance of the client even without new", () => {
     const clientConstructor = Client;
     const instance = clientConstructor(config);
     instance.should.be.instanceof(Client);

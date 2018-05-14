@@ -1,3 +1,9 @@
+// @flow
+import type {
+  HullClientConfiguration, HullEntityClaims, HullEntityType, HullAuxiliaryClaims,
+  HullUserClaims, HullAccountClaims
+} from "../types";
+
 const _ = require("lodash");
 const pkg = require("../../package.json");
 const crypto = require("./crypto");
@@ -70,26 +76,21 @@ const ACCOUNT_CLAIMS = ["id", "external_id", "domain"];
  * claim is an object
  * @throws Error
  */
-function assertClaimValidity(type, object, requiredFields) {
+function assertClaimValidity(type: HullEntityType, object: HullEntityClaims | void, requiredFields: Array<string>): void {
   if (!_.isEmpty(object)) {
-    if (_.isString(object)) {
+    if (typeof object === "string") {
       if (!object) {
         throw new Error(`Missing ${type} ID`);
       }
-    } else if (!_.isObject(object) || _.intersection(_.keys(object), requiredFields).length === 0) {
+    } else if (typeof object !== "object" || _.intersection(_.keys(object), requiredFields).length === 0) {
       throw new Error(`You need to pass an ${type} hash with an ${requiredFields.join(", ")} field`);
     }
   }
 }
 
-function filterClaim(object, possibleFields) {
-  return _.isString(object)
-    ? object
-    : _.pick(object, possibleFields);
-}
-
 class Configuration {
-  constructor(config) {
+  _state: HullClientConfiguration;
+  constructor(config: HullClientConfiguration) {
     if (!_.isObject(config) || !_.size(config)) {
       throw new Error("Configuration is invalid, it should be a non-empty object");
     }
@@ -99,11 +100,11 @@ class Configuration {
       assertClaimValidity("account", config.accountClaim, ACCOUNT_CLAIMS);
 
       if (config.userClaim) {
-        config.userClaim = filterClaim(config.userClaim, USER_CLAIMS);
+        config.userClaim = this.filterUserClaims(config.userClaim);
       }
 
       if (config.accountClaim) {
-        config.accountClaim = filterClaim(config.accountClaim, ACCOUNT_CLAIMS);
+        config.accountClaim = this.filterAccountClaims(config.accountClaim);
       }
 
       const accessToken = crypto.lookupToken(config, config.subjectType, {
@@ -139,14 +140,30 @@ class Configuration {
     this._state.version = pkg.version;
   }
 
-  set(key, value) {
+  filterUserClaims(object: HullUserClaims): HullUserClaims {
+    return typeof object === "string"
+      ? object
+      : _.pick(object, USER_CLAIMS);
+  }
+
+  filterAccountClaims(object: HullAccountClaims): HullAccountClaims {
+    return typeof object === "string"
+      ? object
+      : _.pick(object, ACCOUNT_CLAIMS);
+  }
+
+  set(key: string, value: $Values<HullClientConfiguration>): void {
     this._state[key] = value;
   }
 
-  get(key) {
+  get(key?: string): string | number | HullEntityType | HullEntityClaims | HullAuxiliaryClaims | HullClientConfiguration | void {
     if (key) {
       return this._state[key];
     }
+    return JSON.parse(JSON.stringify(this._state));
+  }
+
+  getAll(): HullClientConfiguration {
     return JSON.parse(JSON.stringify(this._state));
   }
 }
