@@ -20,12 +20,12 @@ export type HullEntityType = "account" | "user";
  */
 
 // separate claims to find entity
-export type HullAccountClaims = {
+export type HullAccountClaims = string | {
   id?: string;
   domain?: string;
   external_id?: string;
 };
-export type HullUserClaims = {
+export type HullUserClaims = string | {
   id?: string;
   email?: string;
   external_id?: string;
@@ -102,9 +102,11 @@ export type HullEvent = {
  * Hull Client Types
  */
 export type HullClientConfiguration = {
-  id: string,
-  secret: string,
-  organization: string,
+  id?: string,
+  secret?: string,
+  organization?: string,
+  domain?: string,
+  namespace?: string,
   requestId?: string,
   connectorName?: string,
   firehoseUrl?: string,
@@ -117,7 +119,8 @@ export type HullClientConfiguration = {
   accessToken?: string,
   hostSecret?: string,
   flushAt?: number,
-  flushAfter?: number
+  flushAfter?: number,
+  version?: string
 };
 
 export type HullClientLogger = {

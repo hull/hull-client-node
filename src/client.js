@@ -88,7 +88,9 @@ class HullClient {
     this.clientConfig = new Configuration(config);
 
     this.batch = Firehose.getInstance(this.clientConfig.get(), (params, batcher) => {
-      const firehoseUrl = this.clientConfig.get("firehoseUrl") || `${this.clientConfig.get("protocol")}://firehose.${this.clientConfig.get("domain")}`;
+      const protocol = this.clientConfig._state.protocol || "";
+      const domain = this.clientConfig._state.domain || "";
+      const firehoseUrl = this.clientConfig._state.firehoseUrl || `${protocol}://firehose.${domain}`;
       return restAPI(this, batcher.config, firehoseUrl, "post", params, {
         timeout: process.env.BATCH_TIMEOUT || 10000,
         retry: process.env.BATCH_RETRY || 5000
@@ -219,7 +221,7 @@ class HullClient {
     * };
     */
   configuration(): HullClientConfiguration {
-    return this.clientConfig.get();
+    return this.clientConfig.getAll();
   }
 
   api(url: string, method: string, params: Object, options: Object = {}) {
@@ -309,8 +311,11 @@ class EntityScopedHullClient extends HullClient {
    * hullClient.asAccount({ domain: "example.com", external_id: "1234" }).token(optionalClaims);
    */
   token(claims: HullEntityClaims) {
-    const subjectType = this.clientConfig.get("subjectType");
-    const claim = this.clientConfig.get(`${subjectType}Claim`);
+    const subjectType = this.clientConfig._state.subjectType || "";
+    const claim = subjectType === "account"
+      ? this.clientConfig._state.accountClaim
+      : this.clientConfig._state.userClaim;
+
     return crypto.lookupToken(this.clientConfig.get(), subjectType, { [subjectType]: claim }, claims);
   }
 
