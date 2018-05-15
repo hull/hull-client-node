@@ -83,7 +83,7 @@ export type HullSegment = {
 /**
  * This are claims we can use to identify account
  */
-export type HullAccountClaims = string | {
+export type HullAccountClaims = {
   id?: string;
   domain?: string;
   external_id?: string;
@@ -92,7 +92,7 @@ export type HullAccountClaims = string | {
 /**
  * This are claims we can use to identify user
  */
-export type HullUserClaims = string | {
+export type HullUserClaims = {
   id?: string;
   email?: string;
   external_id?: string;
@@ -311,8 +311,8 @@ export type HullClientConfiguration = {
   firehoseUrl?: string,
   protocol?: string,
   prefix?: string,
-  userClaim?: HullUserClaims,
-  accountClaim?: HullAccountClaims,
+  userClaim?: string | HullUserClaims,
+  accountClaim?: string | HullAccountClaims,
   subjectType?: HullEntityType,
   additionalClaims?: HullAuxiliaryClaims,
   accessToken?: string,

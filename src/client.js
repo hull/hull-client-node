@@ -248,7 +248,7 @@ class HullClient {
    * @public
    * @deprecated Use `asUser` instead
    */
-  as(userClaim: HullUserClaims, additionalClaims: HullAuxiliaryClaims = {}) {
+  as(userClaim: string | HullUserClaims, additionalClaims: HullAuxiliaryClaims = {}) {
     this.logger.warn("client.deprecation", { message: "use client.asUser instead of client.as" });
     return this.asUser(userClaim, additionalClaims);
   }
@@ -267,7 +267,7 @@ class HullClient {
    * @throws {Error} if no valid claims are passed
    * @return {HullClient}
    */
-  asUser(userClaim: HullUserClaims, additionalClaims: HullAuxiliaryClaims = {}) {
+  asUser(userClaim: string | HullUserClaims, additionalClaims: HullAuxiliaryClaims = {}) {
     if (!userClaim) {
       throw new Error("User Claims was not defined when calling hull.asUser()");
     }
@@ -286,7 +286,7 @@ class HullClient {
    * @throws {Error} If no valid claims are passed
    * @return {HullClient} instance scoped to account claims
    */
-  asAccount(accountClaim: HullAccountClaims, additionalClaims: HullAuxiliaryClaims = {}) {
+  asAccount(accountClaim: string | HullAccountClaims, additionalClaims: HullAuxiliaryClaims = {}) {
     if (!accountClaim) {
       throw new Error("Account Claims was not defined when calling hull.asAccount()");
     }
