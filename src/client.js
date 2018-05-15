@@ -375,6 +375,7 @@ class EntityScopedHullClient extends HullClient {
       type: "track",
       requestId: this.requestId,
       body: {
+        ...{}, // workaround @see https://github.com/facebook/flow/issues/1805#issuecomment-238650551
         ip: null,
         url: null,
         referer: null,

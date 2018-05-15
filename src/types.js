@@ -156,10 +156,7 @@ export type HullEventContext = {
   },
   os?: {},
   useragent?: string,
-  // we cannot specify this param since union type does not
-  // work with spread which we use in client
-  // https://github.com/facebook/flow/issues/1511
-  // ip?: null | string | number
+  ip?: string | number
 };
 
 /*
