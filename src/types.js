@@ -32,6 +32,10 @@ export type HullAttributeOperation = {
  */
 export type HullEntityType = "account" | "user";
 
+export type HullConnectorSettings = {
+  [HullConnectorSettingName: string]: any
+};
+
 /**
  * Connector (also called ship) object with settings, private settings and manifest.json
  * Used for both read and write operations
@@ -44,8 +48,8 @@ export type HullConnector = {
   description: string;
   tags: Array<string>;
   manifest: Object;
-  settings: Object;
-  private_settings: Object;
+  settings: HullConnectorSettings;
+  private_settings: HullConnectorSettings;
   status: Object;
 };
 
