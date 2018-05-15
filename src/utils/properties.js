@@ -1,6 +1,39 @@
+// @flow
 const _ = require("lodash");
 
-function getProperties(raw, path, id_path) {
+type HullProperties = {
+  [HullPropertyName: string]: {
+    id: string,
+    text: string,
+    type: string,
+    id_path: Array<string>,
+    path: Array<string>,
+    title: string,
+    key: string
+  }
+};
+
+type HullPropertiesRawResponseTreeItemChild = {
+  id: string,
+  text: string,
+  type: string,
+};
+
+type HullPropertiesRawResponseTreeItem = {
+  text: string,
+  children: Array<HullPropertiesRawResponseTreeItemChild>
+};
+
+type HullPropertiesRawResponse = {
+  version: string,
+  tree: Array<HullPropertiesRawResponseTreeItem>
+};
+
+
+function getProperties(raw: HullPropertiesRawResponse | HullPropertiesRawResponseTreeItem, path?: Array<string>, id_path?: Array<string>): {
+  properties: HullProperties,
+  tree: Array<*>
+} {
   const properties = {};
   const tree = [];
 
@@ -36,7 +69,7 @@ function getProperties(raw, path, id_path) {
  * @public
  * @return   {Promise<Object>}
  */
-function get() {
+function get(): Promise<HullProperties> {
   return this
     .get("search/user_reports/bootstrap")
     .then(({ tree }) => getProperties(tree).properties);
