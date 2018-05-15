@@ -268,7 +268,7 @@ export type HullAccountUpdateMessage = {
 /**
  * The whole notification object
  */
-export type HullUserUpdateNotification = {
+export type HullNotification = {
   notification_id: string,
   configuration: {
     id?: string,
@@ -278,7 +278,7 @@ export type HullUserUpdateNotification = {
   connector: HullConnector,
   segments: Array<HullSegment>,
   accounts_segments: Array<HullSegment>,
-  messages: Array<HullUserUpdateMessage>
+  messages?: Array<HullUserUpdateMessage | HullAccountUpdateMessage>
 };
 
 /*
