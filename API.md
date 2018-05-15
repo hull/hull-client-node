@@ -182,9 +182,9 @@ Returns **[Promise][13]**
 Following methods allows to perform api calls again Hull REST API.
 Their are available on `HullClient` and scoped HullClient.
 
-### put
+### del
 
-Performs a PUT HTTP request on selected url of Hull REST API (prefixed with `prefix` param of the constructor)
+Performs a DELETE HTTP request on selected url of Hull REST API (prefixed with `prefix` param of the constructor)
 
 **Parameters**
 
@@ -194,9 +194,9 @@ Performs a PUT HTTP request on selected url of Hull REST API (prefixed with `pre
     -   `options.timeout` **[Number][14]?** option controls if the client should retry the request if the client timeout error happens or if there is an error 503 returned serverside - the value of the option is applied for client side error
     -   `options.retry` **[Number][14]?** controls the time between timeout or 503 error occurence and the next retry being done
 
-### del
+### get
 
-Performs a DELETE HTTP request on selected url of Hull REST API (prefixed with `prefix` param of the constructor)
+Performs a GET HTTP request on selected url of Hull REST API (prefixed with `prefix` param of the constructor)
 
 **Parameters**
 
@@ -218,9 +218,9 @@ Performs a POST HTTP request on selected url of Hull REST API (prefixed with `pr
     -   `options.timeout` **[Number][14]?** option controls if the client should retry the request if the client timeout error happens or if there is an error 503 returned serverside - the value of the option is applied for client side error
     -   `options.retry` **[Number][14]?** controls the time between timeout or 503 error occurence and the next retry being done
 
-### get
+### put
 
-Performs a GET HTTP request on selected url of Hull REST API (prefixed with `prefix` param of the constructor)
+Performs a PUT HTTP request on selected url of Hull REST API (prefixed with `prefix` param of the constructor)
 
 **Parameters**
 
