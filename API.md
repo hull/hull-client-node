@@ -93,59 +93,6 @@ This makes [#traits][3] method available.
 
 Returns **[HullClient][8]** instance scoped to account claims
 
-## Api
-
-Following methods allows to perform api calls again Hull REST API.
-Their are available on `HullClient` and scoped HullClient.
-
-### del
-
-Performs a DELETE HTTP request on selected url of Hull REST API (prefixed with `prefix` param of the constructor)
-
-**Parameters**
-
--   `url` **[string][2]** 
--   `params` **[Object][1]?** 
--   `options` **[Object][1]**  (optional, default `{}`)
-    -   `options.timeout` **[Number][9]?** option controls if the client should retry the request if the client timeout error happens or if there is an error 503 returned serverside - the value of the option is applied for client side error
-    -   `options.retry` **[Number][9]?** controls the time between timeout or 503 error occurence and the next retry being done
-
-### put
-
-Performs a PUT HTTP request on selected url of Hull REST API (prefixed with `prefix` param of the constructor)
-
-**Parameters**
-
--   `url` **[string][2]** 
--   `params` **[Object][1]?** 
--   `options` **[Object][1]**  (optional, default `{}`)
-    -   `options.timeout` **[Number][9]?** option controls if the client should retry the request if the client timeout error happens or if there is an error 503 returned serverside - the value of the option is applied for client side error
-    -   `options.retry` **[Number][9]?** controls the time between timeout or 503 error occurence and the next retry being done
-
-### post
-
-Performs a POST HTTP request on selected url of Hull REST API (prefixed with `prefix` param of the constructor)
-
-**Parameters**
-
--   `url` **[string][2]** 
--   `params` **[Object][1]?** 
--   `options` **[Object][1]**  (optional, default `{}`)
-    -   `options.timeout` **[Number][9]?** option controls if the client should retry the request if the client timeout error happens or if there is an error 503 returned serverside - the value of the option is applied for client side error
-    -   `options.retry` **[Number][9]?** controls the time between timeout or 503 error occurence and the next retry being done
-
-### get
-
-Performs a GET HTTP request on selected url of Hull REST API (prefixed with `prefix` param of the constructor)
-
-**Parameters**
-
--   `url` **[string][2]** 
--   `params` **[Object][1]?** 
--   `options` **[Object][1]**  (optional, default `{}`)
-    -   `options.timeout` **[Number][9]?** option controls if the client should retry the request if the client timeout error happens or if there is an error 503 returned serverside - the value of the option is applied for client side error
-    -   `options.retry` **[Number][9]?** controls the time between timeout or 503 error occurence and the next retry being done
-
 ## ScopedHullClient
 
 The following methods are available when `HullClient` instance is scoped to user or account.
@@ -161,9 +108,9 @@ scopedHullClient.traits({ new_attribute: "new_value" });
 
 ### token
 
-Used for [Bring your own users][10].
+Used for [Bring your own users][9].
 Creates a signed string for the user passed in hash. `userHash` needs an `email` field.
-[You can then pass this client-side to Hull.js][11] to authenticate users client-side and cross-domain
+[You can then pass this client-side to Hull.js][10] to authenticate users client-side and cross-domain
 
 **Parameters**
 
@@ -180,7 +127,7 @@ Returns **[string][2]** token
 
 ### traits
 
-Saves attributes on the user or account. Only available on User or Account scoped `HullClient` instance (see [#asuser][12] and [#asaccount][13]).
+Saves attributes on the user or account. Only available on User or Account scoped `HullClient` instance (see [#asuser][11] and [#asaccount][12]).
 
 **Parameters**
 
@@ -189,11 +136,11 @@ Saves attributes on the user or account. Only available on User or Account scope
     -   `context.source` **[string][2]?** optional source prefix, if applied all traits will be prefixed with this string (and `/` character)
     -   `context.sync` **[string][2]** make the operation synchronous - deprecated option, will be removed in next version (optional, default `false`)
 
-Returns **[Promise][14]** 
+Returns **[Promise][13]** 
 
 ### track
 
-Stores events on user. Only available on User scoped `HullClient` instance (see [#asuser][12]).
+Stores events on user. Only available on User scoped `HullClient` instance (see [#asuser][11]).
 
 **Parameters**
 
@@ -207,11 +154,11 @@ Stores events on user. Only available on User scoped `HullClient` instance (see 
     -   `context.ip` **[string][2]?** Define the Event's IP. Set to `null` if you're storing a server call, otherwise, geoIP will locate this event.
     -   `context.referer` **[string][2]?** Define the Referer. `null` for server calls.
 
-Returns **[Promise][14]** 
+Returns **[Promise][13]** 
 
 ### account
 
-Available only for User scoped `HullClient` instance (see [#asuser][12]).
+Available only for User scoped `HullClient` instance (see [#asuser][11]).
 Returns `HullClient` instance scoped to both User and Account, but all traits/track call would be performed on the User, who will be also linked to the Account.
 
 **Parameters**
@@ -228,7 +175,60 @@ Issues an `alias` event on user?
 
 -   `body` **[Object][1]** 
 
-Returns **[Promise][14]** 
+Returns **[Promise][13]** 
+
+## Api
+
+Following methods allows to perform api calls again Hull REST API.
+Their are available on `HullClient` and scoped HullClient.
+
+### del
+
+Performs a DELETE HTTP request on selected url of Hull REST API (prefixed with `prefix` param of the constructor)
+
+**Parameters**
+
+-   `url` **[string][2]** 
+-   `params` **[Object][1]?** 
+-   `options` **[Object][1]**  (optional, default `{}`)
+    -   `options.timeout` **[Number][14]?** option controls if the client should retry the request if the client timeout error happens or if there is an error 503 returned serverside - the value of the option is applied for client side error
+    -   `options.retry` **[Number][14]?** controls the time between timeout or 503 error occurence and the next retry being done
+
+### get
+
+Performs a GET HTTP request on selected url of Hull REST API (prefixed with `prefix` param of the constructor)
+
+**Parameters**
+
+-   `url` **[string][2]** 
+-   `params` **[Object][1]?** 
+-   `options` **[Object][1]**  (optional, default `{}`)
+    -   `options.timeout` **[Number][14]?** option controls if the client should retry the request if the client timeout error happens or if there is an error 503 returned serverside - the value of the option is applied for client side error
+    -   `options.retry` **[Number][14]?** controls the time between timeout or 503 error occurence and the next retry being done
+
+### post
+
+Performs a POST HTTP request on selected url of Hull REST API (prefixed with `prefix` param of the constructor)
+
+**Parameters**
+
+-   `url` **[string][2]** 
+-   `params` **[Object][1]?** 
+-   `options` **[Object][1]**  (optional, default `{}`)
+    -   `options.timeout` **[Number][14]?** option controls if the client should retry the request if the client timeout error happens or if there is an error 503 returned serverside - the value of the option is applied for client side error
+    -   `options.retry` **[Number][14]?** controls the time between timeout or 503 error occurence and the next retry being done
+
+### put
+
+Performs a PUT HTTP request on selected url of Hull REST API (prefixed with `prefix` param of the constructor)
+
+**Parameters**
+
+-   `url` **[string][2]** 
+-   `params` **[Object][1]?** 
+-   `options` **[Object][1]**  (optional, default `{}`)
+    -   `options.timeout` **[Number][14]?** option controls if the client should retry the request if the client timeout error happens or if there is an error 503 returned serverside - the value of the option is applied for client side error
+    -   `options.retry` **[Number][14]?** controls the time between timeout or 503 error occurence and the next retry being done
 
 ## Utils
 
@@ -245,7 +245,7 @@ The following methods are helper utilities. They are available under `utils` pro
 
 Gets and returns all existing properties in the organization along with their metadata
 
-Returns **[Promise][14]&lt;[Object][1]>** 
+Returns **[Promise][13]&lt;[Object][1]>** 
 
 ### settings.update
 
@@ -257,7 +257,7 @@ Note: this method will trigger `hullClient.put` and will result in `ship:update`
 
 -   `newSettings` **[Object][1]** settings to update
 
-Returns **[Promise][14]** 
+Returns **[Promise][13]** 
 
 ### traits.group
 
@@ -322,14 +322,14 @@ Returns **[Object][1]** nested object
 
 [8]: #hullclient
 
-[9]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number
+[9]: http://hull.io/docs/users/byou
 
-[10]: http://hull.io/docs/users/byou
+[10]: http://www.hull.io/docs/users/byou
 
-[11]: http://www.hull.io/docs/users/byou
+[11]: #asuser
 
-[12]: #asuser
+[12]: #asaccount
 
-[13]: #asaccount
+[13]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise
 
-[14]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise
+[14]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number

@@ -47,11 +47,18 @@ export type HullConnector = {
   name: string;
   description: string;
   tags: Array<string>;
+  source_url: string;
+  index: string;
+  picture: string;
+  homepage_url: string;
+  manifest_url: string;
   manifest: Object;
   settings: HullConnectorSettings;
   private_settings: HullConnectorSettings;
   status: Object;
 };
+
+export type HullSegmentType = "users_segment" | "accounts_segment";
 
 /**
  * An object representing the Hull Segment
@@ -60,9 +67,13 @@ export type HullConnector = {
 export type HullSegment = {
   id: string;
   name: string;
+  type: HullSegmentType;
   stats: {
-    users: Number
+    users?: number,
+    accounts?: number // is it really there?
   };
+  created_at: string;
+  updated_at: string;
 };
 
 /*
