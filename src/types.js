@@ -339,7 +339,6 @@ export type HullClientLogger = {
  * Definition of utilities object
  */
 export type HullClientUtils = {
-  groupTraits: traitsUtils.group,
   traits: typeof traitsUtils,
   settings: typeof settingsUtils,
   properties: typeof propertiesUtils,

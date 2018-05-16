@@ -98,71 +98,12 @@ class HullClient {
     });
 
     /**
-     * Performs a GET HTTP request on selected url of Hull REST API (prefixed with `prefix` param of the constructor)
-     * @function get
-     * @public
-     * @memberof Api#
-     * @param {string} url
-     * @param {Object} [params]
-     * @param {Object} [options={}]
-     * @param {Number} [options.timeout] option controls if the client should retry the request if the client timeout error happens or if there is an error 503 returned serverside - the value of the option is applied for client side error
-     * @param {Number} [options.retry] controls the time between timeout or 503 error occurence and the next retry being done
-     */
-    /**
-     * Performs a POST HTTP request on selected url of Hull REST API (prefixed with `prefix` param of the constructor)
-     * @function post
-     * @public
-     * @memberof Api#
-     * @param {string} url
-     * @param {Object} [params]
-     * @param {Object} [options={}]
-     * @param {Number} [options.timeout] option controls if the client should retry the request if the client timeout error happens or if there is an error 503 returned serverside - the value of the option is applied for client side error
-     * @param {Number} [options.retry] controls the time between timeout or 503 error occurence and the next retry being done
-     */
-    /**
-     * Performs a PUT HTTP request on selected url of Hull REST API (prefixed with `prefix` param of the constructor)
-     * @function put
-     * @alias api.put
-     * @public
-     * @memberof Api#
-     * @param {string} url
-     * @param {Object} [params]
-     * @param {Object} [options={}]
-     * @param {Number} [options.timeout] option controls if the client should retry the request if the client timeout error happens or if there is an error 503 returned serverside - the value of the option is applied for client side error
-     * @param {Number} [options.retry] controls the time between timeout or 503 error occurence and the next retry being done
-     */
-    /**
-     * Performs a DELETE HTTP request on selected url of Hull REST API (prefixed with `prefix` param of the constructor)
-     * @function del
-     * @alias api.del
-     * @public
-     * @memberof Api#
-     * @param {string} url
-     * @param {Object} [params]
-     * @param {Object} [options={}]
-     * @param {Number} [options.timeout] option controls if the client should retry the request if the client timeout error happens or if there is an error 503 returned serverside - the value of the option is applied for client side error
-     * @param {Number} [options.retry] controls the time between timeout or 503 error occurence and the next retry being done
-     */
-    _.each(PUBLIC_METHODS, (method) => {
-      this.api[method] = (url, params, options = {}) => {
-        return restAPI(this, this.clientConfig, url, method, params, options);
-      };
-    });
-
-    /**
      * The following methods are helper utilities. They are available under `utils` property
      *
      * @namespace Utils
      * @public
      */
     this.utils = {
-      /**
-       * @memberof Utils
-       * @method   groupTraits
-       * @public
-       * @deprecated - use `utils.traits.group` instead
-       */
-      groupTraits: traitsUtils.group,
       traits: traitsUtils,
       properties: {
         get: propertiesUtils.get.bind(this),
@@ -224,22 +165,80 @@ class HullClient {
     return this.clientConfig.getAll();
   }
 
+  /**
+   * Performs a HTTP request on selected url of Hull REST API (prefixed with `prefix` param of the constructor)
+   * @function get
+   * @public
+   * @memberof Api#
+   * @param {string} url
+   * @param {string} method
+   * @param {Object} [params]
+   * @param {Object} [options={}]
+   * @param {Number} [options.timeout] option controls if the client should retry the request if the client timeout error happens or if there is an error 503 returned serverside - the value of the option is applied for client side error
+   * @param {Number} [options.retry] controls the time between timeout or 503 error occurence and the next retry being done
+   */
   api(url: string, method: string, params: Object, options: Object = {}) {
     return restAPI(this, this.clientConfig, url, method, params, options);
   }
 
+  /**
+   * Performs a GET HTTP request on selected url of Hull REST API (prefixed with `prefix` param of the constructor)
+   * @function get
+   * @public
+   * @memberof Api#
+   * @param {string} url
+   * @param {Object} [params]
+   * @param {Object} [options={}]
+   * @param {Number} [options.timeout] option controls if the client should retry the request if the client timeout error happens or if there is an error 503 returned serverside - the value of the option is applied for client side error
+   * @param {Number} [options.retry] controls the time between timeout or 503 error occurence and the next retry being done
+   */
   get(url: string, params: Object, options: Object = {}) {
     return restAPI(this, this.clientConfig, url, "get", params, options);
   }
 
+  /**
+   * Performs a POST HTTP request on selected url of Hull REST API (prefixed with `prefix` param of the constructor)
+   * @function post
+   * @public
+   * @memberof Api#
+   * @param {string} url
+   * @param {Object} [params]
+   * @param {Object} [options={}]
+   * @param {Number} [options.timeout] option controls if the client should retry the request if the client timeout error happens or if there is an error 503 returned serverside - the value of the option is applied for client side error
+   * @param {Number} [options.retry] controls the time between timeout or 503 error occurence and the next retry being done
+   */
   post(url: string, params: Object, options: Object = {}) {
     return restAPI(this, this.clientConfig, url, "post", params, options);
   }
 
+  /**
+   * Performs a DELETE HTTP request on selected url of Hull REST API (prefixed with `prefix` param of the constructor)
+   * @function del
+   * @alias api.del
+   * @public
+   * @memberof Api#
+   * @param {string} url
+   * @param {Object} [params]
+   * @param {Object} [options={}]
+   * @param {Number} [options.timeout] option controls if the client should retry the request if the client timeout error happens or if there is an error 503 returned serverside - the value of the option is applied for client side error
+   * @param {Number} [options.retry] controls the time between timeout or 503 error occurence and the next retry being done
+   */
   del(url: string, params: Object, options: Object = {}) {
     return restAPI(this, this.clientConfig, url, "del", params, options);
   }
 
+  /**
+   * Performs a PUT HTTP request on selected url of Hull REST API (prefixed with `prefix` param of the constructor)
+   * @function put
+   * @alias api.put
+   * @public
+   * @memberof Api#
+   * @param {string} url
+   * @param {Object} [params]
+   * @param {Object} [options={}]
+   * @param {Number} [options.timeout] option controls if the client should retry the request if the client timeout error happens or if there is an error 503 returned serverside - the value of the option is applied for client side error
+   * @param {Number} [options.retry] controls the time between timeout or 503 error occurence and the next retry being done
+   */
   put(url: string, params: Object, options: Object = {}) {
     return restAPI(this, this.clientConfig, url, "put", params, options);
   }
