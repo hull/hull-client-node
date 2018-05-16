@@ -1,4 +1,5 @@
-const rest = require("restler");
+// const rest = require("restler");
+const superagent = require("superagent");
 const pkg = require("../../package.json");
 
 const DEFAULT_HEADERS = {
@@ -16,86 +17,52 @@ function isAbsolute(url = "") {
 }
 
 function perform(client, config = {}, method = "get", path, params = {}, options = {}) {
-  // restler options
-  const opts = {
-    headers: {
+  const methodCall = superagent[method];
+  if (!methodCall) {
+    throw new Error(`Unsupported method ${method}`);
+  }
+
+  const agent = methodCall(path)
+    .set({
       ...DEFAULT_HEADERS,
       "Hull-App-Id": config.id,
       "Hull-Access-Token": config.token,
       "Hull-Organization": config.organization,
       ...(params.headers || {})
-    }
-  };
-
-  if (config.userId && typeof config.userId === "string") {
-    opts.headers["Hull-User-Id"] = config.userId;
-  }
-
-  if (options.timeout) {
-    opts.timeout = options.timeout;
-  }
-
-  if (method === "get") {
-    options.timeout = options.timeout || 10000;
-  }
-
-  if (options.timeout) {
-    opts.timeout = options.timeout;
-  }
-
-  if (method === "get") {
-    opts.query = params;
-  } else {
-    opts.data = JSON.stringify(params);
-  }
-
-  const methodCall = rest[method];
-  if (!methodCall) { throw new Error(`Unsupported method ${method}`); }
-
-  const actions = {};
-  let retryCount = 0;
-  const query = methodCall(path, opts);
-
-  const promise = new Promise((resolve, reject) => {
-    actions.resolve = resolve;
-    actions.reject = reject;
-
-    query
-      .on("success", actions.resolve)
-      .on("error", actions.reject);
-
-    query.on("fail", function handleError(error, response) {
-      client.logger.debug("client.fail", {
-        statusCode: response.statusCode, retryCount, path, method
-      });
-      if (response.statusCode >= 500 && options.timeout && retryCount < 2) {
-        retryCount += 1;
-        return this.retry(options.retry || 500);
+    })
+    .retry(2, function retryCallback(err, res) {
+      const retryCount = this._retries;
+      if (err && err.timeout) {
+        client.logger.debug("client.timeout", {
+          timeout: err.timeout, retryCount, path, method
+        });
+        return true;
       }
-      return actions.reject(error);
+      client.logger.debug("client.fail", {
+        statusCode: res.statusCode, retryCount, path, method
+      });
+      if (res.statusCode >= 500 && retryCount <= 2) {
+        return true;
+      }
+      return false;
     });
 
-    if (options.timeout) {
-      query.on("timeout", function handleTimeout() {
-        client.logger.debug("client.timeout", {
-          timeout: opts.timeout, retryCount, path, method
-        });
-        if (retryCount < 2) {
-          retryCount += 1;
-          return this.retry(options.retry || 500);
-        }
-        return actions.reject(new Error("Timeout"));
-      });
-    }
-    return query;
-  });
+  if (config.userId && typeof config.userId === "string") {
+    agent.set("Hull-User-Id", config.userId);
+  }
 
-  promise.abort = () => {
-    query.abort();
-    actions.reject(new Error("Aborted"));
-  };
+  if (options.timeout) {
+    agent.timeout(options.timeout);
+  }
 
-  return promise;
+  if (method === "get") {
+    agent.timeout(options.timeout || 10000);
+  }
+
+  if (method === "get") {
+    return agent.query(params);
+  }
+  return agent.send(params);
 }
 
 function format(config, url) {
