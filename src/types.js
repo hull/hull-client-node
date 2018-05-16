@@ -135,14 +135,6 @@ export type HullUserAttribtues = {
 export type HullEntityAttributes = HullAccountAttributes | HullUserAttribtues;
 
 /**
- * This are options passed to the traits setting method which affects it's behavior
- */
-export type HullEntityAttributesOptions = {
-  source?: string,
-  sync?: boolean
-};
-
-/**
  * This is an event name which we use when tracking an event
  */
 export type HullEventName = string;

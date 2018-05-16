@@ -1,7 +1,7 @@
 // @flow
 
 import type {
-  HullClientConfiguration, HullEntityAttributes, HullEntityAttributesOptions,
+  HullClientConfiguration, HullEntityAttributes,
   HullEventName, HullEventProperties, HullEventContext,
   HullAccountClaims, HullUserClaims, HullAuxiliaryClaims, HullEntityClaims,
   HullClientLogger, HullClientUtils
@@ -19,9 +19,6 @@ const Firehose = require("./lib/firehose");
 const traitsUtils = require("./utils/traits");
 const settingsUtils = require("./utils/settings");
 const propertiesUtils = require("./utils/properties");
-
-const PUBLIC_METHODS = ["get", "post", "del", "put"];
-
 
 const logger = new (winston.Logger)({
   transports: [
@@ -315,29 +312,10 @@ class EntityScopedHullClient extends HullClient {
    * @public
    * @memberof ScopedHullClient
    * @param  {Object} traits            object with new attributes, it's always flat object, without nested subobjects
-   * @param  {Object} [context={}]
-   * @param  {string} [context.source=] optional source prefix, if applied all traits will be prefixed with this string (and `/` character)
-   * @param  {string} [context.sync=false] make the operation synchronous - deprecated option, will be removed in next version
    * @return {Promise}
    */
-  traits(traits: HullEntityAttributes, context: HullEntityAttributesOptions = {}): Promise<*> {
-    // Quick and dirty way to add a source prefix to all traits we want in.
-    const source = context.source;
-    let body = {};
-    if (source) {
-      _.reduce(traits, (d, value, key) => {
-        const k = `${source}/${key}`;
-        d[k] = value;
-        return d;
-      }, body);
-    } else {
-      body = { ...traits };
-    }
-
-    if (context.sync === true) {
-      return this.post("me/traits", body);
-    }
-
+  traits(traits: HullEntityAttributes): Promise<*> {
+    const body = { ...traits };
     return this.batch({ type: "traits", body, requestId: this.requestId });
   }
 

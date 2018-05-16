@@ -120,9 +120,6 @@ Saves attributes on the user or account. Only available on User or Account scope
 **Parameters**
 
 -   `traits` **[Object][1]** object with new attributes, it's always flat object, without nested subobjects
--   `context` **[Object][1]**  (optional, default `{}`)
-    -   `context.source` **[string][2]?** optional source prefix, if applied all traits will be prefixed with this string (and `/` character)
-    -   `context.sync` **[string][2]** make the operation synchronous - deprecated option, will be removed in next version (optional, default `false`)
 
 Returns **[Promise][13]** 
 
