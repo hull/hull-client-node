@@ -326,7 +326,8 @@ export type HullClientLogger = {|
   verbose: (string, Object) => void,
   info: (string, Object) => void,
   warn: (string, Object) => void,
-  error: (string, Object) => void
+  error: (string, Object) => void,
+  transports: Object
 |};
 
 /**
