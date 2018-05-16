@@ -133,7 +133,7 @@ export type HullUserAttributes = {
 /**
  * This is a combined entity attributes type. It's either account or user attributes
  */
-export type HullEntityAttributes = HullAccountAttributes | HullUserAttribtues;
+export type HullEntityAttributes = HullAccountAttributes | HullUserAttributes;
 
 /**
  * This is an event name which we use when tracking an event
