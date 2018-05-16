@@ -1,3 +1,19 @@
+# 2.0.0
+* **BREAKING** HullClient is a set of ES6 classes now, not a Function anymore - this means you cannot do `const hullClient = HullClient()` anymore, you always need `new` keyword
+* **BREAKING** `as` method is not available anymore, use `asUser`
+* **BREAKING** `utils.groupTraits` method is not available anymore, use `utils.traits.group`
+* **BREAKING** `traits` method second parameter accepting `source` and `sync` option is not available anymore. Sync calls are not available at all, and if you need to apply `source` to your traits you need to do it before passing payload to `traits` method
+* the client now comes with full set of Flow types in src/types.js file
+  ```js
+  import type { HullUserClaims } from "hull-client";
+
+  const userClaims: HullUserClaims = {
+    wrong_claim: "bar"
+  };
+  // this will throw flow check error since `wrong_claim` is not correct
+  ```
+* underlying HTTP library restler was replaced with superagent
+
 # 1.2.1
 * render docs without a TOC so the Website can display them properly.
 

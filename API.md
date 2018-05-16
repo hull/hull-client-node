@@ -74,7 +74,7 @@ This makes [#traits][3] method available.
 **Parameters**
 
 -   `accountClaim` **[Object][1]** 
--   `additionalClaims` **[Object][1]**  (optional, default `{}`)
+-   `additionalClaims` **[Object][1]**  (optional, default `Object.freeze({})`)
 
 
 -   Throws **[Error][7]** If no valid claims are passed
@@ -148,7 +148,7 @@ Returns `HullClient` instance scoped to both User and Account, but all traits/tr
 
 **Parameters**
 
--   `accountClaim` **[Object][1]** [description] (optional, default `{}`)
+-   `accountClaim` **[Object][1]** [description] (optional, default `Object.freeze({})`)
 
 Returns **[HullClient][8]** HullClient scoped to a User and linked to an Account
 

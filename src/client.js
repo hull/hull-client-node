@@ -254,7 +254,7 @@ class HullClient {
    * @throws {Error} if no valid claims are passed
    * @return {HullClient}
    */
-  asUser(userClaim: string | HullUserClaims, additionalClaims: HullAuxiliaryClaims = {}) {
+  asUser(userClaim: string | HullUserClaims, additionalClaims: HullAuxiliaryClaims = Object.freeze({})) {
     if (!userClaim) {
       throw new Error("User Claims was not defined when calling hull.asUser()");
     }
@@ -273,7 +273,7 @@ class HullClient {
    * @throws {Error} If no valid claims are passed
    * @return {HullClient} instance scoped to account claims
    */
-  asAccount(accountClaim: string | HullAccountClaims, additionalClaims: HullAuxiliaryClaims = {}) {
+  asAccount(accountClaim: string | HullAccountClaims, additionalClaims: HullAuxiliaryClaims = Object.freeze({})) {
     if (!accountClaim) {
       throw new Error("Account Claims was not defined when calling hull.asAccount()");
     }
@@ -365,10 +365,7 @@ class UserScopedHullClient extends EntityScopedHullClient {
    * @param  {Object} accountClaim [description]
    * @return {HullClient} HullClient scoped to a User and linked to an Account
    */
-  account(accountClaim: HullAccountClaims = {}) {
-    if (!accountClaim) {
-      return new AccountScopedHullClient({ ...this.config, subjectType: "account" });
-    }
+  account(accountClaim: HullAccountClaims = Object.freeze({})) {
     return new AccountScopedHullClient({ ...this.config, subjectType: "account", accountClaim });
   }
 

@@ -22,10 +22,10 @@ export type HullAttributeValue = string | boolean | Array<string> | number;
  * When writing attributes we can specify both the value with operation
  * @see https://www.hull.io/docs/references/api/#user-attributes
  */
-export type HullAttributeOperation = {
+export type HullAttributeOperation = {|
   operation: "set" | "setIfNull" | "inc" | "dec",
   value: HullAttributeValue
-};
+|};
 
 /**
  * Possible entity types
@@ -83,21 +83,21 @@ export type HullSegment = {
 /**
  * This are claims we can use to identify account
  */
-export type HullAccountClaims = {
+export type HullAccountClaims = {|
   id?: string;
   domain?: string;
   external_id?: string;
-};
+|};
 
 /**
  * This are claims we can use to identify user
  */
-export type HullUserClaims = {
+export type HullUserClaims = {|
   id?: string;
   email?: string;
   external_id?: string;
   anonymous_id?: string;
-};
+|};
 
 /**
  * This is a combined entity claims type. It's either account or user claims
@@ -108,10 +108,10 @@ export type HullEntityClaims = HullUserClaims | HullAccountClaims;
  * Auxiliary claims which can be added to the main identity claims,
  * both for users and account which change resolution behavior
  */
-export type HullAuxiliaryClaims = {
+export type HullAuxiliaryClaims = {|
   create?: boolean,
   active?: boolean
-};
+|};
 
 /**
  * This is a hash object which allows to set traits on account.
@@ -217,57 +217,57 @@ export type HullEvent = {
  * where first element is an old value and second element is the new value.
  * This object contain information about changes on one or multiple attributes (that's thy attributes and changes are plural).
  */
-export type HullAttributesChanges = {
+export type HullAttributesChanges = {|
   [HullAttributeName]: [HullAttributeValue, HullAttributeValue]
-};
+|};
 
 /**
  * Represents segment changes in TUserChanges.
  * The object contains two params which mark which segments user left or entered.
  * It may contain none, one or multiple HullSegment in both params.
  */
-export type HullSegmentsChanges = {
+export type HullSegmentsChanges = {|
   entered: Array<HullSegment>;
   left: Array<HullSegment>;
-};
+|};
 
 /**
  * Object containing all changes related to User in HullUserUpdateMessage
  */
-export type HullUserChanges = {
+export type HullUserChanges = {|
   user: HullAttributesChanges;
   account: HullAttributesChanges;
   segments: HullSegmentsChanges; // should be segments or user_segments?
-};
+|};
 
 /**
  * Object containing all changes related to User in HullUserUpdateMessage
  */
-export type HullAccountChanges = {
+export type HullAccountChanges = {|
   account: HullAttributesChanges;
   segments: HullSegmentsChanges; // should be segments or account_segments?
-};
+|};
 
 /**
  * A message sent by the platform when any event, attribute (trait) or segment change happens on the user.
  */
-export type HullUserUpdateMessage = {
+export type HullUserUpdateMessage = {|
   user: HullUser;
   changes: HullUserChanges;
   segments: Array<HullSegment>; // should be segments or user_segments?
   events: Array<HullEvent>;
   account: HullAccount;
-};
+|};
 
 /**
  * A message sent by the platform when any attribute (trait) or segment change happens on the account.
  */
-export type HullAccountUpdateMessage = {
+export type HullAccountUpdateMessage = {|
   changes: HullUserChanges;
   segments: Array<HullSegment>; // should be segments or account_segments?
   events: Array<HullEvent>;
   account: HullAccount;
-};
+|};
 
 /**
  * The whole notification object
@@ -292,7 +292,7 @@ export type HullNotification = {
 /**
  * Configuration which can be passed to the HullClient constructor
  */
-export type HullClientConfiguration = {
+export type HullClientConfiguration = {|
   id?: string,
   secret?: string,
   organization?: string,
@@ -312,12 +312,12 @@ export type HullClientConfiguration = {
   flushAt?: number,
   flushAfter?: number,
   version?: string
-};
+|};
 
 /**
  * Definition of logger object
  */
-export type HullClientLogger = {
+export type HullClientLogger = {|
   log: (string, Object) => void,
   silly: (string, Object) => void,
   debug: (string, Object) => void,
@@ -325,13 +325,13 @@ export type HullClientLogger = {
   info: (string, Object) => void,
   warn: (string, Object) => void,
   error: (string, Object) => void
-};
+|};
 
 /**
  * Definition of utilities object
  */
-export type HullClientUtils = {
+export type HullClientUtils = {|
   traits: typeof traitsUtils,
   settings: typeof settingsUtils,
   properties: typeof propertiesUtils,
-};
+|};
