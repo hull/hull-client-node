@@ -48,18 +48,6 @@ hullClient.configuration() == {
 
 Returns **[Object][1]** current `HullClient` configuration parameters
 
-### as
-
-**Parameters**
-
--   `userClaim` **([string][2] | HullUserClaims)** 
--   `additionalClaims` **HullAuxiliaryClaims**  (optional, default `{}`)
-
-**Meta**
-
--   **deprecated**: Use `asUser` instead
-
-
 ### asUser
 
 Takes User Claims (link to User Identity docs) and returnes `HullClient` instance scoped to this User.
@@ -182,9 +170,9 @@ Returns **[Promise][13]**
 Following methods allows to perform api calls again Hull REST API.
 Their are available on `HullClient` and scoped HullClient.
 
-### put
+### post
 
-Performs a PUT HTTP request on selected url of Hull REST API (prefixed with `prefix` param of the constructor)
+Performs a POST HTTP request on selected url of Hull REST API (prefixed with `prefix` param of the constructor)
 
 **Parameters**
 
@@ -206,9 +194,9 @@ Performs a GET HTTP request on selected url of Hull REST API (prefixed with `pre
     -   `options.timeout` **[Number][14]?** option controls if the client should retry the request if the client timeout error happens or if there is an error 503 returned serverside - the value of the option is applied for client side error
     -   `options.retry` **[Number][14]?** controls the time between timeout or 503 error occurence and the next retry being done
 
-### post
+### put
 
-Performs a POST HTTP request on selected url of Hull REST API (prefixed with `prefix` param of the constructor)
+Performs a PUT HTTP request on selected url of Hull REST API (prefixed with `prefix` param of the constructor)
 
 **Parameters**
 

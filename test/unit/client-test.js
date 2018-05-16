@@ -52,18 +52,6 @@ describe("Hull", () => {
         .that.eql(["admin"]);
     });
 
-
-    it("should expose an `as` method being an alias to `asUser`", () => {
-      const hull = new Hull({ id: "562123b470df84b740000042", secret: "1234", organization: "test" });
-
-      const scoped = hull.as("123456");
-      const scopedConfig = scoped.configuration();
-      const scopedJwtClaims = jwt.decode(scopedConfig.accessToken, scopedConfig.secret);
-      expect(scopedJwtClaims)
-        .to.have.property("sub")
-        .that.eql("123456");
-    });
-
     it("should allow to pass user id as a string", () => {
       const hull = new Hull({ id: "562123b470df84b740000042", secret: "1234", organization: "test" });
 

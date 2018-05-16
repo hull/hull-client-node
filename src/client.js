@@ -245,15 +245,6 @@ class HullClient {
   }
 
   /**
-   * @public
-   * @deprecated Use `asUser` instead
-   */
-  as(userClaim: string | HullUserClaims, additionalClaims: HullAuxiliaryClaims = {}) {
-    this.logger.warn("client.deprecation", { message: "use client.asUser instead of client.as" });
-    return this.asUser(userClaim, additionalClaims);
-  }
-
-  /**
    * Takes User Claims (link to User Identity docs) and returnes `HullClient` instance scoped to this User.
    * This makes {@link #traits} and {@link #track} methods available.
    *
