@@ -38,10 +38,10 @@ function perform(client, config = {}, method = "get", path, params = {}, options
         });
         return true;
       }
-      client.logger.debug("client.fail", {
-        statusCode: res.statusCode, retryCount, path, method
-      });
       if (res.statusCode >= 500 && retryCount <= 2) {
+        client.logger.debug("client.fail", {
+          statusCode: res.statusCode, retryCount, path, method
+        });
         return true;
       }
       return false;
