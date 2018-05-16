@@ -292,8 +292,9 @@ export type HullNotification = {
 
 /**
  * Configuration which can be passed to the HullClient constructor
+ * We cannot use exact type here.
  */
-export type HullClientConfiguration = {|
+export type HullClientConfiguration = {
   id?: string,
   secret?: string,
   organization?: string,
@@ -313,7 +314,7 @@ export type HullClientConfiguration = {|
   flushAt?: number,
   flushAfter?: number,
   version?: string
-|};
+};
 
 /**
  * Definition of logger object
