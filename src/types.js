@@ -126,7 +126,7 @@ export type HullAccountAttributes = {
  * This is a hash object which allows to set traits on user.
  * This are direct attribute values or operation definitions
  */
-export type HullUserAttribtues = {
+export type HullUserAttributes = {
   [HullAttributeName]: HullAttributeValue | HullAttributeOperation;
 };
 
