@@ -41,7 +41,7 @@ const logger = new (winston.Logger)({
  * @param {string} config.organization Hull organization - required
  * @param {string} [config.requestId] additional parameter which will be added to logs context, it can be HTTP request unique id when you init HullClient and you want to group log lines by the request (it can be a job id etc.)
  * @param {string} [config.connectorName] additional parameter which will be added to logs context, it's used to track connector name in logs
- * @param {string} [config.firehoseUrl=] The url track/traits calls should be sent - deprecated option, will be removed in next version
+ * @param {string} [config.firehoseUrl=] The url track/traits calls should be sent, available only for testing purposes
  * @param {string} [config.protocol=https] protocol which will be appended to organization url, override for testing only
  * @param {string} [config.prefix=/api/v1] prefix of Hull REST API
  *
@@ -164,7 +164,6 @@ class HullClient {
 
   /**
    * Performs a HTTP request on selected url of Hull REST API (prefixed with `prefix` param of the constructor)
-   * @function get
    * @public
    * @memberof Api#
    * @param {string} url
@@ -180,7 +179,6 @@ class HullClient {
 
   /**
    * Performs a GET HTTP request on selected url of Hull REST API (prefixed with `prefix` param of the constructor)
-   * @function get
    * @public
    * @memberof Api#
    * @param {string} url
@@ -194,8 +192,7 @@ class HullClient {
   }
 
   /**
-   * Performs a POST HTTP request on selected url of Hull REST API (prefixed with `prefix` param of the constructor)
-   * @function post
+   * Performs a POST HTTP request on selected url of Hull REST API (prefixed with `prefix` param of the constructor
    * @public
    * @memberof Api#
    * @param {string} url
@@ -210,8 +207,6 @@ class HullClient {
 
   /**
    * Performs a DELETE HTTP request on selected url of Hull REST API (prefixed with `prefix` param of the constructor)
-   * @function del
-   * @alias api.del
    * @public
    * @memberof Api#
    * @param {string} url
@@ -226,8 +221,6 @@ class HullClient {
 
   /**
    * Performs a PUT HTTP request on selected url of Hull REST API (prefixed with `prefix` param of the constructor)
-   * @function put
-   * @alias api.put
    * @public
    * @memberof Api#
    * @param {string} url
@@ -318,8 +311,39 @@ class EntityScopedHullClient extends HullClient {
     const body = { ...traits };
     return this.batch({ type: "traits", body, requestId: this.requestId });
   }
+}
+
+class UserScopedHullClient extends EntityScopedHullClient {
+  /**
+   * Available only for User scoped `HullClient` instance (see {@link #asuser}).
+   * Returns `HullClient` instance scoped to both User and Account, but all traits/track call would be performed on the User, who will be also linked to the Account.
+   *
+   * @public
+   * @memberof ScopedHullClient
+   * @param  {Object} accountClaim [description]
+   * @return {HullClient} HullClient scoped to a User and linked to an Account
+   */
+  account(accountClaim: HullAccountClaims = Object.freeze({})) {
+    return new AccountScopedHullClient({ ...this.config, subjectType: "account", accountClaim });
+  }
 
   /**
+   * Issues an `alias` event on user?
+   * @todo
+   * @memberof ScopedHullClient
+   * @public
+   * @param  {Object} body
+   * @return {Promise}
+   */
+  alias(body: Object) {
+    return this.batch({
+      type: "alias",
+      requestId: this.requestId,
+      body
+    });
+  }
+
+   /**
    * Stores events on user. Only available on User scoped `HullClient` instance (see {@link #asuser}).
    *
    * @public
@@ -351,37 +375,6 @@ class EntityScopedHullClient extends HullClient {
         properties,
         event
       }
-    });
-  }
-}
-
-class UserScopedHullClient extends EntityScopedHullClient {
-  /**
-   * Available only for User scoped `HullClient` instance (see {@link #asuser}).
-   * Returns `HullClient` instance scoped to both User and Account, but all traits/track call would be performed on the User, who will be also linked to the Account.
-   *
-   * @public
-   * @memberof ScopedHullClient
-   * @param  {Object} accountClaim [description]
-   * @return {HullClient} HullClient scoped to a User and linked to an Account
-   */
-  account(accountClaim: HullAccountClaims = Object.freeze({})) {
-    return new AccountScopedHullClient({ ...this.config, subjectType: "account", accountClaim });
-  }
-
-  /**
-   * Issues an `alias` event on user?
-   * @todo
-   * @memberof ScopedHullClient
-   * @public
-   * @param  {Object} body
-   * @return {Promise}
-   */
-  alias(body: Object) {
-    return this.batch({
-      type: "alias",
-      requestId: this.requestId,
-      body
     });
   }
 }

@@ -12,7 +12,7 @@ HullClient instance constructor - creates new instance to perform API calls, iss
     -   `config.organization` **[string][2]** Hull organization - required
     -   `config.requestId` **[string][2]?** additional parameter which will be added to logs context, it can be HTTP request unique id when you init HullClient and you want to group log lines by the request (it can be a job id etc.)
     -   `config.connectorName` **[string][2]?** additional parameter which will be added to logs context, it's used to track connector name in logs
-    -   `config.firehoseUrl` **[string][2]?** The url track/traits calls should be sent - deprecated option, will be removed in next version
+    -   `config.firehoseUrl` **[string][2]?** The url track/traits calls should be sent, available only for testing purposes
     -   `config.protocol` **[string][2]** protocol which will be appended to organization url, override for testing only (optional, default `https`)
     -   `config.prefix` **[string][2]** prefix of Hull REST API (optional, default `/api/v1`)
 
@@ -123,24 +123,6 @@ Saves attributes on the user or account. Only available on User or Account scope
 
 Returns **[Promise][13]** 
 
-### track
-
-Stores events on user. Only available on User scoped `HullClient` instance (see [#asuser][11]).
-
-**Parameters**
-
--   `event` **[string][2]** event name
--   `properties` **[Object][1]** additional information about event, this is a one-level JSON object (optional, default `{}`)
--   `context` **[Object][1]** The `context` object lets you define event meta-data. Everything is optional (optional, default `{}`)
-    -   `context.source` **[string][2]?** Defines a namespace, such as `zendesk`, `mailchimp`, `stripe`
-    -   `context.type` **[string][2]?** Define a event type, such as `mail`, `ticket`, `payment`
-    -   `context.created_at` **[string][2]?** Define an event date. defaults to `now()`
-    -   `context.event_id` **[string][2]?** Define a way to de-duplicate events. If you pass events with the same unique `event_id`, they will overwrite the previous one.
-    -   `context.ip` **[string][2]?** Define the Event's IP. Set to `null` if you're storing a server call, otherwise, geoIP will locate this event.
-    -   `context.referer` **[string][2]?** Define the Referer. `null` for server calls.
-
-Returns **[Promise][13]** 
-
 ### account
 
 Available only for User scoped `HullClient` instance (see [#asuser][11]).
@@ -162,12 +144,30 @@ Issues an `alias` event on user?
 
 Returns **[Promise][13]** 
 
+### track
+
+Stores events on user. Only available on User scoped `HullClient` instance (see [#asuser][11]).
+
+**Parameters**
+
+-   `event` **[string][2]** event name
+-   `properties` **[Object][1]** additional information about event, this is a one-level JSON object (optional, default `{}`)
+-   `context` **[Object][1]** The `context` object lets you define event meta-data. Everything is optional (optional, default `{}`)
+    -   `context.source` **[string][2]?** Defines a namespace, such as `zendesk`, `mailchimp`, `stripe`
+    -   `context.type` **[string][2]?** Define a event type, such as `mail`, `ticket`, `payment`
+    -   `context.created_at` **[string][2]?** Define an event date. defaults to `now()`
+    -   `context.event_id` **[string][2]?** Define a way to de-duplicate events. If you pass events with the same unique `event_id`, they will overwrite the previous one.
+    -   `context.ip` **[string][2]?** Define the Event's IP. Set to `null` if you're storing a server call, otherwise, geoIP will locate this event.
+    -   `context.referer` **[string][2]?** Define the Referer. `null` for server calls.
+
+Returns **[Promise][13]** 
+
 ## Api
 
 Following methods allows to perform api calls again Hull REST API.
 Their are available on `HullClient` and scoped HullClient.
 
-### get
+### api
 
 Performs a HTTP request on selected url of Hull REST API (prefixed with `prefix` param of the constructor)
 
@@ -194,7 +194,7 @@ Performs a GET HTTP request on selected url of Hull REST API (prefixed with `pre
 
 ### post
 
-Performs a POST HTTP request on selected url of Hull REST API (prefixed with `prefix` param of the constructor)
+Performs a POST HTTP request on selected url of Hull REST API (prefixed with `prefix` param of the constructor
 
 **Parameters**
 

@@ -110,6 +110,7 @@ export type HullEntityClaims = HullUserClaims | HullAccountClaims;
  */
 export type HullAuxiliaryClaims = {|
   create?: boolean,
+  scopes?: Array<string>,
   active?: boolean
 |};
 
