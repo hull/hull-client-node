@@ -60,9 +60,9 @@ function perform(client, config = {}, method = "get", path, params = {}, options
   }
 
   if (method === "get") {
-    return agent.query(params);
+    return agent.query(params).then(res => res.body);
   }
-  return agent.send(params);
+  return agent.send(params).then(res => res.body);
 }
 
 function format(config, url) {
