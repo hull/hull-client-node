@@ -343,7 +343,7 @@ class UserScopedHullClient extends EntityScopedHullClient {
     });
   }
 
-   /**
+  /**
    * Stores events on user. Only available on User scoped `HullClient` instance (see {@link #asuser}).
    *
    * @public

@@ -1,17 +1,7 @@
 // @flow
-const _ = require("lodash");
+import type { HullProperties } from "../types";
 
-type HullProperties = {
-  [HullPropertyName: string]: {
-    id: string,
-    text: string,
-    type: string,
-    id_path: Array<string>,
-    path: Array<string>,
-    title: string,
-    key: string
-  }
-};
+const _ = require("lodash");
 
 type HullPropertiesRawResponseTreeItemChild = {
   id: string,
@@ -63,10 +53,10 @@ function getProperties(raw: HullPropertiesRawResponse | HullPropertiesRawRespons
 }
 
 /**
- * Gets and returns all existing properties in the organization along with their metadata
+ * Fetches and returns all existing properties in the organization along with their metadata
+ * @public
  * @memberof Utils
  * @method   properties.get
- * @public
  * @return   {Promise<Object>}
  */
 function get(): Promise<HullProperties> {

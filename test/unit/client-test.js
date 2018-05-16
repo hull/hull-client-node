@@ -13,12 +13,15 @@ describe("Hull", () => {
       const scopedAccount = hull.asAccount({ domain: "hull.io" });
       const scopedUser = hull.asUser("1234");
 
+      expect(scopedAccount).to.has.property("token")
+        .that.is.an("function");
       expect(scopedAccount).to.has.property("traits")
         .that.is.an("function");
-      expect(scopedAccount).to.has.property("track")
-        .that.is.an("function");
+      expect(scopedAccount).not.to.have.property("track");
       expect(scopedAccount).not.to.have.property("alias");
 
+      expect(scopedUser).to.has.property("token")
+        .that.is.an("function");
       expect(scopedUser).to.has.property("traits")
         .that.is.an("function");
       expect(scopedUser).to.has.property("track")

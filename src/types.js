@@ -336,3 +336,15 @@ export type HullClientUtils = {|
   settings: typeof settingsUtils,
   properties: typeof propertiesUtils,
 |};
+
+export type HullProperties = {
+  [HullPropertyName: string]: {
+    id: string,
+    text: string,
+    type: string,
+    id_path: Array<string>,
+    path: Array<string>,
+    title: string,
+    key: string
+  }
+};

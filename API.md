@@ -234,7 +234,7 @@ The following methods are helper utilities. They are available under `utils` pro
 
 ### properties.get
 
-Gets and returns all existing properties in the organization along with their metadata
+Fetches and returns all existing properties in the organization along with their metadata
 
 Returns **[Promise][13]&lt;[Object][1]>** 
 
