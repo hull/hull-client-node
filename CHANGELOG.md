@@ -3,6 +3,7 @@
 * **BREAKING** `as` method is not available anymore, use `asUser`
 * **BREAKING** `utils.groupTraits` method is not available anymore, use `utils.traits.group`
 * **BREAKING** `traits` method second parameter accepting `source` and `sync` option is not available anymore. Sync calls are not available at all, and if you need to apply `source` to your traits you need to do it before passing payload to `traits` method
+* **BREAKING** `hullClient.api.get` methods are not available anymore, use `hullClient.get` or `hullClient.api(path, "get")`, the same applies for all HTTP verbs
 * the client now comes with full set of Flow types in src/types.js file
   ```js
   import type { HullUserClaims } from "hull-client";
