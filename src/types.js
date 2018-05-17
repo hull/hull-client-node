@@ -77,7 +77,7 @@ export type HullSegment = {
 };
 
 /*
- * --- Data Structures To Use When Writing To Platform only ---
+ * --- Data Structures To Use When Writing To Platform ---
  */
 
 /**
@@ -228,8 +228,8 @@ export type HullAttributesChanges = {|
  * It may contain none, one or multiple HullSegment in both params.
  */
 export type HullSegmentsChanges = {|
-  entered: Array<HullSegment>;
-  left: Array<HullSegment>;
+  entered?: Array<HullSegment>;
+  left?: Array<HullSegment>;
 |};
 
 /**
@@ -242,7 +242,7 @@ export type HullUserChanges = {|
 |};
 
 /**
- * Object containing all changes related to User in HullUserUpdateMessage
+ * Object containing all changes related to Account in HullUserUpdateMessage
  */
 export type HullAccountChanges = {|
   account: HullAttributesChanges;
@@ -317,7 +317,7 @@ export type HullClientConfiguration = {
 };
 
 /**
- * Definition of logger object
+ * Definition of logger object on HullClient instance
  */
 export type HullClientLogger = {|
   log: (string, Object) => void,
@@ -329,6 +329,9 @@ export type HullClientLogger = {|
   error: (string, Object) => void
 |};
 
+/**
+ * Definition of static logger param available on HullClient class
+ */
 export type HullClientStaticLogger = {|
   ...HullClientLogger,
   transports: Object
