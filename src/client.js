@@ -4,7 +4,7 @@ import type {
   HullClientConfiguration, HullEntityAttributes,
   HullEventName, HullEventProperties, HullEventContext,
   HullAccountClaims, HullUserClaims, HullAuxiliaryClaims, HullEntityClaims,
-  HullClientLogger, HullClientUtils
+  HullClientLogger, HullClientUtils, HullClientStaticLogger
 } from "./types";
 
 const _ = require("lodash");
@@ -78,7 +78,7 @@ class HullClient {
   utils: HullClientUtils;
   requestId: string | void;
   batch: Firehose;
-  static logger: HullClientLogger;
+  static logger: HullClientStaticLogger;
 
   constructor(config: HullClientConfiguration) {
     this.config = config;

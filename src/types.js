@@ -326,9 +326,14 @@ export type HullClientLogger = {|
   verbose: (string, Object) => void,
   info: (string, Object) => void,
   warn: (string, Object) => void,
-  error: (string, Object) => void,
+  error: (string, Object) => void
+|};
+
+export type HullClientStaticLogger = {|
+  ...HullClientLogger,
   transports: Object
 |};
+
 
 /**
  * Definition of utilities object
