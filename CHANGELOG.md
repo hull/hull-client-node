@@ -1,3 +1,6 @@
+# 1.2.2
+* Allow anonymous_id in Account claims
+
 # 1.2.1
 * render docs without a TOC so the Website can display them properly.
 
