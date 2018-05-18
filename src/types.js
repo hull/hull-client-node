@@ -329,9 +329,8 @@ export type HullClientLogger = {|
   error: (string, Object) => void
 |};
 
-/**
- * Definition of static logger param available on HullClient class
- */
+
+ // Definition of static logger param available on HullClient class
 export type HullClientStaticLogger = {|
   ...HullClientLogger,
   transports: Object
