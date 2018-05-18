@@ -330,7 +330,7 @@ export type HullClientLogger = {|
 |};
 
 
- // Definition of static logger param available on HullClient class
+// Definition of static logger param available on HullClient class
 export type HullClientStaticLogger = {|
   ...HullClientLogger,
   transports: Object
