@@ -60,7 +60,7 @@ const USER_CLAIMS = ["id", "email", "external_id", "anonymous_id"];
  * All valid accounts claims, used for validation and filtering .asAccount calls
  * @type {Array}
  */
-const ACCOUNT_CLAIMS = ["id", "external_id", "domain"];
+const ACCOUNT_CLAIMS = ["id", "external_id", "domain", "anonymous_id"];
 
 /**
  * make sure that provided "identity claim" is valid
