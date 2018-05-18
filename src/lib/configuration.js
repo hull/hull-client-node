@@ -63,7 +63,7 @@ const USER_CLAIMS: Array<string> = ["id", "email", "external_id", "anonymous_id"
  * All valid accounts claims, used for validation and filtering .asAccount calls
  * @type {Array}
  */
-const ACCOUNT_CLAIMS: Array<string> = ["id", "external_id", "domain"];
+const ACCOUNT_CLAIMS: Array<string> = ["id", "external_id", "domain", "anonymous_id"];
 
 /**
  * Class containing configuration
