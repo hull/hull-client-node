@@ -1,3 +1,4 @@
+
 # 2.0.0
 * **BREAKING** HullClient is a set of ES6 classes now, not a Function anymore - this means you cannot do `const hullClient = HullClient()` anymore, you always need `new` keyword
 * **BREAKING** `as` method is not available anymore, use `asUser`
@@ -14,6 +15,9 @@
   // this will throw flow check error since `wrong_claim` is not correct
   ```
 * underlying HTTP library restler was replaced with superagent
+
+# 1.2.2
+* allow anonymous_id in Account claims
 
 # 1.2.1
 * render docs without a TOC so the Website can display them properly.
