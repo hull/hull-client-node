@@ -1,5 +1,5 @@
 
-# 2.0.0
+# 2.0.0-beta.1
 * **BREAKING** HullClient is a set of ES6 classes now, not a Function anymore - this means you cannot do `const hullClient = HullClient()` anymore, you always need `new` keyword
 * **BREAKING** `as` method is not available anymore, use `asUser`
 * **BREAKING** `utils.groupTraits` method is not available anymore, use `utils.traits.group`
