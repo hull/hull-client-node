@@ -38,11 +38,16 @@ function perform(client, config = {}, method = "get", path, params = {}, options
         });
         return true;
       }
-      if (res.statusCode >= 500 && retryCount <= 2) {
+      if (res && res.statusCode >= 500 && retryCount <= 2) {
         client.logger.debug("client.fail", {
           statusCode: res.statusCode, retryCount, path, method
         });
         return true;
+      }
+      if (err) {
+        client.logger.debug("client.fail.unknown", {
+          err: err.toString()
+        });
       }
       return false;
     });
