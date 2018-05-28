@@ -15,8 +15,8 @@ HullClient instance constructor - creates new instance to perform API calls, iss
     -   `config.firehoseUrl` **[string][2]?** The url track/traits calls should be sent, available only for testing purposes
     -   `config.protocol` **[string][2]** protocol which will be appended to organization url, override for testing only (optional, default `https`)
     -   `config.prefix` **[string][2]** prefix of Hull REST API (optional, default `/api/v1`)
-    -   `config.logsArray` **[string][2]?** an optional array to capture all logs entries
-    -   `config.firehoseEventsArray` **[string][2]?** an optional array to capture all firehose events
+    -   `config.logsArray` **[Array][3]?** an optional array to capture all logs entries
+    -   `config.firehoseEventsArray` **[Array][3]?** an optional array to capture all firehose events
 
 **Examples**
 
@@ -53,14 +53,14 @@ Returns **[Object][1]** current `HullClient` configuration parameters
 ### asUser
 
 Takes User Claims (link to User Identity docs) and returnes `HullClient` instance scoped to this User.
-This makes [#traits][3] and [#track][4] methods available.
+This makes [#traits][4] and [#track][5] methods available.
 
 **Parameters**
 
 -   `userClaim` **[Object][1]** 
 -   `additionalClaims` **[Object][1]**  (optional, default `{}`)
-    -   `additionalClaims.create` **[boolean][5]** marks if the user should be lazily created if not found (optional, default `true`)
-    -   `additionalClaims.scopes` **[Array][6]** adds scopes claim to the JWT to impersonate a User with admin rights (optional, default `[]`)
+    -   `additionalClaims.create` **[boolean][6]** marks if the user should be lazily created if not found (optional, default `true`)
+    -   `additionalClaims.scopes` **[Array][3]** adds scopes claim to the JWT to impersonate a User with admin rights (optional, default `[]`)
     -   `additionalClaims.active` **[string][2]** marks the user as _active_ meaning a reduced latency at the expense of scalability. Don't use for high volume updates (optional, default `false`)
 
 
@@ -71,7 +71,7 @@ Returns **[HullClient][8]**
 ### asAccount
 
 Takes Account Claims (link to User Identity docs) and returnes `HullClient` instance scoped to this Account.
-This makes [#traits][3] method available.
+This makes [#traits][4] method available.
 
 **Parameters**
 
@@ -303,13 +303,13 @@ Returns **[Object][1]** nested object
 
 [2]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String
 
-[3]: #traits
+[3]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array
 
-[4]: #track
+[4]: #traits
 
-[5]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean
+[5]: #track
 
-[6]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array
+[6]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean
 
 [7]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Error
 
