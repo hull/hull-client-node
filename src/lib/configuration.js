@@ -26,6 +26,9 @@ const VALID = {
   },
   number(num) {
     return _.isNumber(num) && num > 0;
+  },
+  array(arr) {
+    return _.isArray(arr);
   }
 };
 
@@ -50,7 +53,9 @@ const VALID_PROPS = {
   flushAt: VALID.number,
   flushAfter: VALID.number,
   connectorName: VALID.string,
-  requestId: VALID.string
+  requestId: VALID.string,
+  logsArray: VALID.array,
+  firehoseEventsArray: VALID.array
 };
 
 /**
@@ -155,7 +160,7 @@ class Configuration {
     this._state[key] = value;
   }
 
-  get(key?: string): string | number | HullEntityType | HullEntityClaims | HullAuxiliaryClaims | HullClientConfiguration | void {
+  get(key?: string): string | number | Array<Object> | HullEntityType | HullEntityClaims | HullAuxiliaryClaims | HullClientConfiguration | void {
     if (key) {
       return this._state[key];
     }

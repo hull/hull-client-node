@@ -44,6 +44,8 @@ const logger = new (winston.Logger)({
  * @param {string} [config.firehoseUrl=] The url track/traits calls should be sent, available only for testing purposes
  * @param {string} [config.protocol=https] protocol which will be appended to organization url, override for testing only
  * @param {string} [config.prefix=/api/v1] prefix of Hull REST API
+ * @param {string} [config.logsArray] an optional array to capture all logs entries
+ * @param {string} [config.firehoseEventsArray] an optional array to capture all firehose events
  *
  * @example
  * const HullClient = require("hull-client");
@@ -83,11 +85,25 @@ class HullClient {
   constructor(config: HullClientConfiguration) {
     this.config = config;
     this.clientConfig = new Configuration(config);
-
     this.batch = Firehose.getInstance(this.clientConfig.get(), (params, batcher) => {
       const protocol = this.clientConfig._state.protocol || "";
       const domain = this.clientConfig._state.domain || "";
       const firehoseUrl = this.clientConfig._state.firehoseUrl || `${protocol}://firehose.${domain}`;
+      if (this.clientConfig.get("firehoseEventsArray")) {
+        const firehoseEventsArray = this.clientConfig.get("firehoseEventsArray");
+        if (Array.isArray(firehoseEventsArray)) {
+          params.batch.map((item) => {
+            const accessToken = item.headers["Hull-Access-Token"];
+            const context = {
+              accessToken,
+              id: this.clientConfig.get("id"),
+              organization: this.clientConfig.get("organization")
+            };
+            return firehoseEventsArray.push({ context, data: { type: item.type, body: item.body } });
+          });
+        }
+      }
+
       return restAPI(this, batcher.config, firehoseUrl, "post", params, {
         timeout: process.env.BATCH_TIMEOUT || 10000,
         retry: process.env.BATCH_RETRY || 5000
@@ -139,6 +155,21 @@ class HullClient {
     };
 
     this.requestId = conf.requestId;
+
+    if (this.clientConfig.get("logsArray")) {
+      const logsArray = this.clientConfig.get("logsArray");
+      if (Array.isArray(logsArray)) {
+        logger.on("logged", (level, message, payload) => {
+          logsArray.push({
+            message,
+            level,
+            data: payload.data,
+            context: payload.context,
+            timestamp: new Date().toISOString()
+          });
+        });
+      }
+    }
   }
 
   /**

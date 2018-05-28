@@ -313,7 +313,9 @@ export type HullClientConfiguration = {
   hostSecret?: string,
   flushAt?: number,
   flushAfter?: number,
-  version?: string
+  version?: string,
+  logsArray?: Array<Object>,
+  firehoseEventsArray?: Array<Object>
 };
 
 /**
