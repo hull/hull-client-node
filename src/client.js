@@ -44,8 +44,8 @@ const logger = new (winston.Logger)({
  * @param {string} [config.firehoseUrl=] The url track/traits calls should be sent, available only for testing purposes
  * @param {string} [config.protocol=https] protocol which will be appended to organization url, override for testing only
  * @param {string} [config.prefix=/api/v1] prefix of Hull REST API
- * @param {Array} [config.logsArray] an optional array to capture all logs entries
- * @param {Array} [config.firehoseEventsArray] an optional array to capture all firehose events
+ * @param {Array}  [config.logsArray] an optional array to capture all logs entries
+ * @param {Array}  [config.firehoseEventsArray] an optional array to capture all firehose events
  *
  * @example
  * const HullClient = require("hull-client");
