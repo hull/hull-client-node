@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.0.0-beta.3
+* fix missing flow types
+* documentation adjustments
+
 ## 2.0.0-beta.2
 * adds experimental `logsArray` and `firehoseEventsArray` to additionally capture log lines and firehose events to separate arrays.
   CAUTION: this does not disable normal behaviour of the libary

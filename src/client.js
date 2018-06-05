@@ -35,17 +35,19 @@ const logger = new (winston.Logger)({
  *
  * @class
  * @public
- * @param {Object} config configuration object
- * @param {string} config.id Connector ID - required
- * @param {string} config.secret Connector Secret - required
- * @param {string} config.organization Hull organization - required
- * @param {string} [config.requestId] additional parameter which will be added to logs context, it can be HTTP request unique id when you init HullClient and you want to group log lines by the request (it can be a job id etc.)
- * @param {string} [config.connectorName] additional parameter which will be added to logs context, it's used to track connector name in logs
- * @param {string} [config.firehoseUrl=] The url track/traits calls should be sent, available only for testing purposes
- * @param {string} [config.protocol=https] protocol which will be appended to organization url, override for testing only
- * @param {string} [config.prefix=/api/v1] prefix of Hull REST API
- * @param {Array}  [config.logsArray] an optional array to capture all logs entries
- * @param {Array}  [config.firehoseEventsArray] an optional array to capture all firehose events
+ * @param {Object}  config configuration object
+ * @param {string}  config.id Connector ID - required
+ * @param {string}  config.secret Connector Secret - required
+ * @param {string}  config.organization Hull organization - required
+ * @param {string}  [config.requestId] additional parameter which will be added to logs context, it can be HTTP request unique id when you init HullClient and you want to group log lines by the request (it can be a job id etc.)
+ * @param {string}  [config.connectorName] additional parameter which will be added to logs context, it's used to track connector name in logs
+ * @param {string}  [config.firehoseUrl=] The url track/traits calls should be sent, available only for testing purposes
+ * @param {string}  [config.protocol=https] protocol which will be appended to organization url, override for testing only
+ * @param {string}  [config.prefix=/api/v1] prefix of Hull REST API
+ * @param {Array}   [config.logsArray] an optional array to capture all logs entries
+ * @param {boolean} [config.suppressLogs] an optional param to disable pushing logs to stdout/err
+ * @param {Array}   [config.firehoseEventsArray] an optional array to capture all firehose events
+ * @param {boolean} [config.suppressFirehoseEvents] an optional param to disable sending firehose events
  *
  * @example
  * const HullClient = require("hull-client");

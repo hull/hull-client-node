@@ -280,6 +280,7 @@ export type HullNotification = {
     secret?: string,
     organization?: string,
   },
+  channel: string,
   connector: HullConnector,
   segments: Array<HullSegment>,
   accounts_segments: Array<HullSegment>,
