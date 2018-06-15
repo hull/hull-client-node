@@ -1,3 +1,6 @@
+// @flow
+import type { HullClientConfiguration, HullEntityClaims, HullEntityType, HullAuxiliaryClaims } from "../types";
+
 const _ = require("lodash");
 const pkg = require("../../package.json");
 const crypto = require("./crypto");
@@ -23,6 +26,9 @@ const VALID = {
   },
   number(num) {
     return _.isNumber(num) && num > 0;
+  },
+  array(arr) {
+    return _.isArray(arr);
   }
 };
 
@@ -47,63 +53,43 @@ const VALID_PROPS = {
   flushAt: VALID.number,
   flushAfter: VALID.number,
   connectorName: VALID.string,
-  requestId: VALID.string
+  requestId: VALID.string,
+  logs: VALID.array,
+  firehoseEvents: VALID.array
 };
 
 /**
  * All valid user claims, used for validation and filterind .asUser calls
  * @type {Array}
  */
-const USER_CLAIMS = ["id", "email", "external_id", "anonymous_id"];
+const USER_CLAIMS: Array<string> = ["id", "email", "external_id", "anonymous_id"];
 
 /**
  * All valid accounts claims, used for validation and filtering .asAccount calls
  * @type {Array}
  */
-const ACCOUNT_CLAIMS = ["id", "external_id", "domain", "anonymous_id"];
+const ACCOUNT_CLAIMS: Array<string> = ["id", "external_id", "domain", "anonymous_id"];
 
 /**
- * make sure that provided "identity claim" is valid
- * @param  {string} type          "user" or "account"
- * @param  {string|Object} object identity claim
- * @param  {Array} requiredFields fields which are required if the passed
- * claim is an object
- * @throws Error
+ * Class containing configuration
  */
-function assertClaimValidity(type, object, requiredFields) {
-  if (!_.isEmpty(object)) {
-    if (_.isString(object)) {
-      if (!object) {
-        throw new Error(`Missing ${type} ID`);
-      }
-    } else if (!_.isObject(object) || _.intersection(_.keys(object), requiredFields).length === 0) {
-      throw new Error(`You need to pass an ${type} hash with an ${requiredFields.join(", ")} field`);
-    }
-  }
-}
-
-function filterClaim(object, possibleFields) {
-  return _.isString(object)
-    ? object
-    : _.pick(object, possibleFields);
-}
-
 class Configuration {
-  constructor(config) {
+  _state: HullClientConfiguration;
+  constructor(config: HullClientConfiguration) {
     if (!_.isObject(config) || !_.size(config)) {
       throw new Error("Configuration is invalid, it should be a non-empty object");
     }
 
-    if (config.userClaim || config.accountClaim) {
-      assertClaimValidity("user", config.userClaim, USER_CLAIMS);
-      assertClaimValidity("account", config.accountClaim, ACCOUNT_CLAIMS);
+    if (config.userClaim !== undefined || config.accountClaim !== undefined) {
+      this.assertEntityClaimsValidity("user", config.userClaim);
+      this.assertEntityClaimsValidity("account", config.accountClaim);
 
       if (config.userClaim) {
-        config.userClaim = filterClaim(config.userClaim, USER_CLAIMS);
+        config.userClaim = this.filterEntityClaims("user", config.userClaim);
       }
 
       if (config.accountClaim) {
-        config.accountClaim = filterClaim(config.accountClaim, ACCOUNT_CLAIMS);
+        config.accountClaim = this.filterEntityClaims("account", config.accountClaim);
       }
 
       const accessToken = crypto.lookupToken(config, config.subjectType, {
@@ -139,14 +125,49 @@ class Configuration {
     this._state.version = pkg.version;
   }
 
-  set(key, value) {
+  /**
+   * make sure that provided "identity claim" is valid
+   * @param  {string} type          "user" or "account"
+   * @param  {string|Object} object identity claim
+   * claim is an object
+   * @throws Error
+   */
+  assertEntityClaimsValidity(type: HullEntityType, object: void | string | HullEntityClaims): void {
+    const claimsToCheck = type === "user"
+      ? USER_CLAIMS
+      : ACCOUNT_CLAIMS;
+    if (!_.isEmpty(object)) {
+      if (typeof object === "string") {
+        if (!object) {
+          throw new Error(`Missing ${type} ID`);
+        }
+      } else if (typeof object !== "object" || _.intersection(_.keys(object), claimsToCheck).length === 0) {
+        throw new Error(`You need to pass an ${type} hash with an ${claimsToCheck.join(", ")} field`);
+      }
+    }
+  }
+
+  filterEntityClaims(type: HullEntityType, object: void | string | HullEntityClaims): * {
+    const claimsToFilter = type === "user"
+      ? USER_CLAIMS
+      : ACCOUNT_CLAIMS;
+    return typeof object === "string"
+      ? object
+      : _.pick(object, claimsToFilter);
+  }
+
+  set(key: string, value: $Values<HullClientConfiguration>): void {
     this._state[key] = value;
   }
 
-  get(key) {
+  get(key?: string): string | number | Array<Object> | HullEntityType | HullEntityClaims | HullAuxiliaryClaims | HullClientConfiguration | void {
     if (key) {
       return this._state[key];
     }
+    return JSON.parse(JSON.stringify(this._state));
+  }
+
+  getAll(): HullClientConfiguration {
     return JSON.parse(JSON.stringify(this._state));
   }
 }

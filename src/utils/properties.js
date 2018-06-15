@@ -1,6 +1,29 @@
+// @flow
+import type { HullProperties } from "../types";
+
 const _ = require("lodash");
 
-function getProperties(raw, path, id_path) {
+type HullPropertiesRawResponseTreeItemChild = {
+  id: string,
+  text: string,
+  type: string,
+};
+
+type HullPropertiesRawResponseTreeItem = {
+  text: string,
+  children: Array<HullPropertiesRawResponseTreeItemChild>
+};
+
+type HullPropertiesRawResponse = {
+  version: string,
+  tree: Array<HullPropertiesRawResponseTreeItem>
+};
+
+
+function getProperties(raw: HullPropertiesRawResponse | HullPropertiesRawResponseTreeItem, path?: Array<string>, id_path?: Array<string>): {
+  properties: HullProperties,
+  tree: Array<*>
+} {
   const properties = {};
   const tree = [];
 
@@ -30,13 +53,13 @@ function getProperties(raw, path, id_path) {
 }
 
 /**
- * Gets and returns all existing properties in the organization along with their metadata
+ * Fetches and returns all existing properties in the organization along with their metadata
+ * @public
  * @memberof Utils
  * @method   properties.get
- * @public
  * @return   {Promise<Object>}
  */
-function get() {
+function get(): Promise<HullProperties> {
   return this
     .get("search/user_reports/bootstrap")
     .then(({ tree }) => getProperties(tree).properties);

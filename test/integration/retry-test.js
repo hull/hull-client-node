@@ -73,7 +73,7 @@ describe("client retrying", function test() {
 
     client.get("/testing", {}, { timeout: 20, retry: 10 })
       .catch(err => {
-        expect(err.message).to.equal("Timeout");
+        expect(err.message).to.equal("Timeout of 20ms exceeded");
         expect(stub.callCount).to.be.eql(3);
         done();
       });

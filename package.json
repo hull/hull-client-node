@@ -1,6 +1,6 @@
 {
   "name": "hull-client",
-  "version": "1.2.2",
+  "version": "2.0.0-beta.3",
   "description": "A barebones Node.js API client for hull.io",
   "main": "lib",
   "repository": {
@@ -17,19 +17,19 @@
     "test": "npm run test:lint && npm run test:flow && npm run test:unit && npm run test:integration",
     "test:lint": "eslint src && documentation lint src",
     "test:dependencies": "npm outdated --depth=0",
-    "test:unit": "NODE_ENV=test mocha --require babel-register --exit -R spec ./tests/unit/** ./test/unit/*",
+    "test:unit": "NODE_ENV=test mocha --require babel-register --exit -R spec ./test/unit/** ./test/unit/*",
     "test:integration": "NODE_ENV=test mocha --require babel-register --exit -R spec ./test/integration/* ./test/integration/**",
     "test:flow": "flow check",
     "clean": "rimraf lib",
     "build": "npm run clean && babel src -d lib && npm run documentation",
     "prepublish": "npm run build",
-    "documentation": "documentation build src -f md -o API.md --access public --markdownToc=false",
+    "documentation": "documentation build src -f md -o API.md --access public --markdownToc=false --config documentation.yml",
     "precommit": "npm run documentation && git add API.md"
   },
   "dependencies": {
     "jwt-simple": "^0.5.0",
     "lodash": "^4.17.5",
-    "restler": "^3.4.0",
+    "superagent": "^3.8.3",
     "urijs": "^1.18.7",
     "uuid": "^3.0.1",
     "winston": "^2.2.0"
@@ -49,7 +49,8 @@
     "eslint-plugin-flowtype": "^2.46.1",
     "eslint-plugin-flowtype-errors": "^3.5.1",
     "eslint-plugin-import": "^2.9.0",
-    "flow-bin": "^0.67.1",
+    "flow-bin": "^0.71.0",
+    "flow-typed": "^2.4.0",
     "husky": "^0.14.3",
     "isparta": "^4.0.0",
     "minihull": "0.0.7",

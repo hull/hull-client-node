@@ -1,5 +1,7 @@
 // @flow
 
+import type { HullConnector, HullConnectorSettings } from "../types";
+
 /**
  * Updates `private_settings` merging them with existing ones before.
  *
@@ -10,12 +12,12 @@
  * @param  {Object} newSettings settings to update
  * @return {Promise}
  */
-function update(newSettings: Object): Promise<any> {
+function update(newSettings: HullConnectorSettings): Promise<HullConnector> {
   return this.get("app")
-    .then((ship) => {
-      const private_settings = { ...ship.private_settings, ...newSettings };
-      ship.private_settings = private_settings;
-      return this.put(ship.id, { private_settings });
+    .then((connector: HullConnector) => {
+      const private_settings: HullConnectorSettings = { ...connector.private_settings, ...newSettings };
+      connector.private_settings = private_settings;
+      return this.put(connector.id, { private_settings });
     });
 }
 

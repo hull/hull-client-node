@@ -1,5 +1,15 @@
 // @flow
+import type { HullAttributeName, HullAttributeValue, HullEntity, HullEntityAttributes } from "../types";
+
 const _ = require("lodash");
+
+type HullEntityNested = {
+  ...HullEntity,
+  [HullAttributeName]: {
+    [HullAttributeName]: HullAttributeValue
+  }
+};
+
 /**
  * The Hull API returns traits in a "flat" format, with '/' delimiters in the key.
  * This method can be used to group those traits into subobjects:
@@ -40,9 +50,8 @@ const _ = require("lodash");
  *     "open_tickets": 18
  *   }
  * };
- * ```
  */
-function group(user: Object): Object {
+function group(user: HullEntity): HullEntityNested {
   return _.reduce(user, (grouped, value, key) => {
     let dest = key;
     if (key.match(/^traits_/)) {
@@ -56,7 +65,7 @@ function group(user: Object): Object {
   }, {});
 }
 
-function normalize(traits: Object): Object {
+function normalize(traits: HullEntityAttributes): HullEntityAttributes {
   return _.reduce(traits, (memo, value, key) => {
     if (!_.isObject(value)) {
       value = { operation: "set", value };

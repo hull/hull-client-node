@@ -23,10 +23,11 @@ describe("API client", () => {
   });
 
 
-  it("should return an instance of the client even without new", () => {
+  it("should throw an error when being called without new", () => {
     const clientConstructor = Client;
-    const instance = clientConstructor(config);
-    instance.should.be.instanceof(Client);
+    expect(() => {
+      clientConstructor(config);
+    }).to.throw(TypeError, "Class constructor HullClient cannot be invoked without 'new'");
   });
 
   it("should have methods for the http verbs", () => {
