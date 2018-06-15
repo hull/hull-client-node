@@ -17,7 +17,7 @@
     "test": "npm run test:lint && npm run test:flow && npm run test:unit && npm run test:integration",
     "test:lint": "eslint src && documentation lint src",
     "test:dependencies": "npm outdated --depth=0",
-    "test:unit": "NODE_ENV=test mocha --require babel-register --exit -R spec ./tests/unit/** ./test/unit/*",
+    "test:unit": "NODE_ENV=test mocha --require babel-register --exit -R spec ./test/unit/** ./test/unit/*",
     "test:integration": "NODE_ENV=test mocha --require babel-register --exit -R spec ./test/integration/* ./test/integration/**",
     "test:flow": "flow check",
     "clean": "rimraf lib",

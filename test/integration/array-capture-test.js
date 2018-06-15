@@ -1,40 +1,22 @@
-/* global it, describe, beforeEach, afterEach */
+/* global it, describe */
 const { expect } = require("chai");
 const sinon = require("sinon");
-const Minihull = require("minihull");
 
 const HullClient = require("../../src/index");
 
 const config = {
   id: "550964db687ee7866d000057",
   secret: "abcd12345",
-  organization: "hull-demos",
-  firehoseUrl: "http://localhost:8000/boom/firehose",
-  flushAt: 1
+  organization: "hull-demos"
 };
 
-describe("HullClient array feature", () => {
-  let minihull, stub;
-  beforeEach(() => {
-    minihull = new Minihull();
-    minihull.listen(8000);
-    stub = minihull.stubPost("/boom/firehose")
-      .callsFake((req, res) => {
-        res.end("ok");
-      });
-  });
-
-  afterEach(() => {
-    minihull.close();
-  });
-
+describe("HullClient array capture feature", () => {
   it("should allow to capture traits", () => {
     const clock = sinon.useFakeTimers();
-    const firehoseEventsArray = [];
-    const hullClient = new HullClient({ ...config, firehoseEventsArray });
+    const hullClient = new HullClient({ ...config, captureFirehoseEvents: true });
     return hullClient.asUser({ email: "foo@bar.com" }).traits({ coconuts: 123 })
       .then(() => {
-        expect(firehoseEventsArray).to.eql([
+        expect(hullClient.configuration().firehoseEvents).to.eql([
           {
             context: {
               organization: "hull-demos",
@@ -51,12 +33,11 @@ describe("HullClient array feature", () => {
       });
   });
 
-  it("should allow to capture traits", () => {
+  it("should allow to capture logs", () => {
     const clock = sinon.useFakeTimers();
-    const logsArray = [];
-    const hullClient = new HullClient({ ...config, logsArray });
+    const hullClient = new HullClient({ ...config, captureLogs: true });
     hullClient.logger.info("test", { foo: "bar" });
-    expect(logsArray).to.eql([
+    expect(hullClient.configuration().logs).to.eql([
       {
         context: {
           organization: "hull-demos", id: "550964db687ee7866d000057"

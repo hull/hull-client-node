@@ -315,8 +315,10 @@ export type HullClientConfiguration = {
   flushAt?: number,
   flushAfter?: number,
   version?: string,
-  logsArray?: Array<Object>,
-  firehoseEventsArray?: Array<Object>
+  logs?: Array<Object>,
+  firehoseEvents?: Array<Object>,
+  captureLogs?: boolean,
+  captureFirehoseEvents?: boolean
 };
 
 /**

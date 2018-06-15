@@ -54,8 +54,8 @@ const VALID_PROPS = {
   flushAfter: VALID.number,
   connectorName: VALID.string,
   requestId: VALID.string,
-  logsArray: VALID.array,
-  firehoseEventsArray: VALID.array
+  logs: VALID.array,
+  firehoseEvents: VALID.array
 };
 
 /**
