@@ -41,13 +41,13 @@ const logger = new (winston.Logger)({
  * @param {string}  config.organization Hull organization - required
  * @param {string}  [config.requestId] additional parameter which will be added to logs context, it can be HTTP request unique id when you init HullClient and you want to group log lines by the request (it can be a job id etc.)
  * @param {string}  [config.connectorName] additional parameter which will be added to logs context, it's used to track connector name in logs
+ * @param {boolean} [config.captureLogs] an optional param to enable capturing logs, when enabled logs won't be sent to stdout/stderr and `logs` array would be initiated, which you can access via hullClient.configuration().logs
+ * @param {boolean} [config.captureFirehoseEvents] an option param to enable capturing firehose events, when enabled firehose events won't be sent to firehose endpoint and `firehoseEvents` array woyld be initiated, which you can access via hullClient.configuration().firehoseEvents
  * @param {string}  [config.firehoseUrl=] The url track/traits calls should be sent, available only for testing purposes
  * @param {string}  [config.protocol=https] protocol which will be appended to organization url, override for testing only
- * @param {string}  [config.prefix=/api/v1] prefix of Hull REST API
- * @param {boolean} [config.captureLogs] an optional param to enable capturing logs, when enabled `logs` array would be initiated
- * @param {Array}   [config.logs] an optional array to capture all logs entries
- * @param {boolean} [config.captureFirehoseEvents] an option param to enable capturing firehose events, when enabled `firehoseEvents` array woyld be initiated
- * @param {Array}   [config.firehoseEvents] an optional array to capture all firehose events
+ * @param {string}  [config.prefix=/api/v1] prefix of Hull REST API, override for testing only
+ * @param {Array}   [config.logs] an optional array to capture all logs entries, you can provide your own array or use `captureLogs` to initiate empty one
+ * @param {Array}   [config.firehoseEvents] an optional array to capture all firehose events, you can provide your own array or use `captureFirehoseEvents` to initiate empty one
  *
  * @example
  * const HullClient = require("hull-client");
@@ -86,54 +86,13 @@ class HullClient {
 
   constructor(config: HullClientConfiguration) {
     if (config.captureLogs === true) {
-      config.logs = [];
+      config.logs = config.logs || [];
     }
     if (config.captureFirehoseEvents === true) {
-      config.firehoseEvents = [];
-      config.flushAt = 1;
+      config.firehoseEvents = config.firehoseEvents || [];
     }
     this.config = config;
     this.clientConfig = new Configuration(config);
-    this.batch = Firehose.getInstance(this.clientConfig.get(), (params, batcher) => {
-      const protocol = this.clientConfig._state.protocol || "";
-      const domain = this.clientConfig._state.domain || "";
-      const firehoseUrl = this.clientConfig._state.firehoseUrl || `${protocol}://firehose.${domain}`;
-      if (this.clientConfig.get("firehoseEvents")) {
-        const firehoseEventsArray = this.clientConfig.get("firehoseEvents");
-        if (Array.isArray(firehoseEventsArray)) {
-          params.batch.map((item) => {
-            const accessToken = item.headers["Hull-Access-Token"];
-            const context = {
-              accessToken,
-              id: this.clientConfig.get("id"),
-              organization: this.clientConfig.get("organization")
-            };
-            return firehoseEventsArray.push({ context, data: { type: item.type, body: item.body } });
-          });
-        }
-        return Promise.resolve();
-      }
-      return restAPI(this, batcher.config, firehoseUrl, "post", params, {
-        timeout: process.env.BATCH_TIMEOUT || 10000,
-        retry: process.env.BATCH_RETRY || 5000
-      });
-    });
-
-    /**
-     * The following methods are helper utilities. They are available under `utils` property
-     *
-     * @namespace Utils
-     * @public
-     */
-    this.utils = {
-      traits: traitsUtils,
-      properties: {
-        get: propertiesUtils.get.bind(this),
-      },
-      settings: {
-        update: settingsUtils.update.bind(this),
-      }
-    };
 
     const conf = this.configuration() || {};
     const ctxKeys = _.pick(conf, ["organization", "id", "connectorName", "subjectType", "requestId"]);
@@ -151,8 +110,44 @@ class HullClient {
       }
     });
 
-    const logFactory = level => (message: string, data: Object) => logger[level](message, { context: ctxe, data });
+    if (this.clientConfig.get("firehoseEvents")) {
+      const firehoseEventsArray = this.clientConfig.get("firehoseEvents");
+      if (!Array.isArray(firehoseEventsArray)) {
+        throw new Error("Configuration `firehoseEvents` must be an Array");
+      }
+      this.batch = (data) => {
+        firehoseEventsArray.push({ context: ctxe, data });
+        return Promise.resolve();
+      };
+    } else {
+      this.batch = Firehose.getInstance(this.clientConfig.get(), (params, batcher) => {
+        const protocol = this.clientConfig._state.protocol || "";
+        const domain = this.clientConfig._state.domain || "";
+        const firehoseUrl = this.clientConfig._state.firehoseUrl || `${protocol}://firehose.${domain}`;
+        return restAPI(this, batcher.config, firehoseUrl, "post", params, {
+          timeout: process.env.BATCH_TIMEOUT || 10000,
+          retry: process.env.BATCH_RETRY || 5000
+        });
+      });
+    }
 
+    /**
+     * The following methods are helper utilities. They are available under `utils` property
+     *
+     * @namespace Utils
+     * @public
+     */
+    this.utils = {
+      traits: traitsUtils,
+      properties: {
+        get: propertiesUtils.get.bind(this),
+      },
+      settings: {
+        update: settingsUtils.update.bind(this),
+      }
+    };
+
+    const logFactory = level => (message: string, data: Object) => logger[level](message, { context: ctxe, data });
     this.logger = {
       log: logFactory("info"),
       silly: logFactory("silly"),
@@ -167,7 +162,10 @@ class HullClient {
 
     if (this.clientConfig.get("logs")) {
       const logsArray = this.clientConfig.get("logs");
-      if (Array.isArray(logsArray)) {
+      if (!Array.isArray(logsArray)) {
+        throw new Error("Configuration `logs` must be an Array");
+      }
+      if (logger.transports.console) {
         logger.remove("console");
         logger.add(winston.transports.Memory, {
           level: "debug",

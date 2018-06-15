@@ -12,13 +12,13 @@ HullClient instance constructor - creates new instance to perform API calls, iss
     -   `config.organization` **[string][2]** Hull organization - required
     -   `config.requestId` **[string][2]?** additional parameter which will be added to logs context, it can be HTTP request unique id when you init HullClient and you want to group log lines by the request (it can be a job id etc.)
     -   `config.connectorName` **[string][2]?** additional parameter which will be added to logs context, it's used to track connector name in logs
+    -   `config.captureLogs` **[boolean][3]?** an optional param to enable capturing logs, when enabled logs won't be sent to stdout/stderr and `logs` array would be initiated, which you can access via hullClient.configuration().logs
+    -   `config.captureFirehoseEvents` **[boolean][3]?** an option param to enable capturing firehose events, when enabled firehose events won't be sent to firehose endpoint and `firehoseEvents` array woyld be initiated, which you can access via hullClient.configuration().firehoseEvents
     -   `config.firehoseUrl` **[string][2]?** The url track/traits calls should be sent, available only for testing purposes
     -   `config.protocol` **[string][2]** protocol which will be appended to organization url, override for testing only (optional, default `https`)
-    -   `config.prefix` **[string][2]** prefix of Hull REST API (optional, default `/api/v1`)
-    -   `config.captureLogs` **[boolean][3]?** an optional param to enable capturing logs, when enabled `logs` array would be initiated
-    -   `config.logs` **[Array][4]?** an optional array to capture all logs entries
-    -   `config.captureFirehoseEvents` **[boolean][3]?** an option param to enable capturing firehose events, when enabled `firehoseEvents` array woyld be initiated
-    -   `config.firehoseEvents` **[Array][4]?** an optional array to capture all firehose events
+    -   `config.prefix` **[string][2]** prefix of Hull REST API, override for testing only (optional, default `/api/v1`)
+    -   `config.logs` **[Array][4]?** an optional array to capture all logs entries, you can provide your own array or use `captureLogs` to initiate empty one
+    -   `config.firehoseEvents` **[Array][4]?** an optional array to capture all firehose events, you can provide your own array or use `captureFirehoseEvents` to initiate empty one
 
 **Examples**
 

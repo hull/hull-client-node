@@ -14,23 +14,40 @@ describe("HullClient array capture feature", () => {
   it("should allow to capture traits", () => {
     const clock = sinon.useFakeTimers();
     const hullClient = new HullClient({ ...config, captureFirehoseEvents: true });
-    return hullClient.asUser({ email: "foo@bar.com" }).traits({ coconuts: 123 })
-      .then(() => {
-        expect(hullClient.configuration().firehoseEvents).to.eql([
-          {
-            context: {
-              organization: "hull-demos",
-              id: "550964db687ee7866d000057",
-              accessToken: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiI1NTA5NjRkYjY4N2VlNzg2NmQwMDAwNTciLCJpYXQiOjAsImlvLmh1bGwuYXNVc2VyIjp7ImVtYWlsIjoiZm9vQGJhci5jb20ifSwiaW8uaHVsbC5zdWJqZWN0VHlwZSI6InVzZXIifQ.wWju3dKDpDk2fG1zUq0DpE-thK5oLMKFRVce9OcXx8g",
-            },
-            data: {
-              type: "traits",
-              body: { coconuts: 123 }
-            }
+    hullClient.configuration().firehoseEvents.push("test");
+    return Promise.all([
+      hullClient.asUser({ email: "foo@bar.com" }).traits({ coconuts: 123 }),
+      hullClient.asUser({ email: "zoo@bay.com" }).traits({ apples: 345 })
+    ]).then(() => {
+      hullClient.configuration().firehoseEvents.push("test");
+      expect(hullClient.configuration().firehoseEvents).to.eql([
+        {
+          context: {
+            organization: "hull-demos",
+            id: "550964db687ee7866d000057",
+            subject_type: "user",
+            user_email: "foo@bar.com"
+          },
+          data: {
+            type: "traits",
+            body: { coconuts: 123 }
           }
-        ]);
-        clock.restore();
-      });
+        },
+        {
+          context: {
+            organization: "hull-demos",
+            id: "550964db687ee7866d000057",
+            subject_type: "user",
+            user_email: "zoo@bay.com"
+          },
+          data: {
+            type: "traits",
+            body: { apples: 345 }
+          }
+        }
+      ]);
+      clock.restore();
+    });
   });
 
   it("should allow to capture logs", () => {
@@ -45,6 +62,32 @@ describe("HullClient array capture feature", () => {
         data: { foo: "bar" },
         level: "info",
         message: "test",
+        timestamp: "1970-01-01T00:00:00.000Z"
+      }
+    ]);
+
+    // then log as user
+    hullClient.asUser({ email: "foo@bar.com" }).logger.info("outgoing.user.success", { baz: "bay" });
+    expect(hullClient.configuration().logs).to.eql([
+      {
+        context: {
+          organization: "hull-demos", id: "550964db687ee7866d000057"
+        },
+        data: { foo: "bar" },
+        level: "info",
+        message: "test",
+        timestamp: "1970-01-01T00:00:00.000Z"
+      },
+      {
+        message: "outgoing.user.success",
+        level: "info",
+        data: { baz: "bay" },
+        context: {
+          organization: "hull-demos",
+          id: "550964db687ee7866d000057",
+          subject_type: "user",
+          user_email: "foo@bar.com"
+        },
         timestamp: "1970-01-01T00:00:00.000Z"
       }
     ]);
