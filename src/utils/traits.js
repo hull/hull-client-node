@@ -50,7 +50,6 @@ type HullEntityNested = {
  *     "open_tickets": 18
  *   }
  * };
- * ```
  */
 function group(user: HullEntity): HullEntityNested {
   return _.reduce(user, (grouped, value, key) => {

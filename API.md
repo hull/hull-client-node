@@ -68,7 +68,7 @@ This makes [#traits][5] and [#track][6] methods available.
 
 -   Throws **[Error][7]** if no valid claims are passed
 
-Returns **[HullClient][8]** 
+Returns **[UserScopedHullClient][8]** 
 
 ### asAccount
 
@@ -83,12 +83,15 @@ This makes [#traits][5] method available.
 
 -   Throws **[Error][7]** If no valid claims are passed
 
-Returns **[HullClient][8]** instance scoped to account claims
+Returns **[AccountScopedHullClient][9]** instance scoped to account claims
 
-## ScopedHullClient
+## EntityScopedHullClient
 
-The following methods are available when `HullClient` instance is scoped to user or account.
+**Extends HullClient**
+
+The following methods are available when `HullClient` instance is scoped to an user or an account.
 How to get scoped client? Use `asUser` or `asAccount` methods.
+The `EntityScopedHullClient` is never directly returned by the HullClient but is a base class for UserScopedHullClient and AccountScopedHullClient classes.
 
 **Examples**
 
@@ -100,9 +103,9 @@ scopedHullClient.traits({ new_attribute: "new_value" });
 
 ### token
 
-Used for [Bring your own users][9].
+Used for [Bring your own users][10].
 Creates a signed string for the user passed in hash. `userHash` needs an `email` field.
-[You can then pass this client-side to Hull.js][10] to authenticate users client-side and cross-domain
+[You can then pass this client-side to Hull.js][11] to authenticate users client-side and cross-domain
 
 **Parameters**
 
@@ -119,24 +122,39 @@ Returns **[string][2]** token
 
 ### traits
 
-Saves attributes on the user or account. Only available on User or Account scoped `HullClient` instance (see [#asuser][11] and [#asaccount][12]).
+Saves attributes on the user or account. Only available on User or Account scoped `HullClient` instance (see [#asuser][12] and [#asaccount][13]).
 
 **Parameters**
 
 -   `traits` **[Object][1]** object with new attributes, it's always flat object, without nested subobjects
 
-Returns **[Promise][13]** 
+Returns **[Promise][14]** 
+
+## UserScopedHullClient
+
+**Extends EntityScopedHullClient**
+
+The following methods are available when `HullClient` instance is scoped to an user only
+How to get scoped client? Use `asUser` method
+
+**Examples**
+
+```javascript
+const hullClient = new HullClient({ id, secret, organization });
+const scopedHullClient = hullClient.asUser({ email: "foo@bar.com "});
+scopedHullClient.traits({ new_attribute: "new_value" });
+```
 
 ### account
 
-Available only for User scoped `HullClient` instance (see [#asuser][11]).
+Available only for User scoped `HullClient` instance (see [#asuser][12]).
 Returns `HullClient` instance scoped to both User and Account, but all traits/track call would be performed on the User, who will be also linked to the Account.
 
 **Parameters**
 
 -   `accountClaim` **[Object][1]** [description] (optional, default `Object.freeze({})`)
 
-Returns **[HullClient][8]** HullClient scoped to a User and linked to an Account
+Returns **[HullClient][15]** HullClient scoped to a User and linked to an Account
 
 ### alias
 
@@ -146,11 +164,11 @@ Issues an `alias` event on user?
 
 -   `body` **[Object][1]** 
 
-Returns **[Promise][13]** 
+Returns **[Promise][14]** 
 
 ### track
 
-Stores events on user. Only available on User scoped `HullClient` instance (see [#asuser][11]).
+Stores events on user. Only available on User scoped `HullClient` instance (see [#asuser][12]).
 
 **Parameters**
 
@@ -164,12 +182,26 @@ Stores events on user. Only available on User scoped `HullClient` instance (see 
     -   `context.ip` **[string][2]?** Define the Event's IP. Set to `null` if you're storing a server call, otherwise, geoIP will locate this event.
     -   `context.referer` **[string][2]?** Define the Referer. `null` for server calls.
 
-Returns **[Promise][13]** 
+Returns **[Promise][14]** 
+
+## AccountScopedHullClient
+
+**Extends EntityScopedHullClient**
+
+This is a class returned when we scope client to account. It provides `token` and `traits` methods.
+
+**Examples**
+
+```javascript
+const hullClient = new HullClient({ id, secret, organization });
+const scopedHullClient = hullClient.asAccount({ domain: "bar.com "});
+scopedHullClient.traits({ new_attribute: "new_value" });
+```
 
 ## Api
 
-Following methods allows to perform api calls again Hull REST API.
-Their are available on `HullClient` and scoped HullClient.
+Following methods allows to perform api calls against Hull REST API.
+Their are available on base `HullClient` and all scoped classes.
 
 ### api
 
@@ -181,8 +213,8 @@ Performs a HTTP request on selected url of Hull REST API (prefixed with `prefix`
 -   `method` **[string][2]** 
 -   `params` **[Object][1]?** 
 -   `options` **[Object][1]**  (optional, default `{}`)
-    -   `options.timeout` **[Number][14]?** option controls if the client should retry the request if the client timeout error happens or if there is an error 503 returned serverside - the value of the option is applied for client side error
-    -   `options.retry` **[Number][14]?** controls the time between timeout or 503 error occurence and the next retry being done
+    -   `options.timeout` **[Number][16]?** option controls if the client should retry the request if the client timeout error happens or if there is an error 503 returned serverside - the value of the option is applied for client side error
+    -   `options.retry` **[Number][16]?** controls the time between timeout or 503 error occurence and the next retry being done
 
 ### get
 
@@ -193,8 +225,8 @@ Performs a GET HTTP request on selected url of Hull REST API (prefixed with `pre
 -   `url` **[string][2]** 
 -   `params` **[Object][1]?** 
 -   `options` **[Object][1]**  (optional, default `{}`)
-    -   `options.timeout` **[Number][14]?** option controls if the client should retry the request if the client timeout error happens or if there is an error 503 returned serverside - the value of the option is applied for client side error
-    -   `options.retry` **[Number][14]?** controls the time between timeout or 503 error occurence and the next retry being done
+    -   `options.timeout` **[Number][16]?** option controls if the client should retry the request if the client timeout error happens or if there is an error 503 returned serverside - the value of the option is applied for client side error
+    -   `options.retry` **[Number][16]?** controls the time between timeout or 503 error occurence and the next retry being done
 
 ### post
 
@@ -205,8 +237,8 @@ Performs a POST HTTP request on selected url of Hull REST API (prefixed with `pr
 -   `url` **[string][2]** 
 -   `params` **[Object][1]?** 
 -   `options` **[Object][1]**  (optional, default `{}`)
-    -   `options.timeout` **[Number][14]?** option controls if the client should retry the request if the client timeout error happens or if there is an error 503 returned serverside - the value of the option is applied for client side error
-    -   `options.retry` **[Number][14]?** controls the time between timeout or 503 error occurence and the next retry being done
+    -   `options.timeout` **[Number][16]?** option controls if the client should retry the request if the client timeout error happens or if there is an error 503 returned serverside - the value of the option is applied for client side error
+    -   `options.retry` **[Number][16]?** controls the time between timeout or 503 error occurence and the next retry being done
 
 ### del
 
@@ -217,8 +249,8 @@ Performs a DELETE HTTP request on selected url of Hull REST API (prefixed with `
 -   `url` **[string][2]** 
 -   `params` **[Object][1]?** 
 -   `options` **[Object][1]**  (optional, default `{}`)
-    -   `options.timeout` **[Number][14]?** option controls if the client should retry the request if the client timeout error happens or if there is an error 503 returned serverside - the value of the option is applied for client side error
-    -   `options.retry` **[Number][14]?** controls the time between timeout or 503 error occurence and the next retry being done
+    -   `options.timeout` **[Number][16]?** option controls if the client should retry the request if the client timeout error happens or if there is an error 503 returned serverside - the value of the option is applied for client side error
+    -   `options.retry` **[Number][16]?** controls the time between timeout or 503 error occurence and the next retry being done
 
 ### put
 
@@ -229,8 +261,8 @@ Performs a PUT HTTP request on selected url of Hull REST API (prefixed with `pre
 -   `url` **[string][2]** 
 -   `params` **[Object][1]?** 
 -   `options` **[Object][1]**  (optional, default `{}`)
-    -   `options.timeout` **[Number][14]?** option controls if the client should retry the request if the client timeout error happens or if there is an error 503 returned serverside - the value of the option is applied for client side error
-    -   `options.retry` **[Number][14]?** controls the time between timeout or 503 error occurence and the next retry being done
+    -   `options.timeout` **[Number][16]?** option controls if the client should retry the request if the client timeout error happens or if there is an error 503 returned serverside - the value of the option is applied for client side error
+    -   `options.retry` **[Number][16]?** controls the time between timeout or 503 error occurence and the next retry being done
 
 ## Utils
 
@@ -240,7 +272,7 @@ The following methods are helper utilities. They are available under `utils` pro
 
 Fetches and returns all existing properties in the organization along with their metadata
 
-Returns **[Promise][13]&lt;[Object][1]>** 
+Returns **[Promise][14]&lt;[Object][1]>** 
 
 ### settings.update
 
@@ -252,7 +284,7 @@ Note: this method will trigger `hullClient.put` and will result in `ship:update`
 
 -   `newSettings` **[Object][1]** settings to update
 
-Returns **[Promise][13]** 
+Returns **[Promise][14]** 
 
 ### traits.group
 
@@ -265,7 +297,7 @@ This method can be used to group those traits into subobjects:
 
 **Examples**
 
-````javascript
+```javascript
 hullClient.utils.traits.group({
   email: "romain@user",
   name: "name",
@@ -297,7 +329,6 @@ hullClient.utils.traits.group({
   }
 };
 ```
-````
 
 Returns **[Object][1]** nested object
 
@@ -315,16 +346,20 @@ Returns **[Object][1]** nested object
 
 [7]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Error
 
-[8]: #hullclient
+[8]: #userscopedhullclient
 
-[9]: http://hull.io/docs/users/byou
+[9]: #accountscopedhullclient
 
-[10]: http://www.hull.io/docs/users/byou
+[10]: http://hull.io/docs/users/byou
 
-[11]: #asuser
+[11]: http://www.hull.io/docs/users/byou
 
-[12]: #asaccount
+[12]: #asuser
 
-[13]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise
+[13]: #asaccount
 
-[14]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number
+[14]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise
+
+[15]: #hullclient
+
+[16]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number
