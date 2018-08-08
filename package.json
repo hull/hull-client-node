@@ -27,6 +27,7 @@
     "precommit": "npm run documentation && git add API.md"
   },
   "dependencies": {
+    "debug": "^3.1.0",
     "jwt-simple": "^0.5.0",
     "lodash": "^4.17.5",
     "superagent": "^3.8.3",

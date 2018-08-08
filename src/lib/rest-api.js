@@ -1,5 +1,7 @@
 // const rest = require("restler");
 const superagent = require("superagent");
+const jwt = require("jwt-simple");
+const debug = require("debug")("hull-client-node:rest-api");
 const pkg = require("../../package.json");
 
 const DEFAULT_HEADERS = {
@@ -62,6 +64,15 @@ function perform(client, config = {}, method = "get", path, params = {}, options
 
   if (method === "get") {
     agent.timeout(options.timeout || 10000);
+  }
+
+  if( params.batch && process.env.NODE_ENV === "development" && process.env.DEBUG ) {
+    debug("perform:")
+    params.batch.forEach( b => {
+      var { type, body } = b
+      var { iss, iat, ...claims} = jwt.decode(b.headers['Hull-Access-Token'], config.secret)
+      debug("%j", { type, body, claims })
+    })
   }
 
   if (method === "get") {
