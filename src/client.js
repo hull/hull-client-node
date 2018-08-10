@@ -100,7 +100,7 @@ class HullClient {
     ]);
     const ctxe = _.mapKeys(ctxKeys, (value, key) => _.snakeCase(key));
 
-    ["user", "account"].forEach((k) => {
+    ["user", "account"].forEach(k => {
       const claim = conf[`${k}Claim`];
       if (_.isString(claim)) {
         ctxe[`${k}_id`] = claim;
@@ -117,7 +117,7 @@ class HullClient {
       if (!Array.isArray(firehoseEventsArray)) {
         throw new Error("Configuration `firehoseEvents` must be an Array");
       }
-      this.batch = (data) => {
+      this.batch = data => {
         firehoseEventsArray.push({ context: ctxe, data });
         return Promise.resolve();
       };

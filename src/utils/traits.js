@@ -1,5 +1,10 @@
 // @flow
-import type { HullAttributeName, HullAttributeValue, HullEntity, HullEntityAttributes } from "../types";
+import type {
+  HullAttributeName,
+  HullAttributeValue,
+  HullEntity,
+  HullEntityAttributes
+} from "../types";
 
 const _ = require("lodash");
 
@@ -52,28 +57,38 @@ type HullEntityNested = {
  * };
  */
 function group(user: HullEntity): HullEntityNested {
-  return _.reduce(user, (grouped, value, key) => {
-    let dest = key;
-    if (key.match(/^traits_/)) {
-      if (key.match(/\//)) {
-        dest = key.replace(/^traits_/, "");
-      } else {
-        dest = key.replace(/^traits_/, "traits/");
+  return _.reduce(
+    user,
+    (grouped, value, key) => {
+      let dest = key;
+      if (key.match(/^traits_/)) {
+        if (key.match(/\//)) {
+          dest = key.replace(/^traits_/, "");
+        } else {
+          dest = key.replace(/^traits_/, "traits/");
+        }
       }
-    }
-    return _.setWith(grouped, dest.split("/"), value, Object);
-  }, {});
+      return _.setWith(grouped, dest.split("/"), value, Object);
+    },
+    {}
+  );
 }
 
 function normalize(traits: HullEntityAttributes): HullEntityAttributes {
-  return _.reduce(traits, (memo, value, key) => {
-    if (!_.isObject(value)) {
-      value = { operation: "set", value };
-    }
-    if (!value.operation) { value.operation = "set"; }
-    memo[key] = value;
-    return memo;
-  }, {});
+  return _.reduce(
+    traits,
+    (memo, value, key) => {
+      if (!_.isObject(value)) {
+        value = { operation: "set", value };
+      }
+      if (!value.operation) {
+        value.operation = "set";
+      }
+      memo[key] = value;
+      return memo;
+    },
+    {}
+  );
 }
 
 module.exports = {
