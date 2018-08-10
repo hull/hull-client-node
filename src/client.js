@@ -121,22 +121,22 @@ class HullClient {
         firehoseEventsArray.push({ context: ctxe, data });
         return Promise.resolve();
       };
+    } else {
+      this.batch = Firehose.getInstance(
+        this.clientConfig.get(),
+        (params, batcher) => {
+          const {
+            protocol = "",
+            domain = "",
+            firehoseUrl = `${protocol}://firehose.${domain}`
+          } = this.clientConfig._state;
+          return restAPI(this, batcher.config, firehoseUrl, "post", params, {
+            timeout: process.env.BATCH_TIMEOUT || 10000,
+            retry: process.env.BATCH_RETRY || 5000
+          });
+        }
+      );
     }
-
-    this.batch = Firehose.getInstance(
-      this.clientConfig.get(),
-      (params, batcher) => {
-        const {
-          protocol = "",
-          domain = "",
-          firehoseUrl = `${protocol}://firehose.${domain}`
-        } = this.clientConfig._state;
-        return restAPI(this, batcher.config, firehoseUrl, "post", params, {
-          timeout: process.env.BATCH_TIMEOUT || 10000,
-          retry: process.env.BATCH_RETRY || 5000
-        });
-      }
-    );
 
     /**
      * The following methods are helper utilities. They are available under `utils` property
@@ -329,7 +329,9 @@ class HullClient {
     additionalClaims: HullAuxiliaryClaims = Object.freeze({})
   ) {
     if (!accountClaim) {
-      throw new Error("Account Claims was not defined when calling hull.asAccount()");
+      throw new Error(
+        "Account Claims was not defined when calling hull.asAccount()"
+      );
     }
     return new AccountScopedHullClient({
       ...this.config,
