@@ -10,7 +10,9 @@ const DEFAULT_HEADERS = {
 };
 
 function strip(url = "") {
-  if (url.indexOf("/") === 0) { return url.slice(1); }
+  if (url.indexOf("/") === 0) {
+    return url.slice(1);
+  }
   return url;
 }
 
@@ -18,7 +20,14 @@ function isAbsolute(url = "") {
   return /http[s]?:\/\//.test(url);
 }
 
-function perform(client, config = {}, method = "get", path, params = {}, options = {}) {
+function perform(
+  client,
+  config = {},
+  method = "get",
+  path,
+  params = {},
+  options = {}
+) {
   const methodCall = superagent[method];
   if (!methodCall) {
     throw new Error(`Unsupported method ${method}`);
@@ -36,13 +45,19 @@ function perform(client, config = {}, method = "get", path, params = {}, options
       const retryCount = this._retries;
       if (err && err.timeout) {
         client.logger.debug("client.timeout", {
-          timeout: err.timeout, retryCount, path, method
+          timeout: err.timeout,
+          retryCount,
+          path,
+          method
         });
         return true;
       }
       if (res && res.statusCode >= 500 && retryCount <= 2) {
         client.logger.debug("client.fail", {
-          statusCode: res.statusCode, retryCount, path, method
+          statusCode: res.statusCode,
+          retryCount,
+          path,
+          method
         });
         return true;
       }
@@ -66,11 +81,18 @@ function perform(client, config = {}, method = "get", path, params = {}, options
     agent.timeout(options.timeout || 10000);
   }
 
-  if (params.batch && process.env.NODE_ENV === "development" && process.env.DEBUG) {
+  if (
+    params.batch &&
+    process.env.NODE_ENV === "development" &&
+    process.env.DEBUG
+  ) {
     debug("perform:");
-    params.batch.forEach((b) => {
+    params.batch.forEach(b => {
       const { type, body } = b;
-      const { iss, iat, ...claims } = jwt.decode(b.headers["Hull-Access-Token"], config.secret);
+      const { iss, iat, ...claims } = jwt.decode(
+        b.headers["Hull-Access-Token"],
+        config.secret
+      );
       debug("%j", { type, body, claims });
     });
   }
@@ -82,12 +104,23 @@ function perform(client, config = {}, method = "get", path, params = {}, options
 }
 
 function format(config, url) {
-  if (isAbsolute(url)) { return url; }
+  if (isAbsolute(url)) {
+    return url;
+  }
   return `${config.get("protocol")}://${config.get("organization")}${config.get("prefix")}/${strip(url)}`;
 }
 
-module.exports = function restAPI(client, config, url, method, params, options = {}) {
-  const token = config.get("sudo") ? config.get("secret") : (config.get("accessToken") || config.get("secret"));
+module.exports = function restAPI(
+  client,
+  config,
+  url,
+  method,
+  params,
+  options = {}
+) {
+  const token = config.get("sudo")
+    ? config.get("secret")
+    : config.get("accessToken") || config.get("secret");
   const conf = {
     token,
     id: config.get("id"),
