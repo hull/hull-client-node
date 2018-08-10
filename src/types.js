@@ -141,10 +141,10 @@ export type HullEntityAttributes = HullAccountAttributes | HullUserAttributes;
 export type HullEventName = string;
 
 /**
- * This is are event's properties which we use when tracking an event
+ * These are event's properties which we use when tracking an event
  */
 export type HullEventProperties = {
-  [HullEventProperty: string]: string
+  [HullEventProperty: string]: HullAttributeValue
 };
 
 /**
@@ -172,8 +172,9 @@ export type HullEventContext = {
  */
 export type HullAccount = {
   id: string,
-  domain: string,
-  external_id: string,
+  domain: string | null,
+  external_id: string | null,
+  name: string | null,
   [HullAttributeName]: HullAttributeValue
 };
 
@@ -182,9 +183,10 @@ export type HullAccount = {
  */
 export type HullUser = {
   id: string,
-  email: string,
-  external_id: string,
-  anonymous_ids: Array<string>,
+  email: string | null,
+  external_id: string | null,
+  anonymous_ids: Array<string> | null,
+  domain?: string | null,
   [HullAttributeName]: HullAttributeValue;
 };
 
@@ -204,7 +206,7 @@ export type HullEvent = {
   event_type?: string;
   track_id?: string;
   user_id?: string;
-  anonymous_id?: string; // not sure whether it's string or an array of strings
+  anonymous_id?: string | null; // not sure whether it's string or an array of strings
   session_id?: string;
   ship_id?: string;
   app_id?: string;

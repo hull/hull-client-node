@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.0.0-beta.4
+* add `debug` - Logs all calls to the REST api when active.
+* tweak Flow types
+
 ## 2.0.0-beta.3
 * fix missing flow types
 * documentation adjustments
