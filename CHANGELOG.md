@@ -4,14 +4,15 @@
 * add `debug` - Logs all calls to the REST api when active.
 * tweak Flow types
 * be more strict with code style, enforce flow, prettier + lint at each commit.
+* fix CHANGELOG to be consistent with actual code behaviour for `firehoseEventsArray`
 
 ## 2.0.0-beta.3
 * fix missing flow types
 * documentation adjustments
 
 ## 2.0.0-beta.2
-* adds experimental `logsArray` and `firehoseEventsArray` to additionally capture log lines and firehose events to separate arrays.
-  CAUTION: this does not disable normal behaviour of the libary
+* adds experimental `logsArray` and `firehoseEventsArray` to capture log lines and firehose events to separate arrays.
+  CAUTION: this DOES disable normal behaviour of the libary
 * fix retry callback errors
 
 ## 2.0.0-beta.1
