@@ -6,7 +6,7 @@ const pkg = require("../../package.json");
 
 const DEFAULT_HEADERS = {
   "Content-Type": "application/json",
-  "User-Agent": `Hull Node Client version: ${pkg.version}`
+  "User-Agent": `Hull Node Client version: ${pkg.version}`,
 };
 
 function strip(url = "") {
@@ -39,7 +39,7 @@ function perform(
       "Hull-App-Id": config.id,
       "Hull-Access-Token": config.token,
       "Hull-Organization": config.organization,
-      ...(params.headers || {})
+      ...(params.headers || {}),
     })
     .retry(2, function retryCallback(err, res) {
       const retryCount = this._retries;
@@ -48,7 +48,7 @@ function perform(
           timeout: err.timeout,
           retryCount,
           path,
-          method
+          method,
         });
         return true;
       }
@@ -57,13 +57,13 @@ function perform(
           statusCode: res.statusCode,
           retryCount,
           path,
-          method
+          method,
         });
         return true;
       }
       if (err) {
         client.logger.debug("client.fail.unknown", {
-          err: err.toString()
+          err: err.toString(),
         });
       }
       return false;
@@ -89,10 +89,11 @@ function perform(
     debug("perform:");
     params.batch.forEach(b => {
       const { type, body } = b;
-      const { iss, iat, ...claims } = jwt.decode(
-        b.headers["Hull-Access-Token"],
-        config.secret
-      );
+      const {
+        iss, // eslint-disable-line no-unused-vars
+        iat, // eslint-disable-line no-unused-vars
+        ...claims
+      } = jwt.decode(b.headers["Hull-Access-Token"], config.secret);
       debug("%j", { type, body, claims });
     });
   }
@@ -107,7 +108,9 @@ function format(config, url) {
   if (isAbsolute(url)) {
     return url;
   }
-  return `${config.get("protocol")}://${config.get("organization")}${config.get("prefix")}/${strip(url)}`;
+  return `${config.get("protocol")}://${config.get("organization")}${config.get(
+    "prefix"
+  )}/${strip(url)}`;
 }
 
 module.exports = function restAPI(
@@ -126,7 +129,7 @@ module.exports = function restAPI(
     id: config.get("id"),
     secret: config.get("secret"),
     userId: config.get("userId"),
-    organization: config.get("organization")
+    organization: config.get("organization"),
   };
 
   const path = format(config, url);
