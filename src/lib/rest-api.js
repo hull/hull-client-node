@@ -69,8 +69,8 @@ function perform(client, config = {}, method = "get", path, params = {}, options
   if (params.batch && process.env.NODE_ENV === "development" && process.env.DEBUG) {
     debug("perform:");
     params.batch.forEach((b) => {
-      let { type, body } = b;
-      let { iss, iat, ...claims } = jwt.decode(b.headers["Hull-Access-Token"], config.secret);
+      const { type, body } = b;
+      const { iss, iat, ...claims } = jwt.decode(b.headers["Hull-Access-Token"], config.secret);
       debug("%j", { type, body, claims });
     });
   }
