@@ -300,7 +300,7 @@ class HullClient {
    * @return {UserScopedHullClient}
    */
   asUser(
-    userClaim: string | HullUserClaims,
+    userClaim: string | { ...HullUserClaims },
     additionalClaims: HullAuxiliaryClaims = Object.freeze({})
   ) {
     if (!userClaim) {
@@ -325,7 +325,7 @@ class HullClient {
    * @return {AccountScopedHullClient} instance scoped to account claims
    */
   asAccount(
-    accountClaim: string | HullAccountClaims,
+    accountClaim: string | { ...HullAccountClaims },
     additionalClaims: HullAuxiliaryClaims = Object.freeze({})
   ) {
     if (!accountClaim) {
@@ -488,4 +488,4 @@ class AccountScopedHullClient extends EntityScopedHullClient {}
 
 HullClient.logger = logger;
 
-module.exports = HullClient;
+module.exports= HullClient;
