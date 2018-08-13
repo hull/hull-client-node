@@ -12,7 +12,7 @@ import type {
   HullEntityClaims,
   HullClientLogger,
   HullClientUtils,
-  HullClientStaticLogger
+  HullClientStaticLogger,
 } from "./types";
 
 const _ = require("lodash");
@@ -33,9 +33,9 @@ const logger = new winston.Logger({
     new winston.transports.Console({
       level: "info",
       json: true,
-      stringify: true
-    })
-  ]
+      stringify: true,
+    }),
+  ],
 });
 
 /**
@@ -96,7 +96,7 @@ class HullClient {
       "id",
       "connectorName",
       "subjectType",
-      "requestId"
+      "requestId",
     ]);
     const ctxe = _.mapKeys(ctxKeys, (value, key) => _.snakeCase(key));
 
@@ -128,11 +128,11 @@ class HullClient {
           const {
             protocol = "",
             domain = "",
-            firehoseUrl = `${protocol}://firehose.${domain}`
+            firehoseUrl = `${protocol}://firehose.${domain}`,
           } = this.clientConfig._state;
           return restAPI(this, batcher.config, firehoseUrl, "post", params, {
             timeout: process.env.BATCH_TIMEOUT || 10000,
-            retry: process.env.BATCH_RETRY || 5000
+            retry: process.env.BATCH_RETRY || 5000,
           });
         }
       );
@@ -147,11 +147,11 @@ class HullClient {
     this.utils = {
       traits: traitsUtils,
       properties: {
-        get: propertiesUtils.get.bind(this)
+        get: propertiesUtils.get.bind(this),
       },
       settings: {
-        update: settingsUtils.update.bind(this)
-      }
+        update: settingsUtils.update.bind(this),
+      },
     };
 
     const logFactory = level => (message: string, data: Object) =>
@@ -163,7 +163,7 @@ class HullClient {
       verbose: logFactory("verbose"),
       info: logFactory("info"),
       warn: logFactory("warn"),
-      error: logFactory("error")
+      error: logFactory("error"),
     };
 
     this.requestId = conf.requestId;
@@ -178,7 +178,7 @@ class HullClient {
         logger.add(winston.transports.Memory, {
           level: "debug",
           json: true,
-          stringify: input => input
+          stringify: input => input,
         });
         logger.on("logged", (level, message, payload) => {
           logsArray.push({
@@ -186,7 +186,7 @@ class HullClient {
             level,
             data: payload.data,
             context: payload.context,
-            timestamp: new Date().toISOString()
+            timestamp: new Date().toISOString(),
           });
         });
       }
@@ -310,7 +310,7 @@ class HullClient {
       ...this.config,
       subjectType: "user",
       userClaim,
-      additionalClaims
+      additionalClaims,
     });
   }
 
@@ -329,15 +329,13 @@ class HullClient {
     additionalClaims: HullAuxiliaryClaims = Object.freeze({})
   ) {
     if (!accountClaim) {
-      throw new Error(
-        "Account Claims was not defined when calling hull.asAccount()"
-      );
+      throw new Error("Account Claims was not defined when calling hull.asAccount()");
     }
     return new AccountScopedHullClient({
       ...this.config,
       subjectType: "account",
       accountClaim,
-      additionalClaims
+      additionalClaims,
     });
   }
 }
@@ -417,7 +415,7 @@ class UserScopedHullClient extends EntityScopedHullClient {
     return new AccountScopedHullClient({
       ...this.config,
       subjectType: "account",
-      accountClaim
+      accountClaim,
     });
   }
 
@@ -432,7 +430,7 @@ class UserScopedHullClient extends EntityScopedHullClient {
     return this.batch({
       type: "alias",
       requestId: this.requestId,
-      body
+      body,
     });
   }
 
@@ -457,7 +455,7 @@ class UserScopedHullClient extends EntityScopedHullClient {
     context: HullEventContext = {}
   ): Promise<*> {
     _.defaults(context, {
-      event_id: uuidV4()
+      event_id: uuidV4(),
     });
     return this.batch({
       type: "track",
@@ -469,8 +467,8 @@ class UserScopedHullClient extends EntityScopedHullClient {
         referer: null,
         ...context,
         properties,
-        event
-      }
+        event,
+      },
     });
   }
 }
