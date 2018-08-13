@@ -175,6 +175,7 @@ export type HullAccount = {
   id: string,
   domain: string | null,
   external_id: string | null,
+  anonymous_ids: Array<string> | null,
   name: string | null,
   [HullAttributeName]: HullAttributeValue,
 };

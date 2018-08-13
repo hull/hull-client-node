@@ -191,7 +191,7 @@ class Configuration {
       ? object
       : _.mapValues( //Ensure we don't return Arrays in the various claims, just primitives.
           _.pick(object, claimsToFilter),
-          (v, k) => (_.isArray(v) ? _.first(v) : v)
+          v => (_.isArray(v) ? _.first(v) : v)
         );
   }
 
