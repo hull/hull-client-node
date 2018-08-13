@@ -19,7 +19,7 @@
     "prettier": "prettier --write \"./src/**/*.{js,json}\"",
     "documentation:lint": "documentation lint src",
     "test": "npm run test:lint && npm run test:flow && npm run test:unit && npm run test:integration",
-    "test:lint": "yarn lint && yarn documentation:lint",
+    "test:lint": "yarn lint",
     "test:dependencies": "npm outdated --depth=0",
     "test:unit": "NODE_ENV=test mocha --require babel-register --exit -R spec ./test/unit/** ./test/unit/*",
     "test:integration": "NODE_ENV=test mocha --require babel-register --exit -R spec ./test/integration/* ./test/integration/**",
@@ -28,14 +28,11 @@
     "build": "npm run clean && babel src -d lib && npm run documentation",
     "prepublish": "npm run build",
     "documentation": "documentation build src -f md -o API.md --access public --markdownToc=false --config documentation.yml",
-    "precommit": "yarn lint && yarn flow && lint-staged && npm run documentation && git add API.md"
+    "precommit": "yarn lint && yarn flow && lint-staged && git add API.md"
   },
   "lint-staged": {
     "linters": {
-      "*.{js,jsx,css,less,json}": [
-        "prettier",
-        "git add"
-      ]
+      "*.{js,jsx,css,less,json}": ["prettier","git add"]
     }
   },
   "prettier": {
