@@ -1,10 +1,18 @@
 // @flow
 
 import type {
-  HullClientConfiguration, HullEntityAttributes,
-  HullEventName, HullEventProperties, HullEventContext,
-  HullAccountClaims, HullUserClaims, HullAuxiliaryClaims, HullEntityClaims,
-  HullClientLogger, HullClientUtils, HullClientStaticLogger
+  HullClientConfiguration,
+  HullEntityAttributes,
+  HullEventName,
+  HullEventProperties,
+  HullEventContext,
+  HullAccountClaims,
+  HullUserClaims,
+  HullAuxiliaryClaims,
+  HullEntityClaims,
+  HullClientLogger,
+  HullClientUtils,
+  HullClientStaticLogger,
 } from "./types";
 
 const _ = require("lodash");
@@ -20,14 +28,14 @@ const traitsUtils = require("./utils/traits");
 const settingsUtils = require("./utils/settings");
 const propertiesUtils = require("./utils/properties");
 
-const logger = new (winston.Logger)({
+const logger = new winston.Logger({
   transports: [
-    new (winston.transports.Console)({
+    new winston.transports.Console({
       level: "info",
       json: true,
-      stringify: true
-    })
-  ]
+      stringify: true,
+    }),
+  ],
 });
 
 /**
@@ -83,10 +91,16 @@ class HullClient {
     this.clientConfig = new Configuration(config);
 
     const conf = this.configuration() || {};
-    const ctxKeys = _.pick(conf, ["organization", "id", "connectorName", "subjectType", "requestId"]);
+    const ctxKeys = _.pick(conf, [
+      "organization",
+      "id",
+      "connectorName",
+      "subjectType",
+      "requestId",
+    ]);
     const ctxe = _.mapKeys(ctxKeys, (value, key) => _.snakeCase(key));
 
-    ["user", "account"].forEach((k) => {
+    ["user", "account"].forEach(k => {
       const claim = conf[`${k}Claim`];
       if (_.isString(claim)) {
         ctxe[`${k}_id`] = claim;
@@ -103,20 +117,25 @@ class HullClient {
       if (!Array.isArray(firehoseEventsArray)) {
         throw new Error("Configuration `firehoseEvents` must be an Array");
       }
-      this.batch = (data) => {
+      this.batch = data => {
         firehoseEventsArray.push({ context: ctxe, data });
         return Promise.resolve();
       };
     } else {
-      this.batch = Firehose.getInstance(this.clientConfig.get(), (params, batcher) => {
-        const protocol = this.clientConfig._state.protocol || "";
-        const domain = this.clientConfig._state.domain || "";
-        const firehoseUrl = this.clientConfig._state.firehoseUrl || `${protocol}://firehose.${domain}`;
-        return restAPI(this, batcher.config, firehoseUrl, "post", params, {
-          timeout: process.env.BATCH_TIMEOUT || 10000,
-          retry: process.env.BATCH_RETRY || 5000
-        });
-      });
+      this.batch = Firehose.getInstance(
+        this.clientConfig.get(),
+        (params, batcher) => {
+          const {
+            protocol = "",
+            domain = "",
+            firehoseUrl = `${protocol}://firehose.${domain}`,
+          } = this.clientConfig._state;
+          return restAPI(this, batcher.config, firehoseUrl, "post", params, {
+            timeout: process.env.BATCH_TIMEOUT || 10000,
+            retry: process.env.BATCH_RETRY || 5000,
+          });
+        }
+      );
     }
 
     /**
@@ -132,10 +151,11 @@ class HullClient {
       },
       settings: {
         update: settingsUtils.update.bind(this),
-      }
+      },
     };
 
-    const logFactory = level => (message: string, data: Object) => logger[level](message, { context: ctxe, data });
+    const logFactory = level => (message: string, data: Object) =>
+      logger[level](message, { context: ctxe, data });
     this.logger = {
       log: logFactory("info"),
       silly: logFactory("silly"),
@@ -158,7 +178,7 @@ class HullClient {
         logger.add(winston.transports.Memory, {
           level: "debug",
           json: true,
-          stringify: input => input
+          stringify: input => input,
         });
         logger.on("logged", (level, message, payload) => {
           logsArray.push({
@@ -166,7 +186,7 @@ class HullClient {
             level,
             data: payload.data,
             context: payload.context,
-            timestamp: new Date().toISOString()
+            timestamp: new Date().toISOString(),
           });
         });
       }
@@ -174,22 +194,22 @@ class HullClient {
   }
 
   /**
-    * Returns the global configuration object.
-    *
-    * @public
-    * @return {Object} current `HullClient` configuration parameters
-    * @example
-    * const hullClient = new HullClient({});
-    * hullClient.configuration() == {
-    *   prefix: "/api/v1",
-    *   domain: "hullapp.io",
-    *   protocol: "https",
-    *   id: "58765f7de3aa14001999",
-    *   secret: "12347asc855041674dc961af50fc1",
-    *   organization: "fa4321.hullapp.io",
-    *   version: "0.13.10"
-    * };
-    */
+   * Returns the global configuration object.
+   *
+   * @public
+   * @return {Object} current `HullClient` configuration parameters
+   * @example
+   * const hullClient = new HullClient({});
+   * hullClient.configuration() == {
+   *   prefix: "/api/v1",
+   *   domain: "hullapp.io",
+   *   protocol: "https",
+   *   id: "58765f7de3aa14001999",
+   *   secret: "12347asc855041674dc961af50fc1",
+   *   organization: "fa4321.hullapp.io",
+   *   version: "0.13.10"
+   * };
+   */
   configuration(): HullClientConfiguration {
     return this.clientConfig.getAll();
   }
@@ -279,12 +299,18 @@ class HullClient {
    * @throws {Error} if no valid claims are passed
    * @return {UserScopedHullClient}
    */
-  asUser(userClaim: string | HullUserClaims, additionalClaims: HullAuxiliaryClaims = Object.freeze({})) {
+  asUser(
+    userClaim: string | HullUserClaims,
+    additionalClaims: HullAuxiliaryClaims = Object.freeze({})
+  ) {
     if (!userClaim) {
       throw new Error("User Claims was not defined when calling hull.asUser()");
     }
     return new UserScopedHullClient({
-      ...this.config, subjectType: "user", userClaim, additionalClaims
+      ...this.config,
+      subjectType: "user",
+      userClaim,
+      additionalClaims,
     });
   }
 
@@ -298,12 +324,18 @@ class HullClient {
    * @throws {Error} If no valid claims are passed
    * @return {AccountScopedHullClient} instance scoped to account claims
    */
-  asAccount(accountClaim: string | HullAccountClaims, additionalClaims: HullAuxiliaryClaims = Object.freeze({})) {
+  asAccount(
+    accountClaim: string | HullAccountClaims,
+    additionalClaims: HullAuxiliaryClaims = Object.freeze({})
+  ) {
     if (!accountClaim) {
       throw new Error("Account Claims was not defined when calling hull.asAccount()");
     }
     return new AccountScopedHullClient({
-      ...this.config, subjectType: "account", accountClaim, additionalClaims
+      ...this.config,
+      subjectType: "account",
+      accountClaim,
+      additionalClaims,
     });
   }
 }
@@ -334,11 +366,17 @@ class EntityScopedHullClient extends HullClient {
    */
   token(claims: HullEntityClaims) {
     const subjectType = this.clientConfig._state.subjectType || "";
-    const claim = subjectType === "account"
-      ? this.clientConfig._state.accountClaim
-      : this.clientConfig._state.userClaim;
+    const claim =
+      subjectType === "account"
+        ? this.clientConfig._state.accountClaim
+        : this.clientConfig._state.userClaim;
 
-    return crypto.lookupToken(this.clientConfig.get(), subjectType, { [subjectType]: claim }, claims);
+    return crypto.lookupToken(
+      this.clientConfig.get(),
+      subjectType,
+      { [subjectType]: claim },
+      claims
+    );
   }
 
   /**
@@ -374,7 +412,11 @@ class UserScopedHullClient extends EntityScopedHullClient {
    * @return {HullClient} HullClient scoped to a User and linked to an Account
    */
   account(accountClaim: HullAccountClaims = Object.freeze({})) {
-    return new AccountScopedHullClient({ ...this.config, subjectType: "account", accountClaim });
+    return new AccountScopedHullClient({
+      ...this.config,
+      subjectType: "account",
+      accountClaim,
+    });
   }
 
   /**
@@ -388,7 +430,7 @@ class UserScopedHullClient extends EntityScopedHullClient {
     return this.batch({
       type: "alias",
       requestId: this.requestId,
-      body
+      body,
     });
   }
 
@@ -407,9 +449,13 @@ class UserScopedHullClient extends EntityScopedHullClient {
    * @param  {string} [context.referer]    Define the Referer. `null` for server calls.
    * @return {Promise}
    */
-  track(event: HullEventName, properties: HullEventProperties = {}, context: HullEventContext = {}): Promise<*> {
+  track(
+    event: HullEventName,
+    properties: HullEventProperties = {},
+    context: HullEventContext = {}
+  ): Promise<*> {
     _.defaults(context, {
-      event_id: uuidV4()
+      event_id: uuidV4(),
     });
     return this.batch({
       type: "track",
@@ -421,8 +467,8 @@ class UserScopedHullClient extends EntityScopedHullClient {
         referer: null,
         ...context,
         properties,
-        event
-      }
+        event,
+      },
     });
   }
 }

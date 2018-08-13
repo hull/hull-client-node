@@ -1,5 +1,10 @@
 // @flow
-import type { HullClientConfiguration, HullEntityClaims, HullEntityType, HullAuxiliaryClaims } from "../types";
+import type {
+  HullClientConfiguration,
+  HullEntityClaims,
+  HullEntityType,
+  HullAuxiliaryClaims
+} from "../types";
 
 const _ = require("lodash");
 const pkg = require("../../package.json");
@@ -13,7 +18,7 @@ const GLOBALS = {
 const VALID_OBJECT_ID = new RegExp("^[0-9a-fA-F]{24}$");
 const VALID = {
   boolean(val) {
-    return (val === true || val === false);
+    return val === true || val === false;
   },
   object(val) {
     return _.isObject(val);
@@ -62,13 +67,23 @@ const VALID_PROPS = {
  * All valid user claims, used for validation and filterind .asUser calls
  * @type {Array}
  */
-const USER_CLAIMS: Array<string> = ["id", "email", "external_id", "anonymous_id"];
+const USER_CLAIMS: Array<string> = [
+  "id",
+  "email",
+  "external_id",
+  "anonymous_id"
+];
 
 /**
  * All valid accounts claims, used for validation and filtering .asAccount calls
  * @type {Array}
  */
-const ACCOUNT_CLAIMS: Array<string> = ["id", "external_id", "domain", "anonymous_id"];
+const ACCOUNT_CLAIMS: Array<string> = [
+  "id",
+  "external_id",
+  "domain",
+  "anonymous_id"
+];
 
 /**
  * Class containing configuration
@@ -89,13 +104,21 @@ class Configuration {
       }
 
       if (config.accountClaim) {
-        config.accountClaim = this.filterEntityClaims("account", config.accountClaim);
+        config.accountClaim = this.filterEntityClaims(
+          "account",
+          config.accountClaim
+        );
       }
 
-      const accessToken = crypto.lookupToken(config, config.subjectType, {
-        user: config.userClaim,
-        account: config.accountClaim
-      }, config.additionalClaims);
+      const accessToken = crypto.lookupToken(
+        config,
+        config.subjectType,
+        {
+          user: config.userClaim,
+          account: config.accountClaim
+        },
+        config.additionalClaims
+      );
       config = { ...config, accessToken };
     }
 
@@ -132,35 +155,45 @@ class Configuration {
    * claim is an object
    * @throws Error
    */
-  assertEntityClaimsValidity(type: HullEntityType, object: void | string | HullEntityClaims): void {
-    const claimsToCheck = type === "user"
-      ? USER_CLAIMS
-      : ACCOUNT_CLAIMS;
+  assertEntityClaimsValidity(
+    type: HullEntityType,
+    object: void | string | HullEntityClaims
+  ): void {
+    const claimsToCheck = type === "user" ? USER_CLAIMS : ACCOUNT_CLAIMS;
     if (!_.isEmpty(object)) {
       if (typeof object === "string") {
         if (!object) {
           throw new Error(`Missing ${type} ID`);
         }
-      } else if (typeof object !== "object" || _.intersection(_.keys(object), claimsToCheck).length === 0) {
+      } else if (
+        typeof object !== "object" ||
+        _.intersection(_.keys(object), claimsToCheck).length === 0
+      ) {
         throw new Error(`You need to pass an ${type} hash with an ${claimsToCheck.join(", ")} field`);
       }
     }
   }
 
-  filterEntityClaims(type: HullEntityType, object: void | string | HullEntityClaims): * {
-    const claimsToFilter = type === "user"
-      ? USER_CLAIMS
-      : ACCOUNT_CLAIMS;
-    return typeof object === "string"
-      ? object
-      : _.pick(object, claimsToFilter);
+  filterEntityClaims(
+    type: HullEntityType,
+    object: void | string | HullEntityClaims
+  ): * {
+    const claimsToFilter = type === "user" ? USER_CLAIMS : ACCOUNT_CLAIMS;
+    return typeof object === "string" ? object : _.pick(object, claimsToFilter);
   }
 
   set(key: string, value: $Values<HullClientConfiguration>): void {
     this._state[key] = value;
   }
 
-  get(key?: string): string | number | Array<Object> | HullEntityType | HullEntityClaims | HullAuxiliaryClaims | HullClientConfiguration | void {
+  get(key?: string): | string
+    | number
+    | Array<Object>
+    | HullEntityType
+    | HullEntityClaims
+    | HullAuxiliaryClaims
+    | HullClientConfiguration
+    | void {
     if (key) {
       return this._state[key];
     }
