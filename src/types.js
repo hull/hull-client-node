@@ -188,6 +188,7 @@ export type HullUser = {
   email: string | null,
   external_id: string | null,
   anonymous_ids: Array<string> | null,
+  segment_ids: Array<string> | null,
   domain?: string | null,
   [HullAttributeName]: HullAttributeValue,
 };
