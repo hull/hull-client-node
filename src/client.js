@@ -16,10 +16,13 @@ import type {
 } from "./types";
 
 const _ = require("lodash");
-const winston = require("winston");
+
+const { createLogger, format, transports } = require("winston");
+
 const uuidV4 = require("uuid/v4");
 
 const Configuration = require("./lib/configuration");
+const LogsArrayTransport = require("./lib/logs-array-transport");
 const restAPI = require("./lib/rest-api");
 const crypto = require("./lib/crypto");
 const Firehose = require("./lib/firehose");
@@ -28,14 +31,12 @@ const traitsUtils = require("./utils/traits");
 const settingsUtils = require("./utils/settings");
 const propertiesUtils = require("./utils/properties");
 
-const logger = new winston.Logger({
-  transports: [
-    new winston.transports.Console({
-      level: "info",
-      json: true,
-      stringify: true
-    })
-  ]
+const consoleTransport = new transports.Console({
+  level: process.env.LOG_LEVEL || "info"
+});
+const logger = createLogger({
+  format: format.json(),
+  transports: [consoleTransport]
 });
 
 /**
@@ -166,6 +167,8 @@ class HullClient {
       error: logFactory("error")
     };
 
+    consoleTransport.level = config.logLevel || "info";
+
     this.requestId = conf.requestId;
 
     if (this.clientConfig.get("logs")) {
@@ -174,21 +177,12 @@ class HullClient {
         throw new Error("Configuration `logs` must be an Array");
       }
       if (logger.transports.console) {
-        logger.remove("console");
-        logger.add(winston.transports.Memory, {
-          level: "debug",
-          json: true,
-          stringify: input => input
+        logger.remove(consoleTransport);
+        const logsArrayTransport = new LogsArrayTransport({
+          logsArray,
+          level: "debug"
         });
-        logger.on("logged", (level, message, payload) => {
-          logsArray.push({
-            message,
-            level,
-            data: payload.data,
-            context: payload.context,
-            timestamp: new Date().toISOString()
-          });
-        });
+        logger.add(logsArrayTransport);
       }
     }
   }
@@ -488,4 +482,4 @@ class AccountScopedHullClient extends EntityScopedHullClient {}
 
 HullClient.logger = logger;
 
-module.exports= HullClient;
+module.exports = HullClient;

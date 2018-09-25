@@ -48,8 +48,7 @@ class FirehoseBatcher {
     });
   }
 
-  flush(fn) {
-    fn = fn || (() => {});
+  flush(fn = (() => {})) {
     if (!this.queue.length) return setImmediate(fn);
 
     const items = this.queue.splice(0, this.flushAt);

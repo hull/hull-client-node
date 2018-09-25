@@ -1,6 +1,10 @@
 # CHANGELOG
 
 ## 2.0.0-rc1
+* winston 3 -> https://github.com/winstonjs/winston/blob/master/UPGRADE-3.0.md
+* babel 7
+* update dependencies
+* add `yarn watch` rask to build continuously. Use with `yarn link hull-client`
 * add `debug` - Logs all calls to the REST api when active.
 * tweak Flow types
 * be more strict with code style, enforce flow, prettier + lint at each commit.
