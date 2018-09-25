@@ -6,9 +6,11 @@ import type {
   HullEventName,
   HullEventProperties,
   HullEventContext,
+  HullAccount,
+  HullUser,
   HullAccountClaims,
   HullUserClaims,
-  HullAuxiliaryClaims,
+  HullAdditionalClaims,
   HullEntityClaims,
   HullClientLogger,
   HullClientUtils,
@@ -294,22 +296,21 @@ class HullClient {
    * @return {UserScopedHullClient}
    */
   asUser(
-    userClaim: string | { ...HullUserClaims },
-    additionalClaims: HullAuxiliaryClaims = Object.freeze({})
-  ) {
+    userClaim: HullUserClaims | HullUser,
+    additionalClaims: HullAdditionalClaims = Object.freeze({})
+  ): UserScopedHullClient {
     if (!userClaim) {
       throw new Error("User Claims was not defined when calling hull.asUser()");
     }
     return new UserScopedHullClient({
       ...this.config,
       subjectType: "user",
-      userClaim,
+      userClaim: { ...userClaim }, //Fixes flow Error https://flow.org/try/#0C4TwDgpgBAglC8UDeUCWATAXFAzsATqgHYDmUAvgNwBQokUAQgsmugPzZ6GkU0DGAeyJ4oAMwEDscRCgzYARAEYATAGYALPIrVBw4GOYAKAEaYGASgQA+KLpwCANhAB0DgSRPOM5mqMPiBHyggA
       additionalClaims
     });
   }
 
   /**
-   * Takes Account Claims (link to User Identity docs) and returnes `HullClient` instance scoped to this Account.
    * This makes {@link #traits} method available.
    *
    * @public
@@ -319,18 +320,19 @@ class HullClient {
    * @return {AccountScopedHullClient} instance scoped to account claims
    */
   asAccount(
-    accountClaim: string | { ...HullAccountClaims },
-    additionalClaims: HullAuxiliaryClaims = Object.freeze({})
-  ) {
+    accountClaim: HullAccountClaims | HullAccount,
+    additionalClaims: HullAdditionalClaims = Object.freeze({})
+  ): AccountScopedHullClient {
     if (!accountClaim) {
       throw new Error(
         "Account Claims was not defined when calling hull.asAccount()"
       );
     }
+    const claim = _.isString(accountClaim) ? accountClaim : { ...accountClaim };
     return new AccountScopedHullClient({
       ...this.config,
       subjectType: "account",
-      accountClaim,
+      accountClaim: { ...claim }, //Fixes flow Error https://flow.org/try/#0C4TwDgpgBAglC8UDeUCWATAXFAzsATqgHYDmUAvgNwBQokUAQgsmugPzZ6GkU0DGAeyJ4oAMwEDscRCgzYARAEYATAGYALPIrVBw4GOYAKAEaYGASgQA+KLpwCANhAB0DgSRPOM5mqMPiBHyggA
       additionalClaims
     });
   }
@@ -407,7 +409,9 @@ class UserScopedHullClient extends EntityScopedHullClient {
    * @param  {Object} accountClaim [description]
    * @return {HullClient} HullClient scoped to a User and linked to an Account
    */
-  account(accountClaim: HullAccountClaims = Object.freeze({})) {
+  account(
+    accountClaim: HullAccountClaims = Object.freeze({})
+  ): AccountScopedHullClient {
     return new AccountScopedHullClient({
       ...this.config,
       subjectType: "account",

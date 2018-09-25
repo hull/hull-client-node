@@ -3,7 +3,7 @@ import type {
   HullClientConfiguration,
   HullEntityClaims,
   HullEntityType,
-  HullAuxiliaryClaims,
+  HullAdditionalClaims,
 } from "../types";
 
 const _ = require("lodash");
@@ -206,7 +206,7 @@ class Configuration {
     | Array<Object>
     | HullEntityType
     | HullEntityClaims
-    | HullAuxiliaryClaims
+    | HullAdditionalClaims
     | HullClientConfiguration
     | void {
     if (key) {

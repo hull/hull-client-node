@@ -24,7 +24,7 @@ export type HullAttributeValue = string | boolean | Array<string> | number;
  */
 export type HullAttributeOperation = {|
   operation: "set" | "setIfNull" | "inc" | "dec",
-  value: HullAttributeValue,
+  value: HullAttributeValue
 |};
 
 /**
@@ -33,7 +33,7 @@ export type HullAttributeOperation = {|
 export type HullEntityType = "account" | "user";
 
 export type HullConnectorSettings = {
-  [HullConnectorSettingName: string]: any,
+  [HullConnectorSettingName: string]: any
 };
 
 /**
@@ -52,10 +52,10 @@ export type HullConnector = {
   picture: string,
   homepage_url: string,
   manifest_url: string,
-  manifest: Object,
+  manifest: HullManifest,
   settings: HullConnectorSettings,
   private_settings: HullConnectorSettings,
-  status: Object,
+  status: Object
 };
 
 export type HullSegmentType = "users_segment" | "accounts_segment";
@@ -70,10 +70,10 @@ export type HullSegment = {
   type: HullSegmentType,
   stats: {
     users?: number,
-    accounts?: number, // is it really there?
+    accounts?: number // is it really there?
   },
   created_at: string,
-  updated_at: string,
+  updated_at: string
 };
 
 /*
@@ -233,7 +233,7 @@ export type HullAttributesChanges = {|
  */
 export type HullSegmentsChanges = {|
   entered?: Array<HullSegment>,
-  left?: Array<HullSegment>,
+  left?: Array<HullSegment>
 |};
 
 /**
@@ -324,7 +324,7 @@ export type HullClientConfiguration = {
   logs?: Array<Object>,
   firehoseEvents?: Array<Object>,
   captureLogs?: boolean,
-  captureFirehoseEvents?: boolean,
+  captureFirehoseEvents?: boolean
 };
 
 /**
@@ -337,13 +337,13 @@ export type HullClientLogger = {|
   verbose: (string, Object) => void,
   info: (string, Object) => void,
   warn: (string, Object) => void,
-  error: (string, Object) => void,
+  error: (string, Object) => void
 |};
 
 // Definition of static logger param available on HullClient class
 export type HullClientStaticLogger = {|
   ...HullClientLogger,
-  transports: Object,
+  transports: Object
 |};
 
 /**
@@ -352,7 +352,7 @@ export type HullClientStaticLogger = {|
 export type HullClientUtils = {|
   traits: typeof traitsUtils,
   settings: typeof settingsUtils,
-  properties: typeof propertiesUtils,
+  properties: typeof propertiesUtils
 |};
 
 export type HullProperties = {
@@ -363,6 +363,6 @@ export type HullProperties = {
     id_path: Array<string>,
     path: Array<string>,
     title: string,
-    key: string,
-  },
+    key: string
+  }
 };
