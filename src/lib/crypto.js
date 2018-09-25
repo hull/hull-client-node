@@ -57,15 +57,15 @@ module.exports = {
    * @returns {string} The jwt token to identity the user.
    */
   lookupToken(config, subjectType, objectClaims = {}, additionalClaims = {}) {
-    subjectType = _.toLower(subjectType);
-    if (!_.includes(["user", "account"], subjectType)) {
+    const subject = _.toLower(subjectType);
+    if (!_.includes(["user", "account"], subject)) {
       throw new Error("Lookup token supports only `user` and `account` types");
     }
 
     checkConfig(config);
     const claims = {};
 
-    const subjectClaim = objectClaims[subjectType];
+    const subjectClaim = objectClaims[subject];
 
     if (_.isString(subjectClaim)) {
       claims.sub = subjectClaim;
@@ -81,7 +81,7 @@ module.exports = {
         } else if (
           _.isString(oClaims) &&
           !_.isEmpty(oClaims) &&
-          objectType !== subjectType
+          objectType !== subject
         ) {
           c[`io.hull.as${_.upperFirst(objectType)}`] = { id: oClaims };
         }
@@ -102,7 +102,7 @@ module.exports = {
       claims["io.hull.active"] = additionalClaims.active;
     }
 
-    claims["io.hull.subjectType"] = subjectType;
+    claims["io.hull.subjectType"] = subject;
     return buildToken(config, claims);
   },
 
