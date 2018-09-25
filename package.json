@@ -36,6 +36,7 @@
     "test:unit": "NODE_ENV=test mocha --require @babel/register --exit -R spec ./test/unit/** ./test/unit/*",
     "test": "yarn lint && yarn test:flow && yarn test:unit && yarn test:integration",
     "watch": "./node_modules/.bin/watch 'yarn build' src",
+    "precommit": "yarn lint && yarn flow && yarn documentation && git add API.md"
   },
   "dependencies": {
     "debug": "^3.1.0",

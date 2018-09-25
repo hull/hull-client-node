@@ -78,13 +78,11 @@ function normalize(traits: HullEntityAttributes): HullEntityAttributes {
   return _.reduce(
     traits,
     (memo, value, key) => {
-      if (!_.isObject(value)) {
-        value = { operation: "set", value };
+      const v = _.isObject(value) ? value : { operation: "set", value };
+      if (!v.operation) {
+        v.operation = "set";
       }
-      if (!value.operation) {
-        value.operation = "set";
-      }
-      memo[key] = value;
+      memo[key] = v;
       return memo;
     },
     {}
