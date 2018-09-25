@@ -3,6 +3,11 @@
   "version": "2.0.0",
   "description": "A barebones Node.js API client for hull.io",
   "main": "lib",
+  "author": {
+    "name": "Hull",
+    "email": "contact@hull.io",
+    "url": "https://github.com/hull"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/hull/hull-client-node.git"
@@ -11,7 +16,10 @@
   "bugs": {
     "url": "https://github.com/hull/hull-client-node/issues"
   },
-  "author": "Romain Dardour <romain@hull.io>",
+  "engines": {
+    "node": "^8.11.x",
+    "yarn": "^1.6.x"
+  },
   "license": "MIT",
   "scripts": {
     "flow": "flow",
