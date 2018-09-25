@@ -121,7 +121,7 @@ class Configuration {
         },
         config.additionalClaims
       );
-      config = { ...config, accessToken };
+      config.accessToken = accessToken;
     }
 
     this._state = { ...GLOBALS };
