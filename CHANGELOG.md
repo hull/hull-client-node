@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 2.0.1
+* fix signatures of API methods
+* rename `Event` to `UserEvent` flow types
+
+## 2.0.0
+* enhance the way `logs` and `firehoseEvents` can be captured
+* documentation updates
+
 ## 2.0.0-beta.3
 * fix missing flow types
 * documentation adjustments
