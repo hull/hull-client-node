@@ -370,6 +370,17 @@ export type HullUserUpdateMessage = {|
   message_id: string
 |};
 
+// TODO: What does a segment update message look like
+export type HullSegmentUpdateMessage = {}
+// TODO: What does a segment delete message look like
+export type HullSegmentDeleteMessage = {}
+// TODO: What does a user delete message look like
+export type HullUserDeleteMessage = {}
+// TODO: What does a account delete message look like
+export type HullAccountDeleteMessage = {}
+// TODO: What does a connector update message look like
+export type HullConnectorUpdateMessage = {}
+
 /**
  * A message sent by the platform when any attribute (trait) or segment change happens on the account.
  */
