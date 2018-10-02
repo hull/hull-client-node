@@ -298,7 +298,8 @@ class HullClient {
   asUser(
     userClaim: HullUserClaims | HullUser,
     additionalClaims: HullAdditionalClaims = Object.freeze({})
-  ): UserScopedHullClient { //eslint-disable-line no-use-before-define
+    //eslint-disable-next-line no-use-before-define
+  ): UserScopedHullClient {
     if (!userClaim) {
       throw new Error("User Claims was not defined when calling hull.asUser()");
     }
@@ -322,7 +323,8 @@ class HullClient {
   asAccount(
     accountClaim: HullAccountClaims | HullAccount,
     additionalClaims: HullAdditionalClaims = Object.freeze({})
-  ): AccountScopedHullClient { //eslint-disable-line no-use-before-define
+    //eslint-disable-next-line no-use-before-define
+  ): AccountScopedHullClient {
     if (!accountClaim) {
       throw new Error(
         "Account Claims was not defined when calling hull.asAccount()"
@@ -411,7 +413,8 @@ class UserScopedHullClient extends EntityScopedHullClient {
    */
   account(
     accountClaim: HullAccountClaims = Object.freeze({})
-  ): AccountScopedHullClient { //eslint-disable-line no-use-before-define
+    //eslint-disable-next-line no-use-before-define
+  ): AccountScopedHullClient {
     return new AccountScopedHullClient({
       ...this.config,
       subjectType: "account",
