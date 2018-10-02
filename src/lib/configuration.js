@@ -121,7 +121,8 @@ class Configuration {
         },
         config.additionalClaims
       );
-      config.accessToken = accessToken;
+      //eslint-disable-next-line no-param-reassign
+      config = { ...config, accessToken };
     }
 
     this._state = { ...GLOBALS };
