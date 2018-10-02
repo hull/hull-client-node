@@ -175,7 +175,7 @@ class Configuration {
         _.intersection(_.keys(object), claimsToCheck).length === 0
       ) {
         throw new Error(
-          `You need to pass an ${type} hash with an ${claimsToCheck.join(
+          `You need to pass a ${type} hash with an ${claimsToCheck.join(
             ", "
           )} field`
         );
