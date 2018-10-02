@@ -32,7 +32,7 @@
     "prepublish": "yarn build && yarn documentation",
     "test:dependencies": "npm outdated --depth=0",
     "test:flow": "flow check",
-    "test:integration": "NODE_ENV=test mocha --require @babel/register --exit -R spec ./test/integration/* ./test/integration/**",
+    "test:integration": "NODE_ENV=test mocha --opts mocha.opts ./test/integration/* ./test/integration/**",
     "test:unit": "NODE_ENV=test mocha --require @babel/register --exit -R spec ./test/unit/** ./test/unit/*",
     "test": "yarn lint && yarn test:flow && yarn test:unit && yarn test:integration",
     "watch": "./node_modules/.bin/watch 'yarn build' src",
