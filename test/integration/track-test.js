@@ -29,11 +29,11 @@ describe("client.track()", function test() {
   });
 
   it("should set default event_id", (done) => {
-    const stub = minihull.stubPost("/boom/firehose")
+    const stub = minihull.stubApp("POST", "/boom/firehose")
       .callsFake((req, res) => {
         res.end("ok");
       });
-    client.asUser("123").track("Foo")
+    client.asUser({ id: "123" }).track("Foo")
       .then(() => {
         const firstReq = minihull.requests.get("incoming").get(0).value();
         expect(firstReq.body.batch[0].body.event_id).to.not.be.empty;
@@ -42,11 +42,11 @@ describe("client.track()", function test() {
   });
 
   it("should not overwrite event_id if provided", (done) => {
-    const stub = minihull.stubPost("/boom/firehose")
+    const stub = minihull.stubApp("POST", "/boom/firehose")
       .callsFake((req, res) => {
         res.end("ok");
       });
-    client.asUser("123").track("Foo", {}, { event_id: "someCustomValue" })
+    client.asUser({ id: "123" }).track("Foo", {}, { event_id: "someCustomValue" })
       .then(() => {
         const firstReq = minihull.requests.get("incoming").get(0).value();
         expect(firstReq.body.batch[0].body.event_id).to.equal("someCustomValue");
@@ -55,7 +55,7 @@ describe("client.track()", function test() {
   });
 
   it("shoud retry with the same event_id", (done) => {
-    const stub = minihull.stubPost("/boom/firehose")
+    const stub = minihull.stubApp("POST", "/boom/firehose")
       .onFirstCall()
       .callsFake((req, res) => {})
       .onSecondCall()
@@ -63,7 +63,7 @@ describe("client.track()", function test() {
         res.end("ok");
       });
 
-    client.asUser("123").track("Foo")
+    client.asUser({ id: "123" }).track("Foo")
       .then(() => {
         expect(stub.callCount).to.be.eql(2);
         const firstReq = minihull.requests.get("incoming").get(0).value();

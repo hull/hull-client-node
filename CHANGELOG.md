@@ -1,6 +1,7 @@
 # CHANGELOG
 
 ## 2.0.0-rc1
+* Removed and deprecated hull.asUser("id") syntax. Use: hull.asUser({ id: id })
 * winston 3 -> https://github.com/winstonjs/winston/blob/master/UPGRADE-3.0.md
 * babel 7
 * update dependencies

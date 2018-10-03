@@ -1,6 +1,6 @@
 /* global describe, it */
 const { expect } = require("chai");
-const sinon = require("sinon");
+// const sinon = require("sinon");
 const jwt = require("jwt-simple");
 
 const Hull = require("../../src");
@@ -9,9 +9,8 @@ describe("Hull", () => {
   describe("as", () => {
     it("should return scoped client with traits, track and alias methods", () => {
       const hull = new Hull({ id: "562123b470df84b740000042", secret: "1234", organization: "test" });
-
       const scopedAccount = hull.asAccount({ domain: "hull.io" });
-      const scopedUser = hull.asUser("1234");
+      const scopedUser = hull.asUser({ id: "1234"});
 
       expect(scopedAccount).to.has.property("token")
         .that.is.an("function");
@@ -55,15 +54,9 @@ describe("Hull", () => {
         .that.eql(["admin"]);
     });
 
-    it("should allow to pass user id as a string", () => {
+    it("should disallow to pass user id as a string", () => {
       const hull = new Hull({ id: "562123b470df84b740000042", secret: "1234", organization: "test" });
-
-      const scoped = hull.asUser("123456");
-      const scopedConfig = scoped.configuration();
-      const scopedJwtClaims = jwt.decode(scopedConfig.accessToken, scopedConfig.secret);
-      expect(scopedJwtClaims)
-        .to.have.property("sub")
-        .that.eql("123456");
+      expect(hull.asUser.bind(hull.asUser, "1234")).to.throw();
     });
 
     it("should allow to pass account domain as an object property", () => {
@@ -100,7 +93,7 @@ describe("Hull", () => {
     it("should allow to link a user using its id to an account", () => {
       const hull = new Hull({ id: "562123b470df84b740000042", secret: "1234", organization: "test" });
 
-      const scoped = hull.asUser("1234").account({ domain: "hull.io" });
+      const scoped = hull.asUser({ id: "1234" }).account({ domain: "hull.io" });
       const scopedJwtClaims = jwt.decode(scoped.configuration().accessToken, scoped.configuration().secret);
 
       expect(scopedJwtClaims)
