@@ -178,8 +178,17 @@ class HullClient {
       if (!Array.isArray(logsArray)) {
         throw new Error("Configuration `logs` must be an Array");
       }
-      if (logger.transports.console) {
-        logger.remove(consoleTransport);
+      const foundConsoleTransport = logger.transports.find(
+        t => t.name === "console"
+      );
+      if (foundConsoleTransport) {
+        logger.remove(foundConsoleTransport);
+      }
+
+      const foundLogsArrayTransport = logger.transports.find(
+        t => t.name === "logsArray"
+      );
+      if (!foundLogsArrayTransport) {
         const logsArrayTransport = new LogsArrayTransport({
           logsArray,
           level: "debug"
