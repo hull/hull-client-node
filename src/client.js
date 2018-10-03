@@ -101,7 +101,7 @@ class HullClient {
     if (this.clientConfig.get("firehoseEvents")) {
       const firehoseEventsArray = this.clientConfig.get("firehoseEvents");
       if (!Array.isArray(firehoseEventsArray)) {
-        throw new Error("Configuration `firehoseEvents` must be an Array");
+        throw new Error("Configuration `firehoseEventsArray` must be an Array");
       }
       this.batch = (data) => {
         firehoseEventsArray.push({ context: ctxe, data });
@@ -151,7 +151,7 @@ class HullClient {
     if (this.clientConfig.get("logs")) {
       const logsArray = this.clientConfig.get("logs");
       if (!Array.isArray(logsArray)) {
-        throw new Error("Configuration `logs` must be an Array");
+        throw new Error("Configuration `logsArray` must be an Array");
       }
       if (logger.transports.console) {
         logger.remove("console");
