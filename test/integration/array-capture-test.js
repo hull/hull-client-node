@@ -57,7 +57,8 @@ describe("HullClient array capture feature", () => {
     expect(hullClient.configuration().logs).to.eql([
       {
         context: {
-          organization: "hull-demos", id: "550964db687ee7866d000057"
+          organization: "hull-demos",
+          id: "550964db687ee7866d000057"
         },
         data: { foo: "bar" },
         level: "info",
@@ -67,11 +68,15 @@ describe("HullClient array capture feature", () => {
     ]);
 
     // then log as user
-    hullClient.asUser({ email: "foo@bar.com" }).logger.info("outgoing.user.success", { baz: "bay" });
+    hullClient
+      .asUser({ email: "foo@bar.com" })
+      .logger.info("outgoing.user.success", { baz: "bay" });
+    /* TODO: Clarify expectations for logs array behaviour. Should it be scoped by client instance? */
     expect(hullClient.configuration().logs).to.eql([
       {
         context: {
-          organization: "hull-demos", id: "550964db687ee7866d000057"
+          organization: "hull-demos",
+          id: "550964db687ee7866d000057"
         },
         data: { foo: "bar" },
         level: "info",
@@ -94,4 +99,3 @@ describe("HullClient array capture feature", () => {
     clock.restore();
   });
 });
-

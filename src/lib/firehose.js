@@ -5,7 +5,6 @@ const BATCHERS = {};
 
 global.setImmediate = global.setImmediate || process.nextTick.bind(process);
 
-
 class FirehoseBatcher {
   static getInstance(config, handler) {
     const {
@@ -44,13 +43,12 @@ class FirehoseBatcher {
 
       if (this.queue.length >= this.flushAt) this.flush();
       if (this.timer) clearTimeout(this.timer);
-      if (this.flushAfter) this.timer = setTimeout(this.flush.bind(this), this.flushAfter);
+      if (this.flushAfter) { this.timer = setTimeout(this.flush.bind(this), this.flushAfter); }
       return true;
     });
   }
 
-  flush(fn) {
-    fn = fn || (() => {});
+  flush(fn = (() => {})) {
     if (!this.queue.length) return setImmediate(fn);
 
     const items = this.queue.splice(0, this.flushAt);
@@ -76,6 +74,5 @@ function handleBeforeExit() {
 }
 
 process.on("beforeExit", handleBeforeExit);
-
 
 module.exports = FirehoseBatcher;

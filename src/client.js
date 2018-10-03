@@ -1,17 +1,30 @@
 // @flow
 
 import type {
-  HullClientConfiguration, HullEntityAttributes,
-  HullEventName, HullEventProperties, HullEventContext,
-  HullAccountClaims, HullUserClaims, HullAuxiliaryClaims, HullEntityClaims,
-  HullClientLogger, HullClientUtils, HullClientStaticLogger
+  HullClientConfiguration,
+  HullEntityAttributes,
+  HullEventName,
+  HullEventProperties,
+  HullEventContext,
+  HullAccount,
+  HullUser,
+  HullAccountClaims,
+  HullUserClaims,
+  HullAdditionalClaims,
+  HullEntityClaims,
+  HullClientLogger,
+  HullClientUtils,
+  HullClientStaticLogger
 } from "./types";
 
 const _ = require("lodash");
-const winston = require("winston");
+
+const { createLogger, format, transports } = require("winston");
+
 const uuidV4 = require("uuid/v4");
 
 const Configuration = require("./lib/configuration");
+const LogsArrayTransport = require("./lib/logs-array-transport");
 const restAPI = require("./lib/rest-api");
 const crypto = require("./lib/crypto");
 const Firehose = require("./lib/firehose");
@@ -20,14 +33,12 @@ const traitsUtils = require("./utils/traits");
 const settingsUtils = require("./utils/settings");
 const propertiesUtils = require("./utils/properties");
 
-const logger = new (winston.Logger)({
-  transports: [
-    new (winston.transports.Console)({
-      level: "info",
-      json: true,
-      stringify: true
-    })
-  ]
+const consoleTransport = new transports.Console({
+  level: process.env.LOG_LEVEL || "info"
+});
+const logger = createLogger({
+  format: format.json(),
+  transports: [consoleTransport]
 });
 
 /**
@@ -83,10 +94,16 @@ class HullClient {
     this.clientConfig = new Configuration(config);
 
     const conf = this.configuration() || {};
-    const ctxKeys = _.pick(conf, ["organization", "id", "connectorName", "subjectType", "requestId"]);
+    const ctxKeys = _.pick(conf, [
+      "organization",
+      "id",
+      "connectorName",
+      "subjectType",
+      "requestId"
+    ]);
     const ctxe = _.mapKeys(ctxKeys, (value, key) => _.snakeCase(key));
 
-    ["user", "account"].forEach((k) => {
+    ["user", "account"].forEach(k => {
       const claim = conf[`${k}Claim`];
       if (_.isString(claim)) {
         ctxe[`${k}_id`] = claim;
@@ -103,20 +120,25 @@ class HullClient {
       if (!Array.isArray(firehoseEventsArray)) {
         throw new Error("Configuration `firehoseEvents` must be an Array");
       }
-      this.batch = (data) => {
+      this.batch = data => {
         firehoseEventsArray.push({ context: ctxe, data });
         return Promise.resolve();
       };
     } else {
-      this.batch = Firehose.getInstance(this.clientConfig.get(), (params, batcher) => {
-        const protocol = this.clientConfig._state.protocol || "";
-        const domain = this.clientConfig._state.domain || "";
-        const firehoseUrl = this.clientConfig._state.firehoseUrl || `${protocol}://firehose.${domain}`;
-        return restAPI(this, batcher.config, firehoseUrl, "post", params, {
-          timeout: process.env.BATCH_TIMEOUT || 10000,
-          retry: process.env.BATCH_RETRY || 5000
-        });
-      });
+      this.batch = Firehose.getInstance(
+        this.clientConfig.get(),
+        (params, batcher) => {
+          const {
+            protocol = "",
+            domain = "",
+            firehoseUrl = `${protocol}://firehose.${domain}`
+          } = this.clientConfig._state;
+          return restAPI(this, batcher.config, firehoseUrl, "post", params, {
+            timeout: process.env.BATCH_TIMEOUT || 10000,
+            retry: process.env.BATCH_RETRY || 5000
+          });
+        }
+      );
     }
 
     /**
@@ -128,14 +150,15 @@ class HullClient {
     this.utils = {
       traits: traitsUtils,
       properties: {
-        get: propertiesUtils.get.bind(this),
+        get: propertiesUtils.get.bind(this)
       },
       settings: {
-        update: settingsUtils.update.bind(this),
+        update: settingsUtils.update.bind(this)
       }
     };
 
-    const logFactory = level => (message: string, data: Object) => logger[level](message, { context: ctxe, data });
+    const logFactory = level => (message: string, data: Object) =>
+      logger[level](message, { context: ctxe, data });
     this.logger = {
       log: logFactory("info"),
       silly: logFactory("silly"),
@@ -143,8 +166,10 @@ class HullClient {
       verbose: logFactory("verbose"),
       info: logFactory("info"),
       warn: logFactory("warn"),
-      error: logFactory("error"),
+      error: logFactory("error")
     };
+
+    consoleTransport.level = config.logLevel || "info";
 
     this.requestId = conf.requestId;
 
@@ -153,43 +178,43 @@ class HullClient {
       if (!Array.isArray(logsArray)) {
         throw new Error("Configuration `logs` must be an Array");
       }
-      if (logger.transports.console) {
-        logger.remove("console");
-        logger.add(winston.transports.Memory, {
-          level: "debug",
-          json: true,
-          stringify: input => input
+      const foundConsoleTransport = logger.transports.find(
+        t => t.name === "console"
+      );
+      if (foundConsoleTransport) {
+        logger.remove(foundConsoleTransport);
+      }
+
+      const foundLogsArrayTransport = logger.transports.find(
+        t => t.name === "logsArray"
+      );
+      if (!foundLogsArrayTransport) {
+        const logsArrayTransport = new LogsArrayTransport({
+          logsArray,
+          level: "debug"
         });
-        logger.on("logged", (level, message, payload) => {
-          logsArray.push({
-            message,
-            level,
-            data: payload.data,
-            context: payload.context,
-            timestamp: new Date().toISOString()
-          });
-        });
+        logger.add(logsArrayTransport);
       }
     }
   }
 
   /**
-    * Returns the global configuration object.
-    *
-    * @public
-    * @return {Object} current `HullClient` configuration parameters
-    * @example
-    * const hullClient = new HullClient({});
-    * hullClient.configuration() == {
-    *   prefix: "/api/v1",
-    *   domain: "hullapp.io",
-    *   protocol: "https",
-    *   id: "58765f7de3aa14001999",
-    *   secret: "12347asc855041674dc961af50fc1",
-    *   organization: "fa4321.hullapp.io",
-    *   version: "0.13.10"
-    * };
-    */
+   * Returns the global configuration object.
+   *
+   * @public
+   * @return {Object} current `HullClient` configuration parameters
+   * @example
+   * const hullClient = new HullClient({});
+   * hullClient.configuration() == {
+   *   prefix: "/api/v1",
+   *   domain: "hullapp.io",
+   *   protocol: "https",
+   *   id: "58765f7de3aa14001999",
+   *   secret: "12347asc855041674dc961af50fc1",
+   *   organization: "fa4321.hullapp.io",
+   *   version: "0.13.10"
+   * };
+   */
   configuration(): HullClientConfiguration {
     return this.clientConfig.getAll();
   }
@@ -279,17 +304,23 @@ class HullClient {
    * @throws {Error} if no valid claims are passed
    * @return {UserScopedHullClient}
    */
-  asUser(userClaim: string | HullUserClaims, additionalClaims: HullAuxiliaryClaims = Object.freeze({})) {
+  asUser(
+    userClaim: HullUserClaims | HullUser,
+    additionalClaims: HullAdditionalClaims = Object.freeze({})
+    //eslint-disable-next-line no-use-before-define
+  ): UserScopedHullClient {
     if (!userClaim) {
       throw new Error("User Claims was not defined when calling hull.asUser()");
     }
     return new UserScopedHullClient({
-      ...this.config, subjectType: "user", userClaim, additionalClaims
+      ...this.config,
+      subjectType: "user",
+      userClaim: { ...userClaim }, //Fixes flow Error https://flow.org/try/#0C4TwDgpgBAglC8UDeUCWATAXFAzsATqgHYDmUAvgNwBQokUAQgsmugPzZ6GkU0DGAeyJ4oAMwEDscRCgzYARAEYATAGYALPIrVBw4GOYAKAEaYGASgQA+KLpwCANhAB0DgSRPOM5mqMPiBHyggA
+      additionalClaims
     });
   }
 
   /**
-   * Takes Account Claims (link to User Identity docs) and returnes `HullClient` instance scoped to this Account.
    * This makes {@link #traits} method available.
    *
    * @public
@@ -298,12 +329,22 @@ class HullClient {
    * @throws {Error} If no valid claims are passed
    * @return {AccountScopedHullClient} instance scoped to account claims
    */
-  asAccount(accountClaim: string | HullAccountClaims, additionalClaims: HullAuxiliaryClaims = Object.freeze({})) {
+  asAccount(
+    accountClaim: HullAccountClaims | HullAccount,
+    additionalClaims: HullAdditionalClaims = Object.freeze({})
+    //eslint-disable-next-line no-use-before-define
+  ): AccountScopedHullClient {
     if (!accountClaim) {
-      throw new Error("Account Claims was not defined when calling hull.asAccount()");
+      throw new Error(
+        "Account Claims was not defined when calling hull.asAccount()"
+      );
     }
+    const claim = _.isString(accountClaim) ? accountClaim : { ...accountClaim };
     return new AccountScopedHullClient({
-      ...this.config, subjectType: "account", accountClaim, additionalClaims
+      ...this.config,
+      subjectType: "account",
+      accountClaim: { ...claim }, //Fixes flow Error https://flow.org/try/#0C4TwDgpgBAglC8UDeUCWATAXFAzsATqgHYDmUAvgNwBQokUAQgsmugPzZ6GkU0DGAeyJ4oAMwEDscRCgzYARAEYATAGYALPIrVBw4GOYAKAEaYGASgQA+KLpwCANhAB0DgSRPOM5mqMPiBHyggA
+      additionalClaims
     });
   }
 }
@@ -334,11 +375,17 @@ class EntityScopedHullClient extends HullClient {
    */
   token(claims: HullEntityClaims) {
     const subjectType = this.clientConfig._state.subjectType || "";
-    const claim = subjectType === "account"
-      ? this.clientConfig._state.accountClaim
-      : this.clientConfig._state.userClaim;
+    const claim =
+      subjectType === "account"
+        ? this.clientConfig._state.accountClaim
+        : this.clientConfig._state.userClaim;
 
-    return crypto.lookupToken(this.clientConfig.get(), subjectType, { [subjectType]: claim }, claims);
+    return crypto.lookupToken(
+      this.clientConfig.get(),
+      subjectType,
+      { [subjectType]: claim },
+      claims
+    );
   }
 
   /**
@@ -373,8 +420,15 @@ class UserScopedHullClient extends EntityScopedHullClient {
    * @param  {Object} accountClaim [description]
    * @return {HullClient} HullClient scoped to a User and linked to an Account
    */
-  account(accountClaim: HullAccountClaims = Object.freeze({})) {
-    return new AccountScopedHullClient({ ...this.config, subjectType: "account", accountClaim });
+  account(
+    accountClaim: HullAccountClaims = Object.freeze({})
+    //eslint-disable-next-line no-use-before-define
+  ): AccountScopedHullClient {
+    return new AccountScopedHullClient({
+      ...this.config,
+      subjectType: "account",
+      accountClaim
+    });
   }
 
   /**
@@ -407,7 +461,11 @@ class UserScopedHullClient extends EntityScopedHullClient {
    * @param  {string} [context.referer]    Define the Referer. `null` for server calls.
    * @return {Promise}
    */
-  track(event: HullEventName, properties: HullEventProperties = {}, context: HullEventContext = {}): Promise<*> {
+  track(
+    event: HullEventName,
+    properties: HullEventProperties = {},
+    context: HullEventContext = {}
+  ): Promise<*> {
     _.defaults(context, {
       event_id: uuidV4()
     });

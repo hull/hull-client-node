@@ -2,7 +2,6 @@ const _ = require("lodash");
 const crypto = require("crypto");
 const jwt = require("jwt-simple");
 
-
 function getSecret(config = {}, secret) {
   return secret || config.accessToken || config.secret;
 }
@@ -11,10 +10,7 @@ function sign(config, data) {
     throw new Error("Signatures can only be generated for Strings");
   }
   const sha1 = getSecret(config);
-  return crypto
-    .createHmac("sha1", sha1)
-    .update(data)
-    .digest("hex");
+  return crypto.createHmac("sha1", sha1).update(data).digest("hex");
 }
 function checkConfig(config) {
   if (!config || !_.isObject(config) || !config.id || !config.secret) {
@@ -23,8 +19,12 @@ function checkConfig(config) {
 }
 
 function buildToken(config, claims = {}) {
-  if (claims.nbf) { claims.nbf = Number(claims.nbf); }
-  if (claims.exp) { claims.exp = Number(claims.exp); }
+  if (claims.nbf) {
+    claims.nbf = Number(claims.nbf);
+  }
+  if (claims.exp) {
+    claims.exp = Number(claims.exp);
+  }
   const iat = Math.floor(new Date().getTime() / 1000);
   const claim = {
     iss: config.id,
@@ -57,15 +57,15 @@ module.exports = {
    * @returns {string} The jwt token to identity the user.
    */
   lookupToken(config, subjectType, objectClaims = {}, additionalClaims = {}) {
-    subjectType = _.toLower(subjectType);
-    if (!_.includes(["user", "account"], subjectType)) {
+    const subject = _.toLower(subjectType);
+    if (!_.includes(["user", "account"], subject)) {
       throw new Error("Lookup token supports only `user` and `account` types");
     }
 
     checkConfig(config);
     const claims = {};
 
-    const subjectClaim = objectClaims[subjectType];
+    const subjectClaim = objectClaims[subject];
 
     if (_.isString(subjectClaim)) {
       claims.sub = subjectClaim;
@@ -73,14 +73,22 @@ module.exports = {
       claims.sub = subjectClaim.id;
     }
 
-    _.reduce(objectClaims, (c, oClaims, objectType) => {
-      if (_.isObject(oClaims) && !_.isEmpty(oClaims)) {
-        c[`io.hull.as${_.upperFirst(objectType)}`] = oClaims;
-      } else if (_.isString(oClaims) && !_.isEmpty(oClaims) && objectType !== subjectType) {
-        c[`io.hull.as${_.upperFirst(objectType)}`] = { id: oClaims };
-      }
-      return c;
-    }, claims);
+    _.reduce(
+      objectClaims,
+      (c, oClaims, objectType) => {
+        if (_.isObject(oClaims) && !_.isEmpty(oClaims)) {
+          c[`io.hull.as${_.upperFirst(objectType)}`] = oClaims;
+        } else if (
+          _.isString(oClaims) &&
+          !_.isEmpty(oClaims) &&
+          objectType !== subject
+        ) {
+          c[`io.hull.as${_.upperFirst(objectType)}`] = { id: oClaims };
+        }
+        return c;
+      },
+      claims
+    );
 
     if (_.has(additionalClaims, "scopes")) {
       claims.scopes = additionalClaims.scopes;
@@ -94,7 +102,7 @@ module.exports = {
       claims["io.hull.active"] = additionalClaims.active;
     }
 
-    claims["io.hull.subjectType"] = subjectType;
+    claims["io.hull.subjectType"] = subject;
     return buildToken(config, claims);
   },
 
@@ -107,7 +115,9 @@ module.exports = {
    */
   currentUserId(config, userId, userSig) {
     checkConfig(config);
-    if (!userId || !userSig) { return false; }
+    if (!userId || !userSig) {
+      return false;
+    }
     const [time, signature] = userSig.split(".");
     const data = [time, userId].join("-");
     return sign(config, data) === signature;

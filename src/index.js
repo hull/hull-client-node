@@ -1,4 +1,6 @@
 // @flow
-/*:: export type * from "./types"; */
 
-module.exports = require("./client");
+export type * from "./types";
+const Client = require("./client");
+export type HullClient = Client;
+module.exports = Client;

@@ -1,14 +1,18 @@
 // const rest = require("restler");
 const superagent = require("superagent");
+const jwt = require("jwt-simple");
+const debug = require("debug")("hull-client-node:rest-api");
 const pkg = require("../../package.json");
 
 const DEFAULT_HEADERS = {
   "Content-Type": "application/json",
-  "User-Agent": `Hull Node Client version: ${pkg.version}`
+  "User-Agent": `Hull Node Client version: ${pkg.version}`,
 };
 
 function strip(url = "") {
-  if (url.indexOf("/") === 0) { return url.slice(1); }
+  if (url.indexOf("/") === 0) {
+    return url.slice(1);
+  }
   return url;
 }
 
@@ -16,7 +20,14 @@ function isAbsolute(url = "") {
   return /http[s]?:\/\//.test(url);
 }
 
-function perform(client, config = {}, method = "get", path, params = {}, options = {}) {
+function perform(
+  client,
+  config = {},
+  method = "get",
+  path,
+  params = {},
+  options = {}
+) {
   const methodCall = superagent[method];
   if (!methodCall) {
     throw new Error(`Unsupported method ${method}`);
@@ -28,25 +39,31 @@ function perform(client, config = {}, method = "get", path, params = {}, options
       "Hull-App-Id": config.id,
       "Hull-Access-Token": config.token,
       "Hull-Organization": config.organization,
-      ...(params.headers || {})
+      ...(params.headers || {}),
     })
     .retry(2, function retryCallback(err, res) {
       const retryCount = this._retries;
       if (err && err.timeout) {
         client.logger.debug("client.timeout", {
-          timeout: err.timeout, retryCount, path, method
+          timeout: err.timeout,
+          retryCount,
+          path,
+          method,
         });
         return true;
       }
       if (res && res.statusCode >= 500 && retryCount <= 2) {
         client.logger.debug("client.fail", {
-          statusCode: res.statusCode, retryCount, path, method
+          statusCode: res.statusCode,
+          retryCount,
+          path,
+          method,
         });
         return true;
       }
       if (err) {
         client.logger.debug("client.fail.unknown", {
-          err: err.toString()
+          err: err.toString(),
         });
       }
       return false;
@@ -64,6 +81,23 @@ function perform(client, config = {}, method = "get", path, params = {}, options
     agent.timeout(options.timeout || 10000);
   }
 
+  if (
+    params.batch &&
+    process.env.NODE_ENV === "development" &&
+    process.env.DEBUG
+  ) {
+    debug("perform:");
+    params.batch.forEach(b => {
+      const { type, body } = b;
+      const {
+        iss, // eslint-disable-line no-unused-vars
+        iat, // eslint-disable-line no-unused-vars
+        ...claims
+      } = jwt.decode(b.headers["Hull-Access-Token"], config.secret);
+      debug("%j", { type, body, claims });
+    });
+  }
+
   if (method === "get") {
     return agent.query(params).then(res => res.body);
   }
@@ -71,18 +105,31 @@ function perform(client, config = {}, method = "get", path, params = {}, options
 }
 
 function format(config, url) {
-  if (isAbsolute(url)) { return url; }
-  return `${config.get("protocol")}://${config.get("organization")}${config.get("prefix")}/${strip(url)}`;
+  if (isAbsolute(url)) {
+    return url;
+  }
+  return `${config.get("protocol")}://${config.get("organization")}${config.get(
+    "prefix"
+  )}/${strip(url)}`;
 }
 
-module.exports = function restAPI(client, config, url, method, params, options = {}) {
-  const token = config.get("sudo") ? config.get("secret") : (config.get("accessToken") || config.get("secret"));
+module.exports = function restAPI(
+  client,
+  config,
+  url,
+  method,
+  params,
+  options = {}
+) {
+  const token = config.get("sudo")
+    ? config.get("secret")
+    : config.get("accessToken") || config.get("secret");
   const conf = {
     token,
     id: config.get("id"),
     secret: config.get("secret"),
     userId: config.get("userId"),
-    organization: config.get("organization")
+    organization: config.get("organization"),
   };
 
   const path = format(config, url);

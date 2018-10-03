@@ -1,5 +1,10 @@
 // @flow
-import type { HullClientConfiguration, HullEntityClaims, HullEntityType, HullAuxiliaryClaims } from "../types";
+import type {
+  HullClientConfiguration,
+  HullEntityClaims,
+  HullEntityType,
+  HullAdditionalClaims,
+} from "../types";
 
 const _ = require("lodash");
 const pkg = require("../../package.json");
@@ -7,13 +12,13 @@ const crypto = require("./crypto");
 
 const GLOBALS = {
   prefix: "/api/v1",
-  protocol: "https"
+  protocol: "https",
 };
 
 const VALID_OBJECT_ID = new RegExp("^[0-9a-fA-F]{24}$");
 const VALID = {
   boolean(val) {
-    return (val === true || val === false);
+    return val === true || val === false;
   },
   object(val) {
     return _.isObject(val);
@@ -29,13 +34,13 @@ const VALID = {
   },
   array(arr) {
     return _.isArray(arr);
-  }
+  },
 };
 
 const REQUIRED_PROPS = {
   id: VALID.objectId,
   secret: VALID.string,
-  organization: VALID.string
+  organization: VALID.string,
 };
 
 const VALID_PROPS = {
@@ -55,20 +60,30 @@ const VALID_PROPS = {
   connectorName: VALID.string,
   requestId: VALID.string,
   logs: VALID.array,
-  firehoseEvents: VALID.array
+  firehoseEvents: VALID.array,
 };
 
 /**
  * All valid user claims, used for validation and filterind .asUser calls
  * @type {Array}
  */
-const USER_CLAIMS: Array<string> = ["id", "email", "external_id", "anonymous_id"];
+const USER_CLAIMS: Array<string> = [
+  "id",
+  "email",
+  "external_id",
+  "anonymous_id",
+];
 
 /**
  * All valid accounts claims, used for validation and filtering .asAccount calls
  * @type {Array}
  */
-const ACCOUNT_CLAIMS: Array<string> = ["id", "external_id", "domain", "anonymous_id"];
+const ACCOUNT_CLAIMS: Array<string> = [
+  "id",
+  "external_id",
+  "domain",
+  "anonymous_id",
+];
 
 /**
  * Class containing configuration
@@ -77,7 +92,9 @@ class Configuration {
   _state: HullClientConfiguration;
   constructor(config: HullClientConfiguration) {
     if (!_.isObject(config) || !_.size(config)) {
-      throw new Error("Configuration is invalid, it should be a non-empty object");
+      throw new Error(
+        "Configuration is invalid, it should be a non-empty object"
+      );
     }
 
     if (config.userClaim !== undefined || config.accountClaim !== undefined) {
@@ -89,13 +106,22 @@ class Configuration {
       }
 
       if (config.accountClaim) {
-        config.accountClaim = this.filterEntityClaims("account", config.accountClaim);
+        config.accountClaim = this.filterEntityClaims(
+          "account",
+          config.accountClaim
+        );
       }
 
-      const accessToken = crypto.lookupToken(config, config.subjectType, {
-        user: config.userClaim,
-        account: config.accountClaim
-      }, config.additionalClaims);
+      const accessToken = crypto.lookupToken(
+        config,
+        config.subjectType,
+        {
+          user: config.userClaim,
+          account: config.accountClaim,
+        },
+        config.additionalClaims
+      );
+      //eslint-disable-next-line no-param-reassign
       config = { ...config, accessToken };
     }
 
@@ -106,7 +132,9 @@ class Configuration {
         throw new Error(`Configuration is missing required property: ${prop}`);
       }
       if (!test(config[prop])) {
-        throw new Error(`${prop} property in Configuration is invalid: ${config[prop]}`);
+        throw new Error(
+          `${prop} property in Configuration is invalid: ${config[prop]}`
+        );
       }
     });
 
@@ -132,35 +160,56 @@ class Configuration {
    * claim is an object
    * @throws Error
    */
-  assertEntityClaimsValidity(type: HullEntityType, object: void | string | HullEntityClaims): void {
-    const claimsToCheck = type === "user"
-      ? USER_CLAIMS
-      : ACCOUNT_CLAIMS;
+  assertEntityClaimsValidity(
+    type: HullEntityType,
+    object: void | string | HullEntityClaims
+  ): void {
+    const claimsToCheck = type === "user" ? USER_CLAIMS : ACCOUNT_CLAIMS;
     if (!_.isEmpty(object)) {
       if (typeof object === "string") {
         if (!object) {
           throw new Error(`Missing ${type} ID`);
         }
-      } else if (typeof object !== "object" || _.intersection(_.keys(object), claimsToCheck).length === 0) {
-        throw new Error(`You need to pass an ${type} hash with an ${claimsToCheck.join(", ")} field`);
+      } else if (
+        typeof object !== "object" ||
+        _.intersection(_.keys(object), claimsToCheck).length === 0
+      ) {
+        throw new Error(
+          `You need to pass a ${type} hash with an ${claimsToCheck.join(
+            ", "
+          )} field`
+        );
       }
     }
   }
 
-  filterEntityClaims(type: HullEntityType, object: void | string | HullEntityClaims): * {
-    const claimsToFilter = type === "user"
-      ? USER_CLAIMS
-      : ACCOUNT_CLAIMS;
+  filterEntityClaims(
+    type: HullEntityType,
+    object: void | string | HullEntityClaims
+  ): * {
+    const claimsToFilter = type === "user" ? USER_CLAIMS : ACCOUNT_CLAIMS;
     return typeof object === "string"
       ? object
-      : _.pick(object, claimsToFilter);
+      : _.mapValues( //Ensure we don't return Arrays in the various claims, just primitives.
+          _.pick(object, claimsToFilter),
+          v => (_.isArray(v) ? _.first(v) : v)
+        );
   }
 
   set(key: string, value: $Values<HullClientConfiguration>): void {
     this._state[key] = value;
   }
 
-  get(key?: string): string | number | Array<Object> | HullEntityType | HullEntityClaims | HullAuxiliaryClaims | HullClientConfiguration | void {
+  get(
+    key?: string
+  ): | string
+    | number
+    | Array<Object>
+    | HullEntityType
+    | HullEntityClaims
+    | HullAdditionalClaims
+    | HullClientConfiguration
+    | void {
     if (key) {
       return this._state[key];
     }

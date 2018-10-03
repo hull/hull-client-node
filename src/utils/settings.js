@@ -13,12 +13,14 @@ import type { HullConnector, HullConnectorSettings } from "../types";
  * @return {Promise}
  */
 function update(newSettings: HullConnectorSettings): Promise<HullConnector> {
-  return this.get("app")
-    .then((connector: HullConnector) => {
-      const private_settings: HullConnectorSettings = { ...connector.private_settings, ...newSettings };
-      connector.private_settings = private_settings;
-      return this.put(connector.id, { private_settings });
-    });
+  return this.get("app").then((connector: HullConnector) => {
+    const private_settings: HullConnectorSettings = {
+      ...connector.private_settings,
+      ...newSettings
+    };
+    connector.private_settings = private_settings;
+    return this.put(connector.id, { private_settings });
+  });
 }
 
 module.exports = {

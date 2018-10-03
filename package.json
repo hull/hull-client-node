@@ -3,6 +3,11 @@
   "version": "2.0.0",
   "description": "A barebones Node.js API client for hull.io",
   "main": "lib",
+  "author": {
+    "name": "Hull",
+    "email": "contact@hull.io",
+    "url": "https://github.com/hull"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/hull/hull-client-node.git"
@@ -11,54 +16,68 @@
   "bugs": {
     "url": "https://github.com/hull/hull-client-node/issues"
   },
-  "author": "Romain Dardour <romain@hull.io>",
+  "engines": {
+    "node": "^8.11.x",
+    "yarn": "^1.6.x"
+  },
   "license": "MIT",
   "scripts": {
-    "test": "npm run test:lint && npm run test:flow && npm run test:unit && npm run test:integration",
-    "test:lint": "eslint src && documentation lint src",
-    "test:dependencies": "npm outdated --depth=0",
-    "test:unit": "NODE_ENV=test mocha --require babel-register --exit -R spec ./test/unit/** ./test/unit/*",
-    "test:integration": "NODE_ENV=test mocha --require babel-register --exit -R spec ./test/integration/* ./test/integration/**",
-    "test:flow": "flow check",
+    "build": "yarn clean && babel src -d lib && flow-copy-source src lib",
     "clean": "rimraf lib",
-    "build": "npm run clean && babel src -d lib && npm run documentation",
-    "prepublish": "npm run build",
+    "documentation:lint": "documentation lint src",
     "documentation": "documentation build src -f md -o API.md --access public --markdownToc=false --config documentation.yml",
-    "precommit": "npm run documentation && git add API.md"
+    "flow:stop": "flow stop",
+    "flow": "flow",
+    "lint": "eslint src",
+    "prepublish": "yarn build && yarn documentation",
+    "test:dependencies": "npm outdated --depth=0",
+    "test:flow": "flow check",
+    "test:integration": "NODE_ENV=test mocha --opts mocha.opts ./test/integration/* ./test/integration/**",
+    "test:unit": "NODE_ENV=test mocha --require @babel/register --exit -R spec ./test/unit/** ./test/unit/*",
+    "test": "yarn lint && yarn test:flow && yarn test:unit && yarn test:integration",
+    "watch": "./node_modules/.bin/watch 'yarn build' src",
+    "precommit": "yarn lint && yarn flow && yarn documentation && git add API.md"
   },
   "dependencies": {
+    "debug": "^3.1.0",
     "jwt-simple": "^0.5.0",
     "lodash": "^4.17.5",
     "superagent": "^3.8.3",
     "urijs": "^1.18.7",
     "uuid": "^3.0.1",
-    "winston": "^2.2.0"
+    "winston": "^3.1.0",
+    "winston-transport": "^4.2.0"
   },
   "devDependencies": {
-    "babel": "^6.23.0",
-    "babel-cli": "^6.24.1",
-    "babel-eslint": "^8.2.2",
-    "babel-plugin-transform-flow-comments": "^6.22.0",
-    "babel-plugin-transform-object-rest-spread": "^6.26.0",
-    "babel-register": "^6.26.0",
+    "@babel/cli": "^7.0.0",
+    "@babel/core": "^7.0.0",
+    "@babel/plugin-transform-flow-comments": "^7.0.0",
+    "@babel/preset-env": "^7.0.0",
+    "@babel/preset-flow": "^7.0.0",
+    "@babel/register": "^7.0.0",
+    "babel-eslint": "^9.0.0",
+    "babel-loader": "^8.0.0",
     "bluebird": "^3.5.1",
     "chai": "^4.1.2",
-    "documentation": "^6.1.0",
-    "eslint": "^4.18.2",
-    "eslint-config-airbnb-base": "^12.1.0",
-    "eslint-plugin-flowtype": "^2.46.1",
-    "eslint-plugin-flowtype-errors": "^3.5.1",
-    "eslint-plugin-import": "^2.9.0",
-    "flow-bin": "^0.71.0",
+    "documentation": "https://github.com/vicapow/documentation#update-babel-dist",
+    "eslint": "^5.3.0",
+    "eslint-config-prettier": "^3.0.1",
+    "eslint-plugin-flowtype": "^2.50.0",
+    "eslint-plugin-flowtype-errors": "^3.6.0",
+    "eslint-plugin-import": "^2.13.0",
+    "eslint-plugin-prettier": "^2.6.2",
+    "flow-bin": "^0.80.0",
+    "flow-copy-source": "^2.0.2",
     "flow-typed": "^2.4.0",
-    "husky": "^0.14.3",
     "isparta": "^4.0.0",
-    "minihull": "0.0.7",
+    "minihull": "3.0.2",
     "mkdirp": "^0.5.1",
     "mocha": "^5.0.4",
+    "prettier": "^1.14.2",
     "rimraf": "^2.6.2",
-    "sinon": "^4.4.5",
-    "sinon-chai": "^3.0.0"
+    "sinon": "^6.2.0",
+    "sinon-chai": "^3.0.0",
+    "watch": "^1.0.2"
   },
   "nodeBoilerplateOptions": {
     "mochaGlobals": [
