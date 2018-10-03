@@ -1,12 +1,20 @@
 # CHANGELOG
 
+## 2.0.1
+* fix signatures of API methods
+* rename `Event` to `UserEvent` flow types
+
+## 2.0.0
+* enhance the way `logs` and `firehoseEvents` can be captured
+* documentation updates
+
 ## 2.0.0-beta.3
 * fix missing flow types
 * documentation adjustments
 
 ## 2.0.0-beta.2
-* adds experimental `logsArray` and `firehoseEventsArray` to additionally capture log lines and firehose events to separate arrays.
-  CAUTION: this does not disable normal behaviour of the libary
+*  adds experimental `logsArray` and `firehoseEventsArray` to additionally capture log lines and firehose events to separate arrays.
+  CAUTION: this does change normal behaviour of the library (when those arrays are provided logs are not send out to stdout and firehose events are not sent out to the firehose endpoint)
 * fix retry callback errors
 
 ## 2.0.0-beta.1

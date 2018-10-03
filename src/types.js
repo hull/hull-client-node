@@ -138,19 +138,20 @@ export type HullEntityAttributes = HullAccountAttributes | HullUserAttributes;
 /**
  * This is an event name which we use when tracking an event
  */
-export type HullEventName = string;
+export type HullUserEventName = string;
+
 
 /**
  * This is are event's properties which we use when tracking an event
  */
-export type HullEventProperties = {
+export type HullUserEventProperties = {
   [HullEventProperty: string]: string
 };
 
 /**
  * This is additional context passed with event
  */
-export type HullEventContext = {
+export type HullUserEventContext = {
   location?: {},
   page?: {
     referrer?: string
@@ -196,9 +197,9 @@ export type HullEntity = HullAccount | HullUser;
 /**
  * Event coming from platform
  */
-export type HullEvent = {
+export type HullUserEvent = {
   event_id: string;
-  event: HullEventName;
+  event: HullUserEventName;
   created_at: string;
   event_source?: string;
   event_type?: string;
@@ -209,8 +210,8 @@ export type HullEvent = {
   ship_id?: string;
   app_id?: string;
   app_name?: string;
-  context: HullEventContext;
-  properties: HullEventProperties;
+  context: HullUserEventContext;
+  properties: HullUserEventProperties;
 };
 
 /**
@@ -256,7 +257,7 @@ export type HullUserUpdateMessage = {|
   user: HullUser;
   changes: HullUserChanges;
   segments: Array<HullSegment>; // should be segments or user_segments?
-  events: Array<HullEvent>;
+  events: Array<HullUserEvent>;
   account: HullAccount;
 |};
 
@@ -266,7 +267,7 @@ export type HullUserUpdateMessage = {|
 export type HullAccountUpdateMessage = {|
   changes: HullUserChanges;
   segments: Array<HullSegment>; // should be segments or account_segments?
-  events: Array<HullEvent>;
+  events: Array<HullUserEvent>;
   account: HullAccount;
 |};
 
@@ -362,3 +363,10 @@ export type HullProperties = {
     key: string
   }
 };
+
+// deprecated types
+
+export type HullEventName = HullUserEventName;
+export type HullEventProperties = HullUserEventProperties;
+export type HullEventContext = HullUserEventContext;
+export type HullEvent = HullUserEvent;

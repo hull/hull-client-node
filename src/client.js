@@ -2,7 +2,7 @@
 
 import type {
   HullClientConfiguration, HullEntityAttributes,
-  HullEventName, HullEventProperties, HullEventContext,
+  HullUserEventName, HullUserEventProperties, HullUserEventContext,
   HullAccountClaims, HullUserClaims, HullAuxiliaryClaims, HullEntityClaims,
   HullClientLogger, HullClientUtils, HullClientStaticLogger
 } from "./types";
@@ -101,7 +101,7 @@ class HullClient {
     if (this.clientConfig.get("firehoseEvents")) {
       const firehoseEventsArray = this.clientConfig.get("firehoseEvents");
       if (!Array.isArray(firehoseEventsArray)) {
-        throw new Error("Configuration `firehoseEvents` must be an Array");
+        throw new Error("Configuration `firehoseEventsArray` must be an Array");
       }
       this.batch = (data) => {
         firehoseEventsArray.push({ context: ctxe, data });
@@ -151,7 +151,7 @@ class HullClient {
     if (this.clientConfig.get("logs")) {
       const logsArray = this.clientConfig.get("logs");
       if (!Array.isArray(logsArray)) {
-        throw new Error("Configuration `logs` must be an Array");
+        throw new Error("Configuration `logsArray` must be an Array");
       }
       if (logger.transports.console) {
         logger.remove("console");
@@ -214,12 +214,12 @@ class HullClient {
    * @public
    * @memberof Api#
    * @param {string} url
-   * @param {Object} [params]
+   * @param {Object} [params={}]
    * @param {Object} [options={}]
    * @param {Number} [options.timeout] option controls if the client should retry the request if the client timeout error happens or if there is an error 503 returned serverside - the value of the option is applied for client side error
    * @param {Number} [options.retry] controls the time between timeout or 503 error occurence and the next retry being done
    */
-  get(url: string, params: Object, options: Object = {}) {
+  get(url: string, params: Object = {}, options: Object = {}) {
     return restAPI(this, this.clientConfig, url, "get", params, options);
   }
 
@@ -228,12 +228,12 @@ class HullClient {
    * @public
    * @memberof Api#
    * @param {string} url
-   * @param {Object} [params]
+   * @param {Object} [params={}]
    * @param {Object} [options={}]
    * @param {Number} [options.timeout] option controls if the client should retry the request if the client timeout error happens or if there is an error 503 returned serverside - the value of the option is applied for client side error
    * @param {Number} [options.retry] controls the time between timeout or 503 error occurence and the next retry being done
    */
-  post(url: string, params: Object, options: Object = {}) {
+  post(url: string, params: Object = {}, options: Object = {}) {
     return restAPI(this, this.clientConfig, url, "post", params, options);
   }
 
@@ -242,12 +242,12 @@ class HullClient {
    * @public
    * @memberof Api#
    * @param {string} url
-   * @param {Object} [params]
+   * @param {Object} [params={}]
    * @param {Object} [options={}]
    * @param {Number} [options.timeout] option controls if the client should retry the request if the client timeout error happens or if there is an error 503 returned serverside - the value of the option is applied for client side error
    * @param {Number} [options.retry] controls the time between timeout or 503 error occurence and the next retry being done
    */
-  del(url: string, params: Object, options: Object = {}) {
+  del(url: string, params: Object = {}, options: Object = {}) {
     return restAPI(this, this.clientConfig, url, "del", params, options);
   }
 
@@ -256,12 +256,12 @@ class HullClient {
    * @public
    * @memberof Api#
    * @param {string} url
-   * @param {Object} [params]
+   * @param {Object} [params={}]
    * @param {Object} [options={}]
    * @param {Number} [options.timeout] option controls if the client should retry the request if the client timeout error happens or if there is an error 503 returned serverside - the value of the option is applied for client side error
    * @param {Number} [options.retry] controls the time between timeout or 503 error occurence and the next retry being done
    */
-  put(url: string, params: Object, options: Object = {}) {
+  put(url: string, params: Object = {}, options: Object = {}) {
     return restAPI(this, this.clientConfig, url, "put", params, options);
   }
 
@@ -407,7 +407,7 @@ class UserScopedHullClient extends EntityScopedHullClient {
    * @param  {string} [context.referer]    Define the Referer. `null` for server calls.
    * @return {Promise}
    */
-  track(event: HullEventName, properties: HullEventProperties = {}, context: HullEventContext = {}): Promise<*> {
+  track(event: HullUserEventName, properties: HullUserEventProperties = {}, context: HullUserEventContext = {}): Promise<*> {
     _.defaults(context, {
       event_id: uuidV4()
     });
