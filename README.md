@@ -170,7 +170,7 @@ user.track("new support ticket", {
 }, {
   source: "zendesk",
   type: 'ticket',
-  event_id: 'uuid1234' // Pass a unique ID to ensure event de-duplication
+  event_id: 'uuid1234', // Pass a unique ID to ensure event de-duplication
   ip: null, // don't store ip - it's a server call
   referer: null, // don't store referer - it's a server call
   created_at: '2013-02-08 09:30:26.123+07:00' // ISO 8601. moment.js does it very well
