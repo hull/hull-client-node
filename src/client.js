@@ -378,11 +378,15 @@ class UserScopedHullClient extends EntityScopedHullClient {
   }
 
   /**
-   * Issues an `alias` event on user?
+   * Issues an `alias` event on user or account
    * @todo
    * @public
    * @param  {Object} body
    * @return {Promise}
+   * @example
+   * const hullClient = new HullClient({ id, secret, organization });
+   * const scopedHullClient = hullClient.asUser({ email: "foo@bar.com "});
+   * scopedHullClient.alias({ anonymous_id: "123" });
    */
   alias(body: Object) {
     return this.batch({
@@ -393,11 +397,15 @@ class UserScopedHullClient extends EntityScopedHullClient {
   }
 
   /**
-   * Issues an `unalias` event on user?
+   * Issues an `unalias` event on user or account
    * @todo
    * @public
    * @param  {Object} body
    * @return {Promise}
+   * @example
+   * const hullClient = new HullClient({ id, secret, organization });
+   * const scopedHullClient = hullClient.asUser({ email: "foo@bar.com "});
+   * scopedHullClient.unalias({ anonymous_id: "123" });
    */
   unalias(body: Object) {
     return this.batch({
