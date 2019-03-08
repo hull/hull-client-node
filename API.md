@@ -166,6 +166,16 @@ Issues an `alias` event on user?
 
 Returns **[Promise][14]** 
 
+### unalias
+
+Issues an `unalias` event on user?
+
+**Parameters**
+
+-   `body` **[Object][1]** 
+
+Returns **[Promise][14]** 
+
 ### track
 
 Stores events on user. Only available on User scoped `HullClient` instance (see [#asuser][12]).

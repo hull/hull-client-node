@@ -393,6 +393,21 @@ class UserScopedHullClient extends EntityScopedHullClient {
   }
 
   /**
+   * Issues an `unalias` event on user?
+   * @todo
+   * @public
+   * @param  {Object} body
+   * @return {Promise}
+   */
+  unalias(body: Object) {
+    return this.batch({
+      type: "unalias",
+      requestId: this.requestId,
+      body
+    });
+  }
+
+  /**
    * Stores events on user. Only available on User scoped `HullClient` instance (see {@link #asuser}).
    *
    * @public

@@ -1,4 +1,5 @@
 /* global describe, it */
+
 const { expect } = require("chai");
 const sinon = require("sinon");
 const jwt = require("jwt-simple");
@@ -19,6 +20,7 @@ describe("Hull", () => {
         .that.is.an("function");
       expect(scopedAccount).not.to.have.property("track");
       expect(scopedAccount).not.to.have.property("alias");
+      expect(scopedAccount).not.to.have.property("unalias");
 
       expect(scopedUser).to.has.property("token")
         .that.is.an("function");
@@ -27,6 +29,8 @@ describe("Hull", () => {
       expect(scopedUser).to.has.property("track")
         .that.is.an("function");
       expect(scopedUser).to.has.property("alias")
+        .that.is.an("function");
+      expect(scopedUser).to.has.property("unalias")
         .that.is.an("function");
     });
 
