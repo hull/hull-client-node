@@ -292,23 +292,36 @@ const HullClient = function HullClient(config) {
       });
     };
 
-    // Allow alias only for users
-    if (config.userClaim || config.accessToken) {
-      /**
-       * Issues an `alias` event on user?
-       * @todo
-       * @memberof ScopedHullClient
-       * @public
-       * @param  {Object} body
-       * @return {Promise}
-       */
-      this.alias = (body) => {
-        return batch({
-          type: "alias",
-          body
-        });
-      };
-    }
+
+    /**
+     * Issues an `alias` event on user? or account?
+     * @todo
+     * @memberof ScopedHullClient
+     * @public
+     * @param  {Object} body
+     * @return {Promise}
+     */
+    this.alias = (body) => {
+      return batch({
+        type: "alias",
+        body
+      });
+    };
+
+    /**
+     * Issues an `unalias` event on user? or account?
+     * @todo
+     * @memberof ScopedHullClient
+     * @public
+     * @param  {Object} body
+     * @return {Promise}
+     */
+    this.unalias = (body) => {
+      return batch({
+        type: "unalias",
+        body
+      });
+    };
 
     if (config.userClaim) {
       /**

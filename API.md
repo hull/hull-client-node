@@ -158,7 +158,17 @@ Returns **[Promise][13]**
 
 ### alias
 
-Issues an `alias` event on user?
+Issues an `alias` event on user? or account?
+
+**Parameters**
+
+-   `body` **[Object][1]** 
+
+Returns **[Promise][13]** 
+
+### unalias
+
+Issues an `unalias` event on user? or account?
 
 **Parameters**
 
@@ -206,9 +216,9 @@ Performs a POST HTTP request on selected url of Hull REST API (prefixed with `pr
     -   `options.timeout` **[Number][14]?** option controls if the client should retry the request if the client timeout error happens or if there is an error 503 returned serverside - the value of the option is applied for client side error
     -   `options.retry` **[Number][14]?** controls the time between timeout or 503 error occurence and the next retry being done
 
-### put
+### del
 
-Performs a PUT HTTP request on selected url of Hull REST API (prefixed with `prefix` param of the constructor)
+Performs a DELETE HTTP request on selected url of Hull REST API (prefixed with `prefix` param of the constructor)
 
 **Parameters**
 
@@ -218,9 +228,9 @@ Performs a PUT HTTP request on selected url of Hull REST API (prefixed with `pre
     -   `options.timeout` **[Number][14]?** option controls if the client should retry the request if the client timeout error happens or if there is an error 503 returned serverside - the value of the option is applied for client side error
     -   `options.retry` **[Number][14]?** controls the time between timeout or 503 error occurence and the next retry being done
 
-### del
+### put
 
-Performs a DELETE HTTP request on selected url of Hull REST API (prefixed with `prefix` param of the constructor)
+Performs a PUT HTTP request on selected url of Hull REST API (prefixed with `prefix` param of the constructor)
 
 **Parameters**
 

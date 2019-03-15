@@ -11,20 +11,16 @@ describe("Hull", () => {
       const hull = new Hull({ id: "562123b470df84b740000042", secret: "1234", organization: "test" });
 
       const scopedAccount = hull.asAccount({ domain: "hull.io" });
+      expect(scopedAccount).to.has.property("traits").that.is.an("function");
+      expect(scopedAccount).to.has.property("track").that.is.an("function");
+      expect(scopedAccount).to.have.property("alias").that.is.an("function");
+      expect(scopedAccount).to.have.property("unalias").that.is.an("function");
+
       const scopedUser = hull.asUser("1234");
-
-      expect(scopedAccount).to.has.property("traits")
-        .that.is.an("function");
-      expect(scopedAccount).to.has.property("track")
-        .that.is.an("function");
-      expect(scopedAccount).not.to.have.property("alias");
-
-      expect(scopedUser).to.has.property("traits")
-        .that.is.an("function");
-      expect(scopedUser).to.has.property("track")
-        .that.is.an("function");
-      expect(scopedUser).to.has.property("alias")
-        .that.is.an("function");
+      expect(scopedUser).to.has.property("traits").that.is.an("function");
+      expect(scopedUser).to.has.property("track").that.is.an("function");
+      expect(scopedUser).to.has.property("alias").that.is.an("function");
+      expect(scopedUser).to.has.property("unalias").that.is.an("function");
     });
 
     it("should allow to pass create option", () => {
@@ -153,7 +149,7 @@ describe("Hull", () => {
         .to.not.throw(Error);
     });
 
-     it("should filter all non standard claims", () => {
+    it("should filter all non standard claims", () => {
       const hull = new Hull({ id: "562123b470df84b740000042", secret: "1234", organization: "test" });
 
       const scoped = hull.asUser({ email: "foo@bar.com", foo: "bar" });
