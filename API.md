@@ -158,11 +158,37 @@ Returns **[HullClient][15]** HullClient scoped to a User and linked to an Accoun
 
 ### alias
 
-Issues an `alias` event on user?
+Issues an `alias` event on user or account
 
 **Parameters**
 
 -   `body` **[Object][1]** 
+
+**Examples**
+
+```javascript
+const hullClient = new HullClient({ id, secret, organization });
+const scopedHullClient = hullClient.asUser({ email: "foo@bar.com "});
+scopedHullClient.alias({ anonymous_id: "123" });
+```
+
+Returns **[Promise][14]** 
+
+### unalias
+
+Issues an `unalias` event on user or account
+
+**Parameters**
+
+-   `body` **[Object][1]** 
+
+**Examples**
+
+```javascript
+const hullClient = new HullClient({ id, secret, organization });
+const scopedHullClient = hullClient.asUser({ email: "foo@bar.com "});
+scopedHullClient.unalias({ anonymous_id: "123" });
+```
 
 Returns **[Promise][14]** 
 

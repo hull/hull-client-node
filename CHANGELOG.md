@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 2.0.2
+* add unalias method for users and accounts
+
 ## 2.0.1
 * fix signatures of API methods
 * rename `Event` to `UserEvent` flow types
