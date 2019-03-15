@@ -1,3 +1,6 @@
+# 1.2.3
+* Add support for unalias method
+
 # 1.2.2
 * Allow anonymous_id in Account claims
 
