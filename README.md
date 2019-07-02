@@ -77,38 +77,40 @@ Find detailed description of those api methods in [API REFERENCE](./API.md#api).
 
 ## Scoping HullClient to User or Account identity
 
-A common use case is to interact with the API identified as a User or Account. To get a scoped HullClient use `asUser` or `asAccount` methods just like below:
+A common use case is to interact with the API identified as a User or Account. To get a scoped HullClient use `asUser` or `asAccount` methods, you pass Claims to it just like below:
 
 ```js
 // if you have a user id from your database, use the `external_id` field
-const user = hullClient.asUser({ external_id: "dkjf565wd654e" });
+const claims = { external_id: "dkjf565wd654e" }
+const userClient = hullClient.asUser(claims);
 
 // if you have a Hull Internal User Id:
-const user = hullClient.asUser({ id: "5718b59b7a85ebf20e000169" });
-// or just as a string:
-const user = hullClient.asUser("5718b59b7a85ebf20e000169");
+const userClient = hullClient.asUser({ id: "5718b59b7a85ebf20e000169" });
+
+// if you have the ID from a 3rd party service. The convention is to prefix with `:`:
+const userClient = hullClient.asUser({ anonymous_id: "intercom:5718b59b7a85ebf20e000169" });
 
 // Constant `user` is an instance of HullClient, scoped to a specific user
 // perform an API call with the user access token
-user.get("/me").then((me) => {
-  console.log(me);
-});
+const userData = await user.get("/me/user_report", { create: false });
+console.log(userData)
 
 // store attributes on this user identity
 user.traits({ foo: "bar "})
-
 
 // get the access token value
 user.token();
 
 // client for an account identified by its domain name
-const account = hullClient.asAccount({ domain: 'hull.io' });
-account.traits({ name: "Hull inc" });
+const accountClient = hullClient.asAccount({ domain: 'hull.io' });
+accountClient.traits({ name: "Hull inc" });
 ```
+
+### Supported Claims
 
 To identify a User, you can use an internal Hull `id`, an ID from your own system of records or database that we call `external_id`, an `email` address or `anonymous_id`. See more examples of picking and using different User claims below.
 
-To identify an account, you can use a Hull `id`, an `external_id` or a `domain`.
+To identify an account, you can use a Hull `id`, an `external_id`, a `domain` or an `anonymous_id`.
 
 Using `asUser` and `asAccount` methods doesn't make an API call, it just returns scoped instance of `HullClient` which comes with additional methods (see [API REFERENCE](./API.md#scopedhullclient)).
 
@@ -116,10 +118,10 @@ The second parameter lets you define additional options (JWT claims) passed to t
 
 ### Examples
 
-> Return a `HullClient` scoped to the user identified by its Hull ID. Not lazily created. Needs an existing User.
+> Return a `HullClient` scoped to the user identified by its Hull ID. Not lazily created. Needs an existing User. Will throw an error if no user with these claims was found
 
 ```js
-hullClient.asUser(userId, { create: false });
+hullClient.asUser(claims, { create: false });
 ```
 
 > Return a `HullClient` scoped to the user identified by its External ID and email. Lazily created if not present before.
@@ -152,7 +154,6 @@ Find detailed description of those claims scoping methods in [API REFERENCE](./A
 ```js
 const externalId = "dkjf565wd654e";
 const anonymousId = "44564-EJVWE-1CE56SE-SDVE879VW8D4";
-
 const user = client.asUser({ external_id: externalId, anonymous_id: anonymousId });
 ```
 
@@ -184,12 +185,7 @@ Find detailed information about `track` method in [API REFERENCE](./API.md#track
 Stores Attributes on the user:
 
 ```js
-user.traits({
-  opened_tickets: 12
-}, { source: "zendesk" });
-// 'source' is optional. Will store the traits grouped under the source name.
-
-// Alternatively, you can send properties for multiple groups with the flat syntax:
+// you can send properties for multiple groups with the flat syntax.
 user.traits({ "zendesk/opened_tickets": 12, "clearbit/name": "foo" });
 ```
 
