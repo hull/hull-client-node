@@ -108,7 +108,7 @@ account.traits({ name: "Hull inc" });
 
 To identify a User, you can use an internal Hull `id`, an ID from your own system of records or database that we call `external_id`, an `email` address or `anonymous_id`. See more examples of picking and using different User claims below.
 
-To identify an account, you can use a Hull `id`, an `external_id` or a `domain`.
+To identify an account, you can use a Hull `id`, an `external_id`, a `domain` or an array of `aliases`.
 
 Using `asUser` and `asAccount` methods doesn't make an API call, it just returns scoped instance of `HullClient` which comes with additional methods (see [API REFERENCE](./API.md#scopedhullclient)).
 
