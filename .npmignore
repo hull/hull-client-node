@@ -1,6 +1,10 @@
 src/
 spec/
 tasks/
+test/
+flow-typed/
+docs/
+documentation.yml
 .babelrc
 .editorconfig
 .gitignore
@@ -9,3 +13,6 @@ gulpfile.js
 .env
 .env.*
 *tgz
+.circleci/config.yml
+.flowconfig
+.eslintrc
