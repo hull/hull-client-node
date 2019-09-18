@@ -1,3 +1,7 @@
+# 1.2.4 
+
+* Add support for account aliases identity claim
+
 # 1.2.3
 * Add support for unalias method
 
