@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 2.0.4
+* add support for account aliases identity claim
+
+## 2.0.3
+* unpublished
+
 ## 2.0.2
 * add unalias method for users and accounts
 
