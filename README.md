@@ -134,7 +134,8 @@ hullClient.asUser({ external_id: "dkjf565wd654e" });
 hullClient.asUser({ email: "user@email.com" });
 ```
 
-> Return a `HullClient` scoped to the user identified by only by an anonymousId. Lets you start tracking and storing properties from a user before you have a UserID ready for him. Lazily created if [Guest Users](http://www.hull.io/docs/users/guest_users) are enabled
+> Return a `HullClient` scoped to the user identified by only by an anonymousId. Lets you start tracking and storing properties from a user before you have a UserID ready for him.
+
 > When you have a UserId, just pass both to link them.
 
 ```js
