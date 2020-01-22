@@ -376,9 +376,9 @@ Returns **[Object][1]** nested object
 
 [9]: #accountscopedhullclient
 
-[10]: http://hull.io/docs/users/byou
+[10]: https://www.hull.io/docs/concepts/users/
 
-[11]: http://www.hull.io/docs/users/byou
+[11]: https://www.hull.io/docs/reference/identity_resolution/
 
 [12]: #asuser
 
