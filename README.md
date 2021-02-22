@@ -30,6 +30,7 @@ const connector = new Hull.Connector({ configuration });
 A complete toolkit which is created next to ExpressJS server instance. Includes Hull Middleware and a set of official patterns to build highly scalable and efficient Connectors.
 
 ![hull node core components](/docs/assets/hull-node-components.png)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fhull%2Fhull-client-node.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fhull%2Fhull-client-node?ref=badge_shield)
 
 ---
 
@@ -257,3 +258,7 @@ will log the following line
 ```js
 {"context":{"organization":"193a8881.hullapp.io","id":"59e99ec13cd60e5c9d000037","request_id":"123"},"level":"info","message":"hello"}
 ```
+
+
+## License
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fhull%2Fhull-client-node.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fhull%2Fhull-client-node?ref=badge_large)
