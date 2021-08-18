@@ -28,7 +28,7 @@ function perform(client, config = {}, method = "get", path, params = {}, options
       "Hull-App-Id": config.id,
       "Hull-Access-Token": config.token,
       "Hull-Organization": config.organization,
-      ...(params.headers || {})
+      ...(options.headers || params.headers || {})
     })
     .retry(2, function retryCallback(err, res) {
       const retryCount = this._retries;
